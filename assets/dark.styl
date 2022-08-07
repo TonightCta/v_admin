@@ -1,0 +1,33 @@
+// Light theme
+.dark-ib-wallet,.dark-ib-wallet-login-register {
+  background: #121212;
+
+  .v-toolbar__content {
+    background-color: #1e1e1e;
+    box-shadow: 0px 0px 21px 0px rgba(0, 0, 0, 0.1);
+    
+    * {color: #f1f1f1;font-weight:400}
+  }
+
+  .v-card {
+    box-shadow: 0px 0px 21px 0px rgba(0, 0, 0, 0.04);
+
+    .v-card__title {
+      color: #f1f1f1;
+      
+      &::before {content: "";height: 20px;width: 4px;background: #304888;margin-right: 14px}
+    }
+  }
+
+  .index-title-label {color:#bbbbbb;font-size:18px}
+  .index-title-title {color:#565C71;font-size:34px;font-weight: 600;}
+  .index-title-today {color:#4365FF !important}
+
+  table { color:#bbbbbb;border:1px solid #bbbbbb }
+  // thead { background: #565C71 }
+  hr,th,td { border-color: #bbbbbb !important }
+}
+
+#ib-wallet-login-register .v-card__title::before {
+  display: none;
+}

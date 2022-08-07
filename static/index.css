@@ -1,0 +1,31 @@
+.el-pager {
+    padding-left: 0 !important;
+}
+
+.el-pager .active {
+    background-color: #4266ff !important;
+}
+
+.el-pager li:hover {
+    color: #4266ff !important;
+}
+
+.el-pager .active:hover {
+    color: white !important;
+}
+.el-input__inner{
+    border-color: #999!important;
+}
+.el-select-dropdown__item.selected{
+    color: #4266ff!important;
+}
+*::-webkit-scrollbar{
+    display: none;
+}
+.el-radio-button__orig-radio:checked+.el-radio-button__inner{
+    background-color: #4266ff!important;
+    border-color:#4266ff!important;
+}
+.el-radio-button__inner:hover{
+    color: #4266ff!important;
+}
