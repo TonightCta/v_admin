@@ -497,18 +497,11 @@
 </template>
     
 <script>
-import { Message, Pagination,Select,Option } from "element-ui";
-import Vue from "vue";
-Vue.use(Pagination);
-Vue.use(Option)
-Vue.use(Select)
 var that = null;
 import withdraw from "../pages/funding/merchant_withdraw";
 export default {
   components: {
     withdraw,
-    Message,
-    Select
   },
   props: {
     identify: {

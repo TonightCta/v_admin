@@ -163,7 +163,6 @@
 
 <script>
 import QRcode from "qrcodejs2";
-import { Popover, Message } from "element-ui";
 import Clipboard from "clipboard";
 export default {
   data: () => {
@@ -220,7 +219,6 @@ export default {
     };
   },
   components: {
-    Popover,
     IsGa: (resolve) => require(["../../../components/is_ga"], resolve),
   },
   computed: {

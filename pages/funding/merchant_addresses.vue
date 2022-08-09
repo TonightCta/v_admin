@@ -196,9 +196,6 @@
 </template>
 
 <script>
-import { Message, Pagination } from "element-ui";
-import Vue from 'vue';
-Vue.use(Pagination)
 export default {
   data() {
     return {

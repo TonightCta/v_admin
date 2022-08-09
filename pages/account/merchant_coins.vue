@@ -238,10 +238,6 @@
 </template>
 
 <script>
-import Vue from "vue";
-import { Message, Pagination,Radio } from "element-ui";
-Vue.use(Pagination);
-Vue.use(Radio)
 export default {
   data() {
     return {
