@@ -341,9 +341,10 @@ export default {
           );
         },
         transPwd: (value) => {
-          const pattern = /^[0-9]*$/;
+          //const pattern = /^[0-9]*$/;
           return (
-            (pattern.test(value) && value.length == 6) ||
+            /*(pattern.test(value) && value.length == 6) ||*/
+            value.length < 6 ||
             this.$vuetify.lang.t("$vuetify.loginPage.inValidTransPwd")
           );
         },

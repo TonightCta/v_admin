@@ -400,11 +400,11 @@
                 ) {{ $vuetify.lang.t('$vuetify.indexPage.view') }}
                 span(v-else) -
               
-            //- el-button(v-else)(
-            //-   :style="{ cursor: $store.state.bossAssetsCenter.merchantInfo.is_admin ? 'pointer' : 'not-allowed', color: $store.state.bossAssetsCenter.merchantInfo.is_admin ? '#5f74d2' : '#999' }",
-            //-   size="mini",
-            //-   @click="$store.state.bossAssetsCenter.merchantInfo.is_admin ? ((orderID = item.id), (setItemHash = true)) : null"
-            //- ) {{ $vuetify.lang.t('$vuetify.mine.填写交易HASH') }}
+            el-button(v-if="identify == 'merchant'")(
+             :style="{ cursor: $store.state.bossAssetsCenter.merchantInfo.is_admin ? 'pointer' : 'not-allowed', color: $store.state.bossAssetsCenter.merchantInfo.is_admin ? '#5f74d2' : '#999' }",
+               size="mini",
+               @click="$store.state.bossAssetsCenter.merchantInfo.is_admin ? ((orderID = item.id), (setItemHash = true)) : null"
+             ) {{ $vuetify.lang.t('$vuetify.mine.填写交易HASH') }}
 
     v-divider
     v-card-text.d-flex.align-center.justify-center
@@ -1006,6 +1006,11 @@ export default {
             value: "asset",
           },
           {
+            text: '提币金额',
+            sortable: false,
+            value: "amount",
+          },
+          {
             text: this.$vuetify.lang.t("$vuetify.mine.到账金额"),
             sortable: false,
             value: "true_amount",
@@ -1113,10 +1118,16 @@ export default {
             value: "asset",
           },
           {
+            text: '提币金额',
+            sortable: false,
+            value: "amount",
+          },
+          {
             text: this.$vuetify.lang.t("$vuetify.mine.到账金额"),
             sortable: false,
             value: "true_amount",
           },
+
           {
             text: this.$vuetify.lang.t(
               "$vuetify.table.merchantWithdrawAddress"

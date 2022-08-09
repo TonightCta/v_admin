@@ -2,7 +2,7 @@
   <div class="merchant-addresses pa-6">
     <v-card style="flex-grow: 1">
       <v-card-title>
-        <div class="title">{{ $vuetify.lang.t("$vuetify.mine.商家列表") }}</div>
+        <div class="title">{{ $vuetify.lang.t("$vuetify.mine.商家配置") }}</div>
       </v-card-title>
       <v-divider />
       <section class="filter-gather">
@@ -50,16 +50,16 @@
             @click="getAllAddress"
             >{{ $vuetify.lang.t("$vuetify.orderComponent.search") }}</v-btn
           >
-          <p class="lable-line" v-if="isAdmin"></p>
           <!-- 新开商户 -->
-          <v-btn
+<!--          <p class="lable-line" v-if="isAdmin"></p>-->
+          <!-- <v-btn
             v-if="isAdmin"
             depressed
             color="primary"
             @click="addMerchantBox = true"
           >
             {{ $vuetify.lang.t("$vuetify.mine.新增商户") }}
-          </v-btn>
+          </v-btn>-->
         </div>
       </section>
       <!-- 数据表格 -->
@@ -77,7 +77,7 @@
               class="can-click"
               @click="
                 $store.state.bossAssetsCenter.merchantInfo.is_admin
-                  ? drawCoin(item)
+                  ? collectCoin(item)
                   : null
               "
               :style="{
@@ -89,7 +89,25 @@
                   : '#999',
               }"
             >
-              {{ $vuetify.lang.t("$vuetify.mine.导入地址") }}
+              {{ $vuetify.lang.t("$vuetify.mine.修改配置") }}
+            </div>
+            <div
+                class="can-click"
+                @click="
+                $store.state.bossAssetsCenter.merchantInfo.is_admin && item.mainCoin === ''
+                  ? drawCoin(item)
+                  : null
+              "
+                :style="{
+                cursor: $store.state.bossAssetsCenter.merchantInfo.is_admin
+                  ? 'pointer'
+                  : 'not-allowed',
+                color: $store.state.bossAssetsCenter.merchantInfo.is_admin
+                  ? '#5f74d2'
+                  : '#999',
+              }"
+            >
+              {{ item.mainCoin === '' ? $vuetify.lang.t("$vuetify.mine.归集") : '' }}
             </div>
           </template>
           <template v-slot:item.status="{ item }">
@@ -123,23 +141,36 @@
     >
       <v-card class="pb-4">
         <v-card-title class="headline pr-2 pb-6">
-          {{ $vuetify.lang.t('$vuetify.mine.导入地址') }}
+          {{ $vuetify.lang.t('$vuetify.mine.归集') }}
           <v-btn icon @click="showTransModel = false">
             <v-icon>mdi-close</v-icon>
           </v-btn>
         </v-card-title>
         <v-card-text class="my-2 px-24">
           <div class="up-file-box">
-            <input type="file" @change="chooseWalletFile"/>
-            <p>{{fileStatus ? fileStatus : this.$vuetify.lang.t('$vuetify.mine.请选择文件')}}</p>
+            <p> {{ $vuetify.lang.t('$vuetify.mine.该商户下用户交易流水笔数为') }}： {{poolCollectResponse.addressDepositNumber}} </p>
+            <p> {{ $vuetify.lang.t('$vuetify.mine.单笔矿工费用') }}： {{poolCollectResponse.minerFee}} </p>
+            <p> {{ $vuetify.lang.t('$vuetify.mine.合计需要矿工费') }}： {{poolCollectResponse.totalToolFee}} {{poolCollectResponse.coin}} </p>
+          </div>
+          <div class="add-content">
+          <div class="inp-box" style="margin-top: 20px;">
+            <p>{{$vuetify.lang.t('$vuetify.mine.谷歌验证码')}}<span></span></p>
+            <input type="text" v-model="ga_code" :placeholder="
+            $vuetify.lang.t('$vuetify.mine.请输入谷歌验证码(未绑定请忽略)')
+          ">
+          </div>
           </div>
         </v-card-text>
+
         <v-card-actions>
+
           <v-spacer></v-spacer>
+
           <v-btn
             color="primary"
             text
             :loading="transfetPending"
+            :disabled="poolCollectResponse.addressDepositNumber <= 0"
             @click="turnTransfer()"
           >
             {{ $vuetify.lang.t('$vuetify.mine.确认') }}
@@ -158,42 +189,41 @@
       <v-card class="headline pr-2 pb-6">
         <div class="add-title">
           <p>
-           {{$vuetify.lang.t('$vuetify.mine.新增商户')}}
+           {{$vuetify.lang.t('$vuetify.mine.修改配置')}}
           </p>
           <img @click="addMerchantBox = false;" :src="require('../../assets/images/close_icon_2.png')" alt="">
         </div>
         <div class="add-content">
           <div class="inp-box">
-            <p>{{$vuetify.lang.t('$vuetify.loginPage.email')}}<span></span></p>
-            <input type="text" v-model="add.email" :placeholder="$vuetify.lang.t('$vuetify.mine.请输入邮箱地址')">
-          </div>
-           <div class="inp-box">
-            <p>{{$vuetify.lang.t('$vuetify.mine.登录密码')}}</p>
-            <input :type="passType" v-model="add.password" :placeholder="$vuetify.lang.t('$vuetify.mine.请输入登录密码(至少8位)')">
-            <div v-if="add.password" class="type-oper">
-              <img :src="require('../../assets/images/see.png')" @click="passType = 'text'" v-if="passType == 'password'" alt="">
-              <img :src="require('../../assets/images/un_see.png')" @click="passType = 'password'" alt="" v-else>
-            </div>
-          </div>
-           <div class="inp-box">
-            <p>{{$vuetify.lang.t('$vuetify.mine.交易密码')}}</p>
-            <input :type="tradeType" v-model="add.tradePass" :placeholder="$vuetify.lang.t('$vuetify.mine.请输入交易密码(至少6位)')">
-            <div v-if="add.tradePass" class="type-oper">
-              <img :src="require('../../assets/images/see.png')" @click="tradeType = 'text'" v-if="tradeType == 'password'" alt="">
-              <img :src="require('../../assets/images/un_see.png')" @click="tradeType = 'password'" alt="" v-else>
-            </div>
+            <p>{{$vuetify.lang.t('$vuetify.mine.入金手续费')}}<span></span></p>
+            <input type="text" v-model="merchantBoxItem.deposit_fee" >
           </div>
           <div class="inp-box">
-            <p>选择类型</p>
-            <div class="inp-select">
-              <el-radio v-model="add.accountType" label="1">内部(自有服务)</el-radio>
-              <el-radio v-model="add.accountType" label="2">外部(UDUN服务)</el-radio>
-            </div>
+            <p>{{$vuetify.lang.t('$vuetify.mine.出金手续费')}}<span></span></p>
+            <input type="text" v-model="merchantBoxItem.withdraw_fee" >
           </div>
           <div class="inp-box">
-            <p>归集地址</p>
-            <input type="text" :class="add.accountType == 2 && 'dis-inp'" :disabled="add.accountType == 2" v-model="add.address" placeholder="请输入归集地址">
+            <p>{{$vuetify.lang.t('$vuetify.table.minerFee')}}<span></span></p>
+            <input type="text" v-model="merchantBoxItem.miner_fee" >
           </div>
+
+          <div class="inp-box">
+            <p>{{$vuetify.lang.t('$vuetify.lable.min_withdrawal_amount')}}<span></span></p>
+            <input type="text" v-model="merchantBoxItem.min_withdraw" >
+          </div>
+
+          <div class="inp-box">
+            <p>{{$vuetify.lang.t('$vuetify.mine.最大提币数量')}}<span></span></p>
+            <input type="text" v-model="merchantBoxItem.max_withdraw" >
+          </div>
+
+          <div class="inp-box">
+            <p>{{$vuetify.lang.t('$vuetify.mine.Udun归集地址')}}<span></span></p>
+            <input type="text" v-model="merchantBoxItem.udun_pool_address" :placeholder="$vuetify.lang.t('$vuetify.mine.Udun归集地址')">
+          </div>
+
+
+
         </div>
         <v-card-actions>
           <v-spacer></v-spacer>
@@ -246,14 +276,23 @@ export default {
       },
       loadAdd: false,
       passType:'password',
-      tradeType:'password'
+      tradeType:'password',
+
+      // 归集
+      collectMsg: {},
+      collectModel: false,
+      poolCollectResponse:{},
+      ga_code:"",
+
+      // 修改配置
+      merchantBoxItem:{},
     };
   },
   // $vuetify.lang.t('$vuetify.mine.确认')
   computed: {
     headers() {
       return [
-        {
+        /*{
           text: this.$vuetify.lang.t("$vuetify.mine.商户"),
           sortable: false,
           value: "name",
@@ -262,13 +301,23 @@ export default {
           text: this.$vuetify.lang.t("$vuetify.mine.邮箱"),
           sortable: false,
           value: "email",
-        },
+        },*/
         {
           text: this.$vuetify.lang.t("$vuetify.mine.商户号"),
           sortable: false,
           value: "mch_id",
         },
-        /*{
+        {
+          text: this.$vuetify.lang.t("$vuetify.mine.币种"),
+          sortable: false,
+          value: "coin",
+        },
+        {
+          text: this.$vuetify.lang.t("$vuetify.mine.主币种"),
+          sortable: false,
+          value: "mainCoin",
+        },
+        {
           text: this.$vuetify.lang.t("$vuetify.mine.入金手续费"),
           sortable: false,
           align: "center",
@@ -279,19 +328,43 @@ export default {
           sortable: false,
           align: "center",
           value: "withdraw_fee",
-        },*/
-        {
-          text: this.$vuetify.lang.t("$vuetify.mine.状态"),
-          sortable: false,
-          value: "status",
-          align:'center'
         },
-        // {
-        //   text: this.$vuetify.lang.t("$vuetify.mine.操作"),
-        //   sortable: false,
-        //   value: "action",
-        //   align: "right",
-        // },
+        {
+          text: this.$vuetify.lang.t("$vuetify.table.minerFee"),
+          sortable: false,
+          align: "center",
+          value: "miner_fee",
+        },
+        {
+          text: this.$vuetify.lang.t("$vuetify.lable.min_withdrawal_amount"),
+          sortable: false,
+          align: "center",
+          value: "min_withdraw",
+        },
+        {
+          text: this.$vuetify.lang.t("$vuetify.mine.最大提币数量"),
+          sortable: false,
+          align: "center",
+          value: "max_withdraw",
+        },
+        {
+          text: this.$vuetify.lang.t("$vuetify.mine.Udun归集地址"),
+          sortable: false,
+          align: "center",
+          value: "udun_pool_address",
+        },
+        {
+          text: this.$vuetify.lang.t("$vuetify.mine.上次归集时间"),
+          sortable: false,
+          align: "center",
+          value: "udun_pool_last_time",
+        },
+        {
+          text: this.$vuetify.lang.t("$vuetify.mine.操作"),
+          sortable: false,
+          value: "action",
+          align: "right",
+        },
       ];
     },
     isAdmin() {
@@ -355,18 +428,34 @@ export default {
         limit: 10,
         merchant_id: this.selectMerchant(this.query.merchant),
       };
-      const result = await this.$store.dispatch(
-        "bossAssetsCenter/getAllMerchants",
+      const result = await this.$store.dispatch("bossAssetsCenter/queryMerchantCoins",
         params
       );
-      this.desserts = result.data.list;
-      this.pagination.total = result.data.last_page;
+      console.log(result)
+      this.desserts = result.data;
+      this.pagination.total = result.data.length;
       this.tableLoading = false;
     },
-    //导入钱包
-    drawCoin(_item) {
-      this.transferMsg = _item;
-      this.showTransModel = true;
+    //归集地址
+    async drawCoin(_item) {
+      console.log(_item)
+      const result = await this.$store.dispatch(
+          "bossAssetsCenter/queryCoinCollectFee",{
+            "coin": _item.coin,
+            "merchant_id": _item.mch_id
+          }
+      );
+      console.log(result)
+      if (result.code === 200){
+        this.transferMsg = _item;
+        this.showTransModel = true;
+        this.poolCollectResponse = result.data;
+      }
+    },
+    //修改配置
+    collectCoin(_item) {
+      this.merchantBoxItem = _item;
+      this.addMerchantBox = true;
     },
     //页码事件
     pageChange(_val) {
@@ -382,30 +471,35 @@ export default {
     async turnTransfer() {
       this.transfetPending = true;
 
-      if (!this.walletFile) {
+      /*if (!this.walletFile) {
         //this.snackbar = true;
         Message.error(this.$vuetify.lang.t("$vuetify.mine.请选择地址文件"));
         return;
-      }
-      const formdata = new FormData();
+      }*/
+      /*const formdata = new FormData();
       formdata.append("merchant_id", this.transferMsg?.mch_id);
-      formdata.append("file", this.walletFile);
+      formdata.append("file", this.walletFile);*/
+      const params = {
+        merchant_id: this.transferMsg.mch_id,
+        coin:this.transferMsg.coin,
+        ga_code:this.ga_code,
+      }
       const result = await this.$store.dispatch(
-        "bossAssetsCenter/importWallet",
-        formdata
+        "bossAssetsCenter/sendCoinCollectFee",
+          params
       );
       this.transfetPending = false;
       const { code } = result;
-      if (code != 200) {
+      if (code !== 200) {
         Message.error(result.message);
         return;
       }
-      Message.success(this.$vuetify.lang.t("$vuetify.mine.导入成功"));
+      Message.success(this.$vuetify.lang.t("$vuetify.mine.归集成功"));
       this.showTransModel = false;
     },
     //新增商户
     async submitAddMerchant() {
-      if (!this.add.email) {
+      /*if (!this.add.email) {
         Message.error(this.$vuetify.lang.t("$vuetify.mine.请输入邮箱地址"));
         return;
       }
@@ -428,26 +522,20 @@ export default {
       if(this.add.onlyTrx == 1 && !this.add.address){
         Message.error('请输入归集地址');
         return;
-      }
+      }*/
       this.loadAdd = true;
-      const params = {
-        email: this.add.email,
-        password: this.add.password,
-        pay_password: this.add.tradePass,
-        onlyTrx:this.add.accountType,
-        trx_pool_address:this.add.address
-      };
+      const params = this.merchantBoxItem
       const result = await this.$store.dispatch(
-        "bossAssetsCenter/addMerchant",
+        "bossAssetsCenter/updateMerchantCoinConfig",
         params
       );
       this.loadAdd = false;
       const { code } = result;
-      if (code != 200) {
+      if (code !== 200) {
         Message.error(result.message);
         return;
       }
-      Message.success(this.$vuetify.lang.t("$vuetify.mine.新增成功"));
+      Message.success(this.$vuetify.lang.t("$vuetify.mine.通过"));
       this.getMerchantList();
       this.addMerchantBox = false;
     },
@@ -546,7 +634,7 @@ export default {
     }
     p{
       font-size: 15px;
-      width: 70px;
+      width: 100px;
       text-align: justify;
       margin-bottom: 0;
       text-align-last:justify;

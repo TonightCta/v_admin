@@ -154,6 +154,18 @@ v-app#ib-wallet(
         v-list-item-avatar
           i.iconfont.icon-7.ali-icon
         v-list-item-title {{$vuetify.lang.t('$vuetify.mine.商家列表')}}
+
+      v-list-item(
+        v-if="isAdmin",
+        link,
+        v-ripple="false",
+        to="/account/merchant_coins",
+        :class="[{ 'current-page': currentPage == '/account/merchant_coins' }]"
+      )
+        v-list-item-avatar
+          i.iconfont.icon-7.ali-icon
+        v-list-item-title {{$vuetify.lang.t('$vuetify.mine.商家配置')}}
+
       v-list-item(
         link,
         v-ripple="false",
@@ -437,9 +449,10 @@ export default {
           );
         },
         transPwd: (value) => {
-          const pattern = /^[0-9]*$/;
+          // const pattern = /^[0-9]*$/;
           return (
-            (pattern.test(value) && value.length == 6) ||
+            /*(pattern.test(value) && value.length == 6) ||*/
+             value.length < 6 ||
             _layout.$vuetify.lang.t("$vuetify.loginPage.inValidTransPwd")
           );
         },

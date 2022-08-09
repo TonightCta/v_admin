@@ -76,7 +76,20 @@
               hide-details
             ></v-select>
           </div>
+
+          <div class="">
+            <span
+            >{{
+                $vuetify.lang.t("$vuetify.mine.类型")
+              }}&nbsp;:&nbsp;&nbsp;</span
+            >
+            <el-select v-model="query.is_self" filterable style="width:150px;transform:scale(0.9)" :placeholder="$vuetify.lang.t('$vuetify.mine.类型')">
+              <el-option v-for="(item,index) in isSelfList" :key="index" :label="item.name" :value="item.val">
+              </el-option>
+            </el-select>
+          </div>
         </div>
+
         <!-- 查询按钮 -->
         <div>
           <v-btn
@@ -101,6 +114,12 @@
           <template v-slot:item.action="{ item }">
             <!-- <div class="can-click" @click="drawCoin(item)">提币</div> -->
             -
+          </template>
+          <template v-slot:item.is_self="{ item }">
+
+           {{item.is_self == 1 ? $vuetify.lang.t('$vuetify.mine.商户主钱包') : ''}}
+           {{item.is_self == 2 ? $vuetify.lang.t('$vuetify.mine.商户手续费钱包') : ''}}
+           {{item.is_self == 0 ? $vuetify.lang.t('$vuetify.mine.客户钱包') : ''}}
           </template>
         </v-data-table>
       </div>
@@ -191,6 +210,7 @@ export default {
         merchant: "",
         coin: "全部",
         address: null,
+        is_self: null,
       }, //筛选条件
       showTransModel: false, //转账窗口
       transferMsg: {}, //转账信息
@@ -203,10 +223,20 @@ export default {
       errorBox: false, //提币回执
       transferResult: "",
       errorMessage: "", //提币回执信息
+
+      isSelfList:[
+
+      ],
     };
   },
   created() {
     this.query.coin = this.$vuetify.lang.t("$vuetify.mine.全部");
+    this.query.is_self = null;
+    this.isSelfList = [
+      {name: this.$vuetify.lang.t("$vuetify.mine.商户主钱包"),val:1},
+      {name:this.$vuetify.lang.t("$vuetify.mine.商户手续费钱包"),val:2},
+      {name:this.$vuetify.lang.t("$vuetify.mine.客户钱包"),val:0},
+    ]
     this.getMerchantList();
     this.getAllAddress();
   },
@@ -227,6 +257,21 @@ export default {
           text: this.$vuetify.lang.t("$vuetify.mine.币种"),
           sortable: false,
           value: "coin",
+        },
+        {
+          text: this.$vuetify.lang.t("$vuetify.mine.类型"),
+          sortable: false,
+          value: "is_self",
+        },
+        {
+          text: this.$vuetify.lang.t("$vuetify.mine.业务ID"),
+          sortable: false,
+          value: "businessId",
+        },
+        {
+          text: this.$vuetify.lang.t("$vuetify.mine.回调地址"),
+          sortable: false,
+          value: "notify_url",
         },
         {
           text: this.$vuetify.lang.t("$vuetify.mine.操作"),
@@ -282,6 +327,7 @@ export default {
           this.query.coin == this.$vuetify.lang.t("$vuetify.mine.全部")
             ? null
             : this.query.coin,
+        is_self:this.query.is_self,
       };
       const result = await this.$store.dispatch(
         "bossAssetsCenter/queryAllAddress",

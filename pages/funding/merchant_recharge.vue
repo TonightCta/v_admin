@@ -98,11 +98,11 @@
             span.subtitle-1.font-weight-bold.mr-4.card-label {{ $vuetify.lang.t('$vuetify.mine.手续费地址') }}：
             .addr-input
               .input-layer
-              input#depositaddress.text--primary(
+              input#depositaddressFee.text--primary(
                 :value="currentCoinFee.merchantDepositAddress",
                 style="outline: none"
               )
-            v-btn.ml-4(text, small, color="primary", @click="copyAddress")
+            v-btn.ml-4(text, small, color="primary", @click="copyAddressFee")
               span {{ $vuetify.lang.t('$vuetify.lable.copy') }}
 
           v-card-text.per-card-item
@@ -231,6 +231,12 @@ export default {
       ele.focus();
       ele.select();
       this.$setClip(this.currentCoin.merchantDepositAddress);
+      this.$success("success");
+    },
+    copyAddressFee(){
+      let ele = document.getElementById("depositaddressFee");
+      ele.focus();
+      ele.select();
       this.$setClip(this.currentCoinFee.merchantDepositAddress);
       this.$success("success");
     },

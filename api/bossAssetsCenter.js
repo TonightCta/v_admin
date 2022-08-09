@@ -89,6 +89,33 @@ export default class BossAssetsCenter {
             method:'GET'
         })
     }
+    //获取所有商家币种配置
+    async queryAllMerchantCoins(params){
+        return await request({
+            url:BASE_URL + "/manager/merchantCoins",
+            method:'POST',
+            data:params
+        })
+    }
+
+    //获取归集数据
+    async queryCoinCollectFee(params){
+        return await request({
+            url:BASE_URL + "/manager/poolFee",
+            method:'POST',
+            data:params
+        })
+    }
+
+    // 发起归集操作
+    async sendCoinCollectFee(params){
+        return await request({
+            url:BASE_URL + "/manager/calculateMerchantPoolFee",
+            method:'POST',
+            data:params
+        })
+    }
+
     //获取所有地址
     async queryAllAddress(params){
         return await request({
@@ -156,6 +183,14 @@ export default class BossAssetsCenter {
     async addMerchant(params){
         return await request({
             url:BASE_URL + "/manager/createMerchant",
+            method:"POST",
+            data:params
+        })
+    }
+    //更新商户币种配置
+    async updateMerchantCoinConfig(params){
+        return await request({
+            url:BASE_URL + "/manager/saveMerchantCoins",
             method:"POST",
             data:params
         })

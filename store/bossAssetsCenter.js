@@ -1,4 +1,4 @@
-import { bossAssetsCenter } from "~/api"
+import {bossAssetsCenter} from "~/api"
 
 export const state = () => ({
     // 所有币种
@@ -151,5 +151,24 @@ export const actions = {
         const res = await bossAssetsCenter.userWithdraw(params);
         return res;
     },
-   
+
+    queryMerchantCoins: async ({ commit },params) => {
+        const res = await bossAssetsCenter.queryAllMerchantCoins(params);
+        return res
+    },
+
+    queryCoinCollectFee: async ({ commit },params) => {
+        const res = await bossAssetsCenter.queryCoinCollectFee(params);
+        return res
+    },
+
+    sendCoinCollectFee: async ({ commit },params) => {
+        const res = await bossAssetsCenter.sendCoinCollectFee(params);
+        return res
+    },
+
+    updateMerchantCoinConfig:async({commit},params) => {
+        const res = await bossAssetsCenter.updateMerchantCoinConfig(params);
+        return res;
+    },
 }
