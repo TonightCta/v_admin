@@ -361,6 +361,7 @@
                 style="color: #5f74d2",
                 size="mini",
                 slot="reference",
+                v-if="false",
                 @click="showTransForm(item)"
               ) {{ $vuetify.lang.t('$vuetify.mine.通过') }}
             span(v-else) -
@@ -1147,6 +1148,12 @@ export default {
             align: "center",
             width: "104",
           },
+          {
+            text: '操作',
+            value:'operate',
+            align: "center",
+            sortable: false,
+          }
         ];
       } else {
         // 我的账单

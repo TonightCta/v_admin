@@ -1,7 +1,6 @@
 import Vue from 'vue';
 import { Popover, Button,MessageBox,Message,Pagination,Radio,Select,Option} from 'element-ui';
 import 'element-ui/lib/theme-chalk/index.css';
-Vue.use(Message);
 Vue.use(Pagination);
 Vue.use(Radio);
 Vue.use(Select);
@@ -10,3 +9,4 @@ Vue.use(Popover);
 Vue.use(Button);
 Vue.prototype.$msgbox = MessageBox;
 Vue.prototype.$alert = MessageBox.alert;
+Vue.prototype.Message = Message;
