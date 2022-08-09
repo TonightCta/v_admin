@@ -1004,10 +1004,15 @@ export default {
             value: "amount",
           },
           {
-            text: this.$vuetify.lang.t("$vuetify.mine.到账金额"),
+            text: '手续费',
             sortable: false,
-            value: "true_amount",
+            value: "fee",
           },
+          // {
+          //   text: this.$vuetify.lang.t("$vuetify.mine.到账金额"),
+          //   sortable: false,
+          //   value: "true_amount",
+          // },
           {
             text: this.$vuetify.lang.t("$vuetify.table.userWithdrawAddress"),
             sortable: false,

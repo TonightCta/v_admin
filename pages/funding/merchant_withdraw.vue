@@ -4,7 +4,7 @@
     v-card-title
       .title {{ $vuetify.lang.t('$vuetify.defaultLayout.merchantWithdraw') }}
     v-divider
-    v-card-text.d-flex.align-start
+    v-card-text.d-flex.clo-flex
       .subtitle-1.card-label {{ $vuetify.lang.t('$vuetify.lable.select_account') }}：
       v-btn-toggle.d-flex.align-center.flex-wrap(
         v-model="currentCoin",
@@ -20,39 +20,48 @@
           :value="coin"
         ) {{ coin.asset }}
 
-    v-card-text.d-flex.align-center.pb-4(v-if="showInpAddress")
+    v-card-text.d-flex.pb-4.clo-flex(v-if="showInpAddress")
       .subtitle-1.card-label {{ $vuetify.lang.t('$vuetify.table.address') }}：
-      v-autocomplete(
-        v-model="currentAddr.address",
-        :items="calcAddress",
-        :loading="addrLoading",
-        :disabled="!currentCoin.asset",
-        dense,
-        outlined,
-        hide-no-data,
-        hide-details,
-        allow-overflow,
-        ref="coinAddress",
-        style="max-width: 500px",
-        :placeholder="$vuetify.lang.t('$vuetify.placeholder.address')",
-        item-text="address",
-        item-value="address",
-        :class="[{ 'check-success': completeComponent.checkResult == 'success' }, { 'check-error': completeComponent.checkResult == 'error' }]",
-        @focus="addrFocus",
-        @update:search-input="currentAddrChange",
-        @blur="checkAddress"
-      )
-        template(v-slot:append)
+      //- v-autocomplete(
+      //-   v-model="currentAddr.address",
+      //-   :items="calcAddress",
+      //-   :loading="addrLoading",
+      //-   :disabled="!currentCoin.asset",
+      //-   dense,
+      //-   outlined,
+      //-   hide-no-data,
+      //-   hide-details,
+      //-   allow-overflow,
+      //-   ref="coinAddress",
+      //-   style="width: 500px",
+      //-   :placeholder="$vuetify.lang.t('$vuetify.placeholder.address')",
+      //-   item-text="address",
+      //-   item-value="address",
+      //-   :class="[{ 'check-success': completeComponent.checkResult == 'success' }, { 'check-error': completeComponent.checkResult == 'error' }]",
+      //-   @focus="addrFocus",
+      //-   @update:search-input="currentAddrChange",
+      //-   @blur="checkAddress"
+      //- )
+      //-   template(v-slot:append)
           //v-icon(
           //  @click="$router.push('/funding/merchant_withdraw_address')"
           // ) mdi-account-box-outline
+      v-text-field(
+        v-model="currentAddr.address",
+        style="width: 560px",
+        :placeholder="$vuetify.lang.t('$vuetify.placeholder.address')",
+        outlined,
+        dense,
+        hide-details,
+        :disabled="!currentCoin.asset"
+      )
 
-    v-card-text.d-flex.align-center.pt-0(v-if="showInpAddress")
+    v-card-text.d-flex.pt-0.clo-flex(v-if="showInpAddress")
       .card-label
       .red--text.text--accent-2(v-if="completeComponent.error") {{ completeComponent.errorMessages }}
       .text--disabled(v-else) {{ completeComponent.hint }}
 
-    v-card-text.d-flex.align-center.pb-2(
+    v-card-text.d-flex.pb-2.clo-flex(
       v-if="currentCoin.asset == 'XRP' || currentCoin.asset == 'EOS'"
     )
       .subtitle-1.card-label {{ $vuetify.lang.t('$vuetify.table.tag') }}：
@@ -66,7 +75,7 @@
         :disabled="currentAddr.hasTag"
       )
 
-    v-card-text.d-flex.align-center.pt-0(
+    v-card-text.d-flex.pt-0.clo-flex(
       v-if="currentCoin.asset == 'XRP' || currentCoin.asset == 'EOS'"
     )
       .card-label
@@ -77,11 +86,11 @@
         small
       )
 
-    v-card-text.d-flex.align-center.pb-2
-      .subtitle-1.card-label(style="margin-bottom: 20px") {{ $vuetify.lang.t('$vuetify.lable.number_of_withdrawals') }}：
+    v-card-text.d-flex.pb-2.clo-flex
+      .subtitle-1.card-label {{ $vuetify.lang.t('$vuetify.lable.number_of_withdrawals') }}：
       v-text-field.withdraw-num-btn(
         v-model="withdrawNum",
-        style="max-width: 360px",
+        style="width: 560px",
         placeholder="0.00",
         outlined,
         dense,
@@ -92,9 +101,9 @@
         template(v-slot:append)
           a.text-caption(@click="allWithdraw") {{ $vuetify.lang.t('$vuetify.table.all') }}
 
-    v-card-text.d-flex.align-center.pt-0(v-if="false")
-      .card-label
-      .text--disabled {{ $vuetify.lang.t('$vuetify.lable.available') }} {{ $toNumberStr(currentCoin.avaliableBalance, 8) }}
+    //- v-card-text.d-flex.align-center.pt-0(v-if="false")
+    //-   .card-label
+    //-   .text--disabled {{ $vuetify.lang.t('$vuetify.lable.available') }} {{ $toNumberStr(currentCoin.avaliableBalance, 8) }}
 
     //- v-card-text.d-flex.align-center.pt-0 
     //-   .card-label
@@ -102,29 +111,41 @@
     //- v-card-text.per-card-item
     //-         span.subtitle-1.font-weight-bold.mr-4.card-label 可代付手续费额度：
     //-         span.mx-2.red--text {{ currentCoin.mchFeeAvailable }}
-     
-    v-card-text.d-flex.align-center.pt-0 
-      .card-label
-      .text--disabled {{ $vuetify.lang.t('$vuetify.mine.可代付') }} {{ $toNumberStr(currentCoin.mchAvailable, 8) }}
-    v-card-text.d-flex.align-center.pt-0 
-      .card-label
-      .text--disabled {{ $vuetify.lang.t('$vuetify.mine.可代付手续费额度') }}： {{ $toNumberStr(currentCoin.mchFeeAvailable, 8) }}
 
-    v-card-text.d-flex.align-center.pt-0 
-      .card-label
-      .text--disabled {{ $vuetify.lang.t('$vuetify.mine.可提现') }} {{ $toNumberStr(currentCoin.userAvailable, 8) }}
-    v-card-text.d-flex.align-center.pt-0 
-      .card-label
-      .text--disabled {{ $vuetify.lang.t('$vuetify.mine.可提现手续费额度') }}： {{ $toNumberStr(currentCoin.userFeeAvailable, 8) }}
-    
+    //- v-card-text.d-flex.align-center.pt-0 
+    //-   .card-label
+    //-   .text--disabled {{ $vuetify.lang.t('$vuetify.mine.可代付') }} {{ $toNumberStr(currentCoin.mchAvailable, 8) }}
+    //- v-card-text.d-flex.align-center.pt-0 
+    //-   .card-label
+    //-   .text--disabled {{ $vuetify.lang.t('$vuetify.mine.可代付手续费额度') }}： {{ $toNumberStr(currentCoin.mchFeeAvailable, 8) }}
 
-    v-card-text.d-flex.align-center
-      .subtitle-1.card-label {{ $vuetify.lang.t('$vuetify.lable.fee') }}：
-      .subtitle-1 {{ $toNumberStr(calcServerFee, 8) }}
+    //- v-card-text.d-flex.align-center.pt-0 
+    //-   .card-label
+    //-   .text--disabled {{ $vuetify.lang.t('$vuetify.mine.可提现') }} {{ $toNumberStr(currentCoin.userAvailable, 8) }}
+    //- v-card-text.d-flex.align-center.pt-0 
+    //-   .card-label
+    //-   .text--disabled {{ $vuetify.lang.t('$vuetify.mine.可提现手续费额度') }}： {{ $toNumberStr(currentCoin.userFeeAvailable, 8) }}
+    .balance-box
+      .balance-fee 
+        p 
+          span.color-6 矿工费：
+          span {{ $toNumberStr(currentCoin.withdrawMinerFee, 8) }}&nbsp;{{ currentCoin.mainAsset }}
+        p 
+          span.color-6 提币手续费：
+          span {{ $toNumberStr(calcServerFee, 8) }}
+      .balance-con 
+        p.m-16 {{ $vuetify.lang.t('$vuetify.mine.可提现') }}&nbsp;&nbsp;&nbsp;&nbsp;{{ $toNumberStr(currentCoin.userAvailable, 8) }}
+        p.m-16 提现矿工费：&nbsp;&nbsp;&nbsp;&nbsp;{{ $toNumberStr(currentCoin.userFeeAvailable, 8) }}
+        p {{ $vuetify.lang.t('$vuetify.mine.可代付') }}&nbsp;&nbsp;&nbsp;&nbsp;{{ $toNumberStr(currentCoin.mchAvailable, 8) }}
+        p 代付矿工费：&nbsp;&nbsp;&nbsp;&nbsp;{{ $toNumberStr(currentCoin.mchFeeAvailable, 8) }}
 
-    v-card-text.d-flex.align-center.pb-1
-      .subtitle-1.card-label {{ $vuetify.lang.t('$vuetify.lable.prompt') }}：
-      .text--disabled {{ $vuetify.lang.t('$vuetify.lable.min_withdrawal_amount') }}：{{ $fixed8(currentCoin.minWithdrawAmount) || 0 }}
+    //- v-card-text.d-flex.align-center
+    //-   .subtitle-1.card-label {{ $vuetify.lang.t('$vuetify.lable.fee') }}：
+    //-   .subtitle-1 {{ $toNumberStr(calcServerFee, 8) }}
+
+    //- v-card-text.d-flex.align-center.pb-1
+    //-   .subtitle-1.card-label {{ $vuetify.lang.t('$vuetify.lable.prompt') }}：
+    //-   .text--disabled {{ $vuetify.lang.t('$vuetify.lable.min_withdrawal_amount') }}：{{ $fixed8(currentCoin.minWithdrawAmount) || 0 }}
 
     //- v-card-text.d-flex.align-center.pt-0
       .card-label
@@ -398,8 +419,7 @@ export default {
       let n = 0;
       n =
         parseFloat(this.withdrawNum) *
-          this.currentCoin.withdraw_service_fee_rate +
-        this.currentCoin.withdrawMinerFee;
+        this.currentCoin.withdraw_service_fee_rate;
       return isNaN(n) ? 0 : n;
     },
     allCoins() {
@@ -439,6 +459,9 @@ export default {
         "$vuetify.lable.tip4"
       )}`;
     },
+    'currentAddr.address'(val){
+      val && this.checkAddress();
+    }
   },
   async mounted() {
     if (this.asset !== "") {
@@ -726,12 +749,8 @@ export default {
             : "error";
         } else {
           this.completeComponent.error = true;
-          this.$error(
-            res.message ||
-              this.$vuetify.lang.t(
-                "$vuetify.message.checking_address_format_failed"
-              )
-          );
+          this.completeComponent.errorMessages = '地址格式错误';
+
         }
       } catch (error) {
         this.completeComponent.checkResult = "error";
@@ -793,6 +812,60 @@ export default {
 
   .item-text {
     white-space: nowrap;
+  }
+}
+
+.clo-flex {
+  flex-direction: column;
+  align-items: flex-start;
+  justify-content: flex-start;
+  padding-bottom:0;
+  fieldset{
+    border:1px solid #eee!important;
+  }
+  .card-label{
+    text-align:left;
+    margin-bottom:0;
+    font-size:18px!important;
+    color:#333;
+    font-weight:500;
+  }
+  .v-text-field__slot{
+    height:50px;
+  }
+}
+
+.balance-box {
+  width: 560px;
+  padding-left:16px;
+  margin-top:12px;
+  .balance-fee {
+    display: flex;
+    justify-content: space-between;
+    .color-6{
+      color:#666;
+    }
+    p {
+      width: 50%;
+    }
+  }
+
+  .balance-con {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    padding: 20px;
+    background: #f8f8f8;
+    border-radius:4px;
+    p {
+      width: 50%;
+      margin-bottom: 0;
+      color:#999;
+    }
+
+    .m-16 {
+      margin-bottom: 16px;
+    }
   }
 }
 </style>
