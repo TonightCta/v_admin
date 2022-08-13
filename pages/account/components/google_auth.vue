@@ -164,6 +164,7 @@
 <script>
 import QRcode from "qrcodejs2";
 import Clipboard from "clipboard";
+import { Message } from "element-ui";
 export default {
   data: () => {
     return {

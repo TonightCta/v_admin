@@ -153,7 +153,7 @@ v-app#ib-wallet(
       )
         v-list-item-avatar
           i.iconfont.icon-7.ali-icon
-        v-list-item-title {{$vuetify.lang.t('$vuetify.mine.商家列表')}}
+        v-list-item-title {{ $vuetify.lang.t('$vuetify.mine.商家列表') }}
 
       v-list-item(
         v-if="isAdmin",
@@ -164,7 +164,7 @@ v-app#ib-wallet(
       )
         v-list-item-avatar
           i.iconfont.icon-7.ali-icon
-        v-list-item-title {{$vuetify.lang.t('$vuetify.mine.商家配置')}}
+        v-list-item-title {{ $vuetify.lang.t('$vuetify.mine.商家配置') }}
 
       v-list-item(
         link,
@@ -209,8 +209,8 @@ v-app#ib-wallet(
           v-list-item-title {{ $vuetify.lang.t('$vuetify.defaultLayout.updateTransPwd') }}
         v-list-item(@click="showLogout = true")
           v-list-item-title 
-           img(:src="require('../assets/images/out_icon.png')")
-           span {{ $vuetify.lang.t('$vuetify.defaultLayout.logout') }}
+            img(:src="require('../assets/images/out_icon.png')")
+            span {{ $vuetify.lang.t('$vuetify.defaultLayout.logout') }}
 
     //- language
     v-menu(offset-y)
@@ -376,7 +376,7 @@ v-app#ib-wallet(
               :disabled="disabledVerifyCode",
               @click="sendVerifyCode(2)"
             ) {{ sendingTime > 0 ? sendingTime + 's' : $vuetify.lang.t('$vuetify.loginPage.getVerifyCode') }}
-      
+
       v-card-actions.pr-4
         v-spacer
         v-btn.mr-2(outlined, @click="closeTransPwd") {{ $vuetify.lang.t('$vuetify.lable.cancel') }}
@@ -414,7 +414,7 @@ var _layout = null;
 export default {
   data: () => {
     return {
-      sendingTime:0,//验证码倒计时
+      sendingTime: 0, //验证码倒计时
       currentLang: {
         lang: "en_US",
         name: "English",
@@ -452,7 +452,7 @@ export default {
           // const pattern = /^[0-9]*$/;
           return (
             /*(pattern.test(value) && value.length == 6) ||*/
-             value.length < 6 ||
+            value.length >= 6 ||
             _layout.$vuetify.lang.t("$vuetify.loginPage.inValidTransPwd")
           );
         },
@@ -491,8 +491,8 @@ export default {
     },
   },
   computed: {
-    isAdmin(){
-      return this.$store.state.bossAssetsCenter.merchantInfo.is_admin
+    isAdmin() {
+      return this.$store.state.bossAssetsCenter.merchantInfo.is_admin;
     },
     disabledVerifyCode() {
       return this.sendingTime > 0;
@@ -537,9 +537,12 @@ export default {
     accountInfo() {
       return this.$store.state.bossMember.accountInfo || {};
     },
-    infoEmail(){
-      return this.$store.state.bossAssetsCenter.merchantInfo.email?.substr(0,5) + '...'
-    }
+    infoEmail() {
+      return (
+        this.$store.state.bossAssetsCenter.merchantInfo.email?.substr(0, 5) +
+        "..."
+      );
+    },
   },
   async created() {
     _layout = this;
@@ -750,7 +753,7 @@ export default {
       try {
         let res = await this.$store.dispatch("bossMember/updatePwd", {
           accountNumber: this.user.email,
-          code:this.user.email_code,
+          code: this.user.email_code,
           accountType: 1,
           businessType: 3,
           oldpassword: this.user.oldpassword,
@@ -816,7 +819,7 @@ export default {
         let res = await this.$store.dispatch("bossMember/updatePwd", {
           accountNumber: this.user.email,
           accountType: 1,
-          code:this.user.email_code,
+          code: this.user.email_code,
           businessType: 3,
           oldpassword: this.user.oldpassword,
           password: this.user.transPwd,
@@ -859,7 +862,7 @@ export default {
         this.sendingTime = 60;
         this.startSendingTime();
         let res = await this.$store.dispatch("bossMember/sendVerifyCode", {
-          scene:type
+          scene: type,
         });
         if (res.code == "200") {
           // this.$success('success')
@@ -889,24 +892,27 @@ export default {
 </script>
 
 <style lang="stylus">
-.mine_btn{
-  background:#F8F8F8;
-  border:0;
-  img{
-    width:16px;
-    height:16px;
-    margin-right:4px;
+.mine_btn {
+  background: #F8F8F8;
+  border: 0;
+
+  img {
+    width: 16px;
+    height: 16px;
+    margin-right: 4px;
   }
 }
+
 #ib-wallet {
-  .text-center{
-    img{
-      width:16px;
-      height:16px;
-      margin-right:4px;
-      transform:translateY(2px);
+  .text-center {
+    img {
+      width: 16px;
+      height: 16px;
+      margin-right: 4px;
+      transform: translateY(2px);
     }
   }
+
   // .v-menu__content {
   // max-height: calc(100vh - 24px) !important;
   // }

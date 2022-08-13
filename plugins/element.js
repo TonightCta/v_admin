@@ -1,5 +1,5 @@
 import Vue from 'vue';
-import { Popover, Button,MessageBox,Message,Pagination,Radio,Select,Option} from 'element-ui';
+import { Popover, Button,MessageBox,Pagination,Radio,Select,Option,Loading} from 'element-ui';
 import 'element-ui/lib/theme-chalk/index.css';
 Vue.use(Pagination);
 Vue.use(Radio);
@@ -7,6 +7,6 @@ Vue.use(Select);
 Vue.use(Option);
 Vue.use(Popover);
 Vue.use(Button);
+Vue.use(Loading);
 Vue.prototype.$msgbox = MessageBox;
 Vue.prototype.$alert = MessageBox.alert;
-Vue.prototype.Message = Message;

@@ -62,12 +62,14 @@
         $vuetify.lang.t("$vuetify.loginPage.login")
       }}</v-btn>
     </section>
+    <Loading v-if="isAuto"/>
   </div>
 </template>
 
 <script>
 import { Message } from "element-ui";
 import { checkEmail } from "../../../utils";
+import Loading from './loading.vue';
 export default {
   data() {
     return {
@@ -77,16 +79,37 @@ export default {
         password: null,
         ga_code: null,
       },
+      isAuto:false,
     };
   },
+  components:{
+    Loading
+  },
+  created(){
+    if(this.GetUrlKey('auto',window.location.href)){
+      const key = this.GetUrlKey('auto',window.location.href);
+      console.log(key);
+      this.isAuto = true;
+    }
+  },
   methods: {
+    //获取地址栏参数
+    GetUrlKey(name, url) {
+      return (
+        decodeURIComponent(
+          (new RegExp("[?|&]" + name + "=" + "([^&;]+?)(&|#|;|$)").exec(
+            url
+          ) || [, ""])[1].replace(/\+/g, "%20")
+        ) || null
+      );
+    },
     loginBox() {
       if (!this.loginParams.email) {
         Message.error(this.$vuetify.lang.t("$vuetify.mine.请输入邮箱"));
         return;
       }
-      if(!checkEmail(this.loginParams.email)){
-        Message.error(this.$vuetify.lang.t("$vuetify.loginPage.inValidEmail"))
+      if (!checkEmail(this.loginParams.email)) {
+        Message.error(this.$vuetify.lang.t("$vuetify.loginPage.inValidEmail"));
       }
       if (!this.loginParams.password) {
         Message.error(this.$vuetify.lang.t("$vuetify.mine.请输入登录密码"));

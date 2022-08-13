@@ -1,8 +1,9 @@
 <template lang="pug">
 .merchant-withdraw.pa-6
-  v-card(style="flex-grow: 1")
+  v-card.acrd-mine(style="flex-grow: 1")
     v-card-title
       .title {{ $vuetify.lang.t('$vuetify.defaultLayout.merchantWithdraw') }}
+      .wring-read 到账时间说明：1-5分钟，快慢取决于链上区块拥堵情况
     v-divider
     v-card-text.d-flex.clo-flex
       .subtitle-1.card-label {{ $vuetify.lang.t('$vuetify.lable.select_account') }}：
@@ -365,8 +366,7 @@ export default {
           //const pattern = /^[0-9]*$/;
           return (
             /*(pattern.test(value) && value.length == 6) ||*/
-            value.length < 6 ||
-            this.$vuetify.lang.t("$vuetify.loginPage.inValidTransPwd")
+            value.length >= 6 || this.$vuetify.lang.t("$vuetify.loginPage.inValidTransPwd")
           );
         },
         googleInp: (value) => {
@@ -764,6 +764,7 @@ export default {
 </script>
 
 <style lang="stylus">
+@import ('./index.scss')
 .merchant-withdraw {
   display: flex;
   flex-direction: column;

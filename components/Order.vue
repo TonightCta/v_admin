@@ -237,7 +237,7 @@
           :placeholder="$vuetify.lang.t('$vuetify.mine.商户邮箱')"
         )
           el-option(
-            v-for="item,index in merchantPerson",
+            v-for="item, index in merchantPerson",
             :key="index",
             :label="item",
             :value="item"
@@ -335,8 +335,8 @@
           .align-center 
             el-button(
               v-if="item.notify_status == 0 && item.status == 3",
-              style="color:#5f74d2",
-              size="mini"
+              style="color: #5f74d2",
+              size="mini",
               @click="rebackOrder(item)"
             ) {{ $vuetify.lang.t('$vuetify.mine.重新回调') }}
             span(v-else) -
@@ -350,7 +350,9 @@
               :content="item.transaction_id",
               v-if="item.type == 2"
             )
-            .actions-box(v-if="item.status == 0")
+            .actions-box(
+              v-if="item.status == 0 && $store.state.bossAssetsCenter.merchantInfo.is_admin"
+            )
               el-button(
                 style="color: #5f74d2",
                 size="mini",
@@ -399,13 +401,12 @@
                   v-if="item.status == 3",
                   @click="$toBlockBrowser(item.transaction_id, item)"
                 ) {{ $vuetify.lang.t('$vuetify.indexPage.view') }}
-                span(v-else) -
-              
-            el-button(v-if="identify == 'merchant'")(
-             :style="{ cursor: $store.state.bossAssetsCenter.merchantInfo.is_admin ? 'pointer' : 'not-allowed', color: $store.state.bossAssetsCenter.merchantInfo.is_admin ? '#5f74d2' : '#999' }",
-               size="mini",
-               @click="$store.state.bossAssetsCenter.merchantInfo.is_admin ? ((orderID = item.id), (setItemHash = true)) : null"
-             ) {{ $vuetify.lang.t('$vuetify.mine.填写交易HASH') }}
+            el-button(
+              v-if="item.status == 0 && identify == 'merchant' && manageWay != 'deposit' && $store.state.bossAssetsCenter.merchantInfo.is_admin",
+              :style="{ cursor: $store.state.bossAssetsCenter.merchantInfo.is_admin ? 'pointer' : 'not-allowed', color: $store.state.bossAssetsCenter.merchantInfo.is_admin ? '#5f74d2' : '#999' }",
+              size="mini",
+              @click="$store.state.bossAssetsCenter.merchantInfo.is_admin ? ((orderID = item.id), (setItemHash = true)) : null"
+            ) {{ $vuetify.lang.t('$vuetify.mine.填写交易HASH') }}
 
     v-divider
     v-card-text.d-flex.align-center.justify-center
@@ -413,7 +414,7 @@
         background,
         layout="prev, pager, next",
         @current-change="pageChange",
-        :total="pagination.total * 10"
+        :total="pagination.total"
       )
 
     // - 发起转账
@@ -476,8 +477,8 @@
       v-card.pb-4 
         v-card-title.headline.pr-2.pb-6 提示
           v-spacer
-          v-btn(icon, @click="turnWithdraw = false;")
-              v-icon mdi-close
+          v-btn(icon, @click="turnWithdraw = false")
+            v-icon mdi-close
         v-card-text.my-2.px-24.align-center
           h3.mine-title 是否确认提币?
         v-card-actions 
@@ -488,16 +489,11 @@
             @click="turnWithdraw = false",
             :loading="waitSet"
           ) {{ $vuetify.lang.t('$vuetify.lable.cancel') }}
-          v-btn(
-            color="primary",
-            @click="submitWithdraw",
-            :loading="waitSet"
-          ) {{ $vuetify.lang.t('$vuetify.mine.确认') }}
-
-        
+          v-btn(color="primary", @click="submitWithdraw", :loading="waitSet") {{ $vuetify.lang.t('$vuetify.mine.确认') }}
 </template>
     
 <script>
+import { Message } from "element-ui";
 var that = null;
 import withdraw from "../pages/funding/merchant_withdraw";
 export default {
@@ -520,7 +516,7 @@ export default {
   },
   data: () => {
     return {
-      turnWithdraw:false,//用户提币
+      turnWithdraw: false, //用户提币
       showTransModel: false,
       showTable: false,
       tableLoading: false,
@@ -774,26 +770,32 @@ export default {
   },
   methods: {
     //确认提币
-    async submitWithdraw(){
+    async submitWithdraw() {
       console.log(this.withdraw);
-      const result = await this.$store.dispatch('bossAssetsCenter/userWithdraw',{withdrawId:this.withdraw.id});
+      const result = await this.$store.dispatch(
+        "bossAssetsCenter/userWithdraw",
+        { withdrawId: this.withdraw.id }
+      );
       const { code } = result;
-      if(code != 200){
+      if (code != 200) {
         Message.error(result.message);
         return;
       }
-      Message.success('通过成功');
-      this.turnWithdraw = false;  
+      Message.success("通过成功");
+      this.turnWithdraw = false;
       this.filterTransDetail();
     },
     //重新回调
-    async rebackOrder(_item){
-      const result = await this.$store.dispatch('bossAssetsCenter/rebackOrder',{orderId:_item.id});
+    async rebackOrder(_item) {
+      const result = await this.$store.dispatch(
+        "bossAssetsCenter/rebackOrder",
+        { orderId: _item.id,type:this.manageWay }
+      );
       const { code } = result;
-      if(code != 200){
+      if (code != 200) {
         Message.error(result.message);
         return;
-      };
+      }
       Message.success(this.$vuetify.lang.t("$vuetify.mine.从新回调成功"));
       this.filterTransDetail();
     },
@@ -1000,12 +1002,12 @@ export default {
             value: "asset",
           },
           {
-            text: '提币金额',
+            text: "提币金额",
             sortable: false,
             value: "amount",
           },
           {
-            text: '手续费',
+            text: "手续费",
             sortable: false,
             value: "fee",
           },
@@ -1117,16 +1119,20 @@ export default {
             value: "asset",
           },
           {
-            text: '提币金额',
+            text: "提币金额",
             sortable: false,
             value: "amount",
           },
+          // {
+          //   text: this.$vuetify.lang.t("$vuetify.mine.到账金额"),
+          //   sortable: false,
+          //   value: "true_amount",
+          // },
           {
-            text: this.$vuetify.lang.t("$vuetify.mine.到账金额"),
+            text: "手续费",
             sortable: false,
-            value: "true_amount",
+            value: "fee",
           },
-
           {
             text: this.$vuetify.lang.t(
               "$vuetify.table.merchantWithdrawAddress"
@@ -1154,11 +1160,11 @@ export default {
             width: "104",
           },
           {
-            text: '操作',
-            value:'operate',
+            text: "操作",
+            value: "operate",
             align: "center",
             sortable: false,
-          }
+          },
         ];
       } else {
         // 我的账单
@@ -1425,19 +1431,20 @@ export default {
 </script>
 
 <style lang="stylus">
-.mine-title{
-  padding-left:24px;
-    font-weight:400;
-    font-size:18px;
-    color:#333;
-  }
+.mine-title {
+  padding-left: 24px;
+  font-weight: 400;
+  font-size: 18px;
+  color: #333;
+}
+
 .order-management {
   min-height: 100%;
   flex-grow: 1;
   display: flex;
   flex-direction: column;
   background-color: #F5F5FC;
-  
+
   .v-card {
     flex-grow: 1;
   }
@@ -1480,6 +1487,7 @@ export default {
 
   .actions-box {
     display: flex;
+    justify-content: space-around;
   }
 }
 </style>

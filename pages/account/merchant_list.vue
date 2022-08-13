@@ -77,7 +77,7 @@
               class="can-click"
               @click="
                 $store.state.bossAssetsCenter.merchantInfo.is_admin
-                  ? drawCoin(item)
+                  ? autoLogin(item)
                   : null
               "
               :style="{
@@ -89,7 +89,8 @@
                   : '#999',
               }"
             >
-              {{ $vuetify.lang.t("$vuetify.mine.导入地址") }}
+              <!-- {{ $vuetify.lang.t("$vuetify.mine.导入地址") }} -->
+              <el-button size="mini" type="primary" style="background:#4266ff">登录</el-button>
             </div>
           </template>
           <template v-slot:item.status="{ item }">
@@ -208,6 +209,7 @@
 </template>
 
 <script>
+import { Message } from "element-ui";
 export default {
   data() {
     return {
@@ -282,12 +284,12 @@ export default {
           value: "status",
           align:'center'
         },
-        // {
-        //   text: this.$vuetify.lang.t("$vuetify.mine.操作"),
-        //   sortable: false,
-        //   value: "action",
-        //   align: "right",
-        // },
+        {
+          text: this.$vuetify.lang.t("$vuetify.mine.操作"),
+          sortable: false,
+          value: "action",
+          align: "right",
+        },
       ];
     },
     isAdmin() {
@@ -313,8 +315,12 @@ export default {
     // this.query.merchant = this.$vuetify.lang.t("$vuetify.mine.全部");
     this.getMerchantList();
     this.getAllAddress();
+    
   },
   methods: {
+    autoLogin(_item){
+      window.open(`http://192.168.31.188:3030/login?auto=${_item.mch_id}`)
+    },
     //获取商家列表
     async getMerchantList() {
       const result = await this.$store.dispatch(

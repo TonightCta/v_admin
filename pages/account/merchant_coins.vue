@@ -73,8 +73,10 @@
           class="elevation-0"
         >
           <template v-slot:item.action="{ item }">
-            <div
+            <div class="oper-flex">
+              <el-button
               class="can-click"
+                size="mini"
               @click="
                 $store.state.bossAssetsCenter.merchantInfo.is_admin
                   ? collectCoin(item)
@@ -90,9 +92,11 @@
               }"
             >
               {{ $vuetify.lang.t("$vuetify.mine.修改配置") }}
-            </div>
-            <div
+            </el-button>
+            <el-button
                 class="can-click"
+                v-if=" item.mainCoin === ''"
+                size="mini"
                 @click="
                 $store.state.bossAssetsCenter.merchantInfo.is_admin && item.mainCoin === ''
                   ? drawCoin(item)
@@ -107,7 +111,8 @@
                   : '#999',
               }"
             >
-              {{ item.mainCoin === '' ? $vuetify.lang.t("$vuetify.mine.归集") : '' }}
+              矿工费归集
+            </el-button>
             </div>
           </template>
           <template v-slot:item.status="{ item }">
@@ -228,8 +233,8 @@
         <v-card-actions>
           <v-spacer></v-spacer>
           <div class="inp-oper">
-              <v-btn color="primary" class="default-btn" text @click="addMerchantBox = false"> {{ $vuetify.lang.t('$vuetify.lable.cancel') }} </v-btn>
-              <v-btn color="primary" class="primary-btn" :loading="loadAdd" text @click="submitAddMerchant"> {{ $vuetify.lang.t('$vuetify.mine.确认') }} </v-btn>
+              <v-btn color="primary" class="default-btn" @click="addMerchantBox = false"> {{ $vuetify.lang.t('$vuetify.lable.cancel') }} </v-btn>
+              <v-btn color="primary" class="primary-btn" :loading="loadAdd" @click="submitAddMerchant"> {{ $vuetify.lang.t('$vuetify.mine.确认') }} </v-btn>
           </div>
         </v-card-actions>
       </v-card>
@@ -238,6 +243,7 @@
 </template>
 
 <script>
+import { Message } from "element-ui";
 export default {
   data() {
     return {
@@ -539,6 +545,26 @@ export default {
 };
 </script>
 <style lang="scss" scoped>
+.headline::before{
+  display: none;
+}
+.headline{
+  justify-content: space-between;
+}
+.oper-flex{
+  display: flex;
+  justify-content: flex-end;
+  div{
+    border:1px solid #ccc;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 12px;
+    padding: 2px 4px;
+  }
+  div:last-child{
+    margin-left: 12px;
+  }
+}
 .up-file-box {
   height: 80px;
   border: 1px dashed #efefef;
