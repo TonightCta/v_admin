@@ -167,10 +167,10 @@ export default class BossMember {
       let result = await axios.post(SERVER_URL + BASE_URL + "/user/upload/imgUpload", formData, {
         headers: {
           'Content-Type': 'multipart/form-data',
-          Authorization: window.localStorage.getItem('TOKEN'),
-          userId: window.localStorage.getItem('userId'),
-          enterpriseManagerId: window.localStorage.getItem('enterpriseManagerId'),
-          enterpriseMemberId: window.localStorage.getItem('enterpriseMemberId')
+          Authorization: window.sessionStorage.getItem('TOKEN'),
+          userId: window.sessionStorage.getItem('userId'),
+          enterpriseManagerId: window.sessionStorage.getItem('enterpriseManagerId'),
+          enterpriseMemberId: window.sessionStorage.getItem('enterpriseMemberId')
         }
       })
       res = result.data
@@ -180,11 +180,18 @@ export default class BossMember {
     return res
   }
   //忘记密码
-  async forgetPass(params){
+  async forgetPass(params) {
     return await noAuthRequest({
-        url:BASE_URL + "/user/forgetPassword",
-        method:"POST",
-        data:params
+      url: BASE_URL + "/user/forgetPassword",
+      method: "POST",
+      data: params
     })
-}
+  }
+  async autoLogin(params){
+    return await noAuthRequest({
+      url:BASE_URL + "/user/login/v2/loginUserToken",
+      method:"POST",
+      data:params
+    })
+  }
 }

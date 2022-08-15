@@ -110,7 +110,7 @@
           background
           layout="prev, pager, next"
           @current-change="pageChange"
-          :total="pagination.total * 10">
+          :total="pagination.total">
         </el-pagination>
       </v-card-text>
     </v-card>
@@ -319,7 +319,8 @@ export default {
   },
   methods: {
     autoLogin(_item){
-      window.open(`http://192.168.31.188:3030/login?auto=${_item.mch_id}`)
+      const features = 'height=800, width=1366, top=100, left=100, toolbar=no, menubar=no,scrollbars=no,resizable=no, location=no, status=no'
+      window.open(`https://client.ib.cc/login?auto=${_item.mch_id}`,'NEW',features)
     },
     //获取商家列表
     async getMerchantList() {
@@ -362,7 +363,7 @@ export default {
         params
       );
       this.desserts = result.data.list;
-      this.pagination.total = result.data.last_page;
+      this.pagination.total = result.data.total;
       this.tableLoading = false;
     },
     //导入钱包

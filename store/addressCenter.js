@@ -17,7 +17,7 @@ export const actions = {
 
   // 查询地址薄
   getAddressBookPage: async ({ commit }, params) => {
-    params.walletId = window.localStorage.getItem('userId')
+    params.walletId = window.sessionStorage.getItem('userId')
     let res = await addressCenter.getAddressBookPage(params)
     return res
   },

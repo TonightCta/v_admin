@@ -1,5 +1,20 @@
 import Vue from 'vue';
-import { Popover, Button,MessageBox,Pagination,Radio,Select,Option,Loading} from 'element-ui';
+import { 
+    Popover, 
+    Button, 
+    MessageBox, 
+    Pagination, 
+    Radio, 
+    Select, 
+    Option,
+    Loading, 
+    Dropdown, 
+    DropdownMenu, 
+    DropdownItem,
+    DatePicker,
+    Table,
+    TableColumn
+} from 'element-ui';
 import 'element-ui/lib/theme-chalk/index.css';
 Vue.use(Pagination);
 Vue.use(Radio);
@@ -7,6 +22,6 @@ Vue.use(Select);
 Vue.use(Option);
 Vue.use(Popover);
 Vue.use(Button);
-Vue.use(Loading);
+Vue.use(Loading).use(Dropdown).use(DropdownMenu).use(DropdownItem).use(DatePicker).use(Table).use(TableColumn);
 Vue.prototype.$msgbox = MessageBox;
 Vue.prototype.$alert = MessageBox.alert;

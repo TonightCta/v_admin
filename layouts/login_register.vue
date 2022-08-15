@@ -78,8 +78,8 @@ export default {
       b_lang = b_lang === "en" ? "en_US" : b_lang;
       b_lang = b_lang.replace("-", "_");
       this.$vuetify.lang.current = b_lang;
-      localStorage.setItem("language", b_lang);
-      localStorage.setItem(
+      sessionStorage.setItem("language", b_lang);
+      sessionStorage.setItem(
         "languageName",
         this.allLangs.find(function (item) {
           return item.lang == b_lang;
@@ -87,11 +87,11 @@ export default {
       );
     } else {
       if (
-        window.localStorage.getItem("language") &&
-        localStorage.getItem("language") != undefined &&
-        localStorage.getItem("language") != "undefined"
+        window.sessionStorage.getItem("language") &&
+        sessionStorage.getItem("language") != undefined &&
+        sessionStorage.getItem("language") != "undefined"
       ) {
-        this.$vuetify.lang.current = window.localStorage.getItem("language");
+        this.$vuetify.lang.current = window.sessionStorage.getItem("language");
       } else {
         b_lang = langs.find(function (item) {
           return item == window.navigator.language;
@@ -103,8 +103,8 @@ export default {
         b_lang = b_lang.replace("-", "_");
 
         this.$vuetify.lang.current = b_lang;
-        localStorage.setItem("language", b_lang);
-        localStorage.setItem(
+        sessionStorage.setItem("language", b_lang);
+        sessionStorage.setItem(
           "languageName",
           this.allLangs.find(function (item) {
             return item.lang == b_lang;
@@ -164,15 +164,15 @@ export default {
       );
     },
     getLocalLang() {
-      let lang = window.localStorage.getItem("language");
+      let lang = window.sessionStorage.getItem("language");
       if (lang) {
         this.currentLang.lang = lang;
-        this.currentLang.name = window.localStorage.getItem("languageName");
+        this.currentLang.name = window.sessionStorage.getItem("languageName");
       }
     },
     async currentLangChange() {
-      window.localStorage.setItem("language", this.currentLang.lang);
-      window.localStorage.setItem("languageName", this.currentLang.name);
+      window.sessionStorage.setItem("language", this.currentLang.lang);
+      window.sessionStorage.setItem("languageName", this.currentLang.name);
       this.$vuetify.lang.current = this.currentLang.lang;
     },
     changeTheme() {

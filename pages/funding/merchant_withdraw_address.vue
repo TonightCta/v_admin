@@ -407,7 +407,7 @@ export default {
       try {
         let res = await this.$store.dispatch("addressCenter/deleteAddress", {
           id: this.currentCoin.id,
-          walletId: window.localStorage.getItem("userId"),
+          walletId: window.sessionStorage.getItem("userId"),
         });
         if (res.code == "200") {
           this.$success(
@@ -447,7 +447,7 @@ export default {
             res = await this.$store.dispatch("addressCenter/addAddress", {
               address: address,
               supportCoin: this.coinType,
-              walletId: window.localStorage.getItem("userId"),
+              walletId: window.sessionStorage.getItem("userId"),
               verifyCode: this.verifyCode,
               password: this.transPwd,
               accountNumber:this.$store.state.bossMember.user.email
@@ -457,7 +457,7 @@ export default {
               id: this.currentCoin.id,
               address: address,
               supportCoin: this.coinType,
-              walletId: window.localStorage.getItem("userId"),
+              walletId: window.sessionStorage.getItem("userId"),
               verifyCode: this.verifyCode,
               password: this.transPwd,
             });
@@ -467,7 +467,7 @@ export default {
             res = await this.$store.dispatch("addressCenter/addAddress", {
               address: this.coinAddress,
               supportCoin: this.coinType,
-              walletId: window.localStorage.getItem("userId"),
+              walletId: window.sessionStorage.getItem("userId"),
               verifyCode: this.verifyCode,
               password: this.transPwd,
               accountNumber:this.$store.state.bossMember.user.email
@@ -477,7 +477,7 @@ export default {
               id: this.currentCoin.id,
               address: this.coinAddress,
               supportCoin: this.coinType,
-              walletId: window.localStorage.getItem("userId"),
+              walletId: window.sessionStorage.getItem("userId"),
               verifyCode: this.verifyCode,
               password: this.transPwd,
             });

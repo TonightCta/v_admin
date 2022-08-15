@@ -16,10 +16,10 @@ request.interceptors.request.use(
     if (config.headers == undefined) {
       config.headers = {}
     }
-    config.headers.Authorization = window.localStorage.getItem('TOKEN')
-    config.headers.userId = window.localStorage.getItem('userId')
-    config.headers.enterpriseManagerId = window.localStorage.getItem('enterpriseManagerId')
-    config.headers.lang = window.localStorage.getItem('language') || 'en_US'
+    config.headers.Authorization = window.sessionStorage.getItem('TOKEN')
+    config.headers.userId = window.sessionStorage.getItem('userId')
+    config.headers.enterpriseManagerId = window.sessionStorage.getItem('enterpriseManagerId')
+    config.headers.lang = window.sessionStorage.getItem('language') || 'en_US'
     return config
   },
   error => {

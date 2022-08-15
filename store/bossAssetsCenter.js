@@ -6,7 +6,7 @@ export const state = () => ({
     merchantInfo: {},
     allRates: {},
     currentRate: 'USD',
-    isAuthBox:window.localStorage.getItem('isAuthBox') || 1,
+    isAuthBox:window.sessionStorage.getItem('isAuthBox') || 1,
     allRateSymbols: {
         TWD: "NT$",
         AUD: "A$",
@@ -38,7 +38,7 @@ export const mutations = {
     },
     setIsAuthBox(state,opt){
         state.isAuthBox = opt;
-        window.localStorage.setItem('isAuthBox',opt)
+        window.sessionStorage.setItem('isAuthBox',opt)
     }
 }
 
@@ -61,14 +61,14 @@ export const actions = {
     },
 
     queryWalletAssetsFlow: async ({ commit }, params) => {
-        params.walletId = window.localStorage.getItem('userId')
+        params.walletId = window.sessionStorage.getItem('userId')
         params.ignoreUserId = true
         let res = await bossAssetsCenter.queryWalletAssetsFlow(params)
         return res
     },
 
     queryWithdrawHistory: async ({ commit }, params) => {
-        params.walletId = window.localStorage.getItem('userId')
+        params.walletId = window.sessionStorage.getItem('userId')
         let res = await bossAssetsCenter.queryWithdrawHistory(params)
         return res
     },

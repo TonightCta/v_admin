@@ -30,7 +30,7 @@ export const actions = {
   // 查询用户信息
   queryUserInfo: async ({ commit }, params) => {
     params = {
-      userId: window.localStorage.getItem('userId')
+      userId: window.sessionStorage.getItem('userId')
     }
     let res = await bossMember.queryUserInfo(params)
     if (res.code == '200') {
@@ -46,11 +46,11 @@ export const actions = {
     params.clientSecret = config.client.clientSecret
     let res = await bossMember.loginToken(params)
     if (res.code == '200') {
-      window.localStorage.setItem('TOKEN', res.data.token_type + ' ' + res.data.access_token)
-      window.localStorage.setItem('refreshToken', res.data.token_type)
-      window.localStorage.setItem('userId', res.data.userId)
-      window.localStorage.setItem('enterpriseManagerId', res.data.enterpriseManagerId)
-      window.localStorage.setItem('enterpriseMemberId', res.data.enterpriseMemberId)
+      window.sessionStorage.setItem('TOKEN', res.data.token_type + ' ' + res.data.access_token)
+      window.sessionStorage.setItem('refreshToken', res.data.token_type)
+      window.sessionStorage.setItem('userId', res.data.userId)
+      window.sessionStorage.setItem('enterpriseManagerId', res.data.enterpriseManagerId)
+      window.sessionStorage.setItem('enterpriseMemberId', res.data.enterpriseMemberId)
       commit('setUser', res.data.userLoginInfo)
       commit('setWalletInfo', res.data.walletInfo)
     }
@@ -83,17 +83,17 @@ export const actions = {
   },
   // 修改登录/交易密码
   updatePwd: async ({ commit }, params) => {
-    params.userId = window.localStorage.getItem('userId')
+    params.userId = window.sessionStorage.getItem('userId')
     let res = await bossMember.updatePwd(params)
     return res
   },
   // 注销
   logout: async ({ commit }, params = {}) => {
-    window.localStorage.removeItem('TOKEN')
-    window.localStorage.removeItem('refreshToken')
-    window.localStorage.removeItem('userId')
-    window.localStorage.removeItem('enterpriseManagerId')
-    window.localStorage.removeItem('enterpriseMemberId')
+    window.sessionStorage.removeItem('TOKEN')
+    window.sessionStorage.removeItem('refreshToken')
+    window.sessionStorage.removeItem('userId')
+    window.sessionStorage.removeItem('enterpriseManagerId')
+    window.sessionStorage.removeItem('enterpriseMemberId')
 
     commit('setUser', {})
     commit('setAccountInfo', {})
@@ -102,7 +102,7 @@ export const actions = {
 
     let res = await bossMember.logout(params)
     if (res.code == '200') {
-      window.localStorage.clear()
+      window.sessionStorage.clear()
       commit('setUser', {})
       commit('setAccountInfo', {})
       commit('setWalletInfo', {})
@@ -114,7 +114,7 @@ export const actions = {
     params = {
       clientId: config.client.clientId,
       clientSecret: config.client.clientSecret,
-      refreshToken: window.localStorage.getItem('refreshToken')
+      refreshToken: window.sessionStorage.getItem('refreshToken')
     }
     let res = await bossMember.refreshToken(params)
     return res
@@ -162,5 +162,18 @@ export const actions = {
   forgetPass: async ({ commit }, params) => {
     const res = await bossMember.forgetPass(params);
     return res;
-  }
+  },
+  autoLogin: async ({ commit }, params) => {
+    let res = await bossMember.autoLogin(params)
+    if (res.code == '200') {
+      window.sessionStorage.setItem('TOKEN', res.data.token_type + ' ' + res.data.access_token)
+      window.sessionStorage.setItem('refreshToken', res.data.token_type)
+      window.sessionStorage.setItem('userId', res.data.userId)
+      window.sessionStorage.setItem('enterpriseManagerId', res.data.enterpriseManagerId)
+      window.sessionStorage.setItem('enterpriseMemberId', res.data.enterpriseMemberId)
+      commit('setUser', res.data.userLoginInfo)
+      commit('setWalletInfo', res.data.walletInfo)
+    }
+    return res
+  },
 }

@@ -708,7 +708,7 @@ export default {
             toAddress: toAddress,
             txAmount: this.withdrawNum,
             verifyCode: this.withdrawVerifyCode,
-            walletId: window.localStorage.getItem("userId"),
+            walletId: window.sessionStorage.getItem("userId"),
             userWithdrawId: this.userWithdrawId,
           }
         );

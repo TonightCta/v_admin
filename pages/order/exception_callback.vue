@@ -555,7 +555,7 @@ export default {
     async resend() {
       this.resend_loading = true;
       let res = await this.$store.dispatch("bossAssetsCenter/pushNotifyAgain", {
-        enterpriseManagerId: localStorage.getItem("enterpriseManagerId"),
+        enterpriseManagerId: sessionStorage.getItem("enterpriseManagerId"),
         asset: this.resend_asset,
       });
       if (res.code == 200) {
@@ -570,7 +570,7 @@ export default {
     async resendOne() {
       this.resend_loading = true;
       let res = await this.$store.dispatch("bossAssetsCenter/pushNotifyAgain", {
-        enterpriseManagerId: localStorage.getItem("enterpriseManagerId"),
+        enterpriseManagerId: sessionStorage.getItem("enterpriseManagerId"),
         asset: this.curr_item.asset,
         id: this.curr_item.id,
       });
@@ -654,7 +654,7 @@ export default {
       this.tableLoading = true;
       try {
         let params = this.getQueryParams();
-        params.walletId = window.localStorage.getItem('userId')
+        params.walletId = window.sessionStorage.getItem('userId')
         let res = await this.$store.dispatch(
           "bossAssetsCenter/queryWalletNotify",
           params

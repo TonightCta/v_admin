@@ -6,17 +6,17 @@ let showToast = false
 
 
 export function clearLocalStorage() {
-  window.localStorage.removeItem('TOKEN')
-  window.localStorage.removeItem('refreshToken')
-  window.localStorage.removeItem('userId')
-  window.localStorage.removeItem('enterpriseManagerId')
-  window.localStorage.removeItem('enterpriseMemberId')
+  window.sessionStorage.removeItem('TOKEN')
+  window.sessionStorage.removeItem('refreshToken')
+  window.sessionStorage.removeItem('userId')
+  window.sessionStorage.removeItem('enterpriseManagerId')
+  window.sessionStorage.removeItem('enterpriseMemberId')
 }
 
 export default async function ibRequest(params) {
-  let token = window.localStorage.getItem('TOKEN')
-  let userId = window.localStorage.getItem('userId')
-  let enterpriseManagerId = window.localStorage.getItem('enterpriseManagerId')
+  let token = window.sessionStorage.getItem('TOKEN')
+  let userId = window.sessionStorage.getItem('userId')
+  let enterpriseManagerId = window.sessionStorage.getItem('enterpriseManagerId')
   if (!token || !userId || !enterpriseManagerId) {
     eVue.$error(window.$nuxt.$vuetify.lang.t('$vuetify.message.is_login'))
     setTimeout(() => {
@@ -26,9 +26,9 @@ export default async function ibRequest(params) {
     return new Promise((rs, rj) => { })
   } else {
     if (params.data) {
-      params.data.enterpriseManagerId = window.localStorage.getItem('enterpriseManagerId')
+      params.data.enterpriseManagerId = window.sessionStorage.getItem('enterpriseManagerId')
       if (!params.data.ignoreUserId) {
-        params.data.userId = window.localStorage.getItem('userId')
+        params.data.userId = window.sessionStorage.getItem('userId')
       }
     }
     let res = await request(params)

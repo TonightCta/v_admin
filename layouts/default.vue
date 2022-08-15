@@ -39,7 +39,15 @@ v-app#ib-wallet(
     v-list-item.mt-4.mb-8.ib-logo
       v-img.mr-3(src="/logo.png", style="width: 116px")
       v-list-item-title {{ $vuetify.lang.t('$vuetify.defaultLayout.title') }}
-
+    v-list-item(
+      link,
+      v-ripple="false",
+      to="/",
+      :class="[{ 'current-page': currentPage == '/' }]"
+    )
+      v-list-item-avatar
+        i.iconfont.icon-6.ali-icon
+      v-list-item-title 概览
     //- 订单管理
     v-list-group(
       no-action,
@@ -559,8 +567,8 @@ export default {
       b_lang = b_lang === "en" ? "en_US" : b_lang;
       b_lang = b_lang.replace("-", "_");
       this.$vuetify.lang.current = b_lang;
-      localStorage.setItem("language", b_lang);
-      localStorage.setItem(
+      sessionStorage.setItem("language", b_lang);
+      sessionStorage.setItem(
         "languageName",
         this.allLangs.find(function (item) {
           return item.lang == b_lang;
@@ -568,11 +576,11 @@ export default {
       );
     } else {
       if (
-        window.localStorage.getItem("language") &&
-        localStorage.getItem("language") != undefined &&
-        localStorage.getItem("language") != "undefined"
+        window.sessionStorage.getItem("language") &&
+        sessionStorage.getItem("language") != undefined &&
+        sessionStorage.getItem("language") != "undefined"
       ) {
-        this.$vuetify.lang.current = window.localStorage.getItem("language");
+        this.$vuetify.lang.current = window.sessionStorage.getItem("language");
       } else {
         b_lang = langs.find(function (item) {
           return item == window.navigator.language;
@@ -583,8 +591,8 @@ export default {
         b_lang = b_lang === "en" ? "en_US" : b_lang;
         b_lang = b_lang.replace("-", "_");
         this.$vuetify.lang.current = b_lang;
-        localStorage.setItem("language", b_lang);
-        localStorage.setItem(
+        sessionStorage.setItem("language", b_lang);
+        sessionStorage.setItem(
           "languageName",
           this.allLangs.find(function (item) {
             return item.lang == b_lang;
@@ -644,20 +652,20 @@ export default {
       );
     },
     getLocalRate() {
-      let rate = window.localStorage.getItem("currentRate");
+      let rate = window.sessionStorage.getItem("currentRate");
       if (rate) {
         this.changeCurrentRate(rate);
       }
     },
     changeCurrentRate(rate) {
-      window.localStorage.setItem("currentRate", rate);
+      window.sessionStorage.setItem("currentRate", rate);
       this.$store.dispatch("bossAssetsCenter/changeCurrentRate", rate);
     },
     getLocalLang() {
-      let lang = window.localStorage.getItem("language");
+      let lang = window.sessionStorage.getItem("language");
       if (lang) {
         this.currentLang.lang = lang;
-        this.currentLang.name = window.localStorage.getItem("languageName");
+        this.currentLang.name = window.sessionStorage.getItem("languageName");
       }
     },
     closeLoginPwd() {
@@ -683,8 +691,8 @@ export default {
       };
     },
     async currentLangChange() {
-      window.localStorage.setItem("language", this.currentLang.lang);
-      window.localStorage.setItem("languageName", this.currentLang.name);
+      window.sessionStorage.setItem("language", this.currentLang.lang);
+      window.sessionStorage.setItem("languageName", this.currentLang.name);
       this.showDrawer = false;
       await this.$nextTick();
       this.$vuetify.lang.current = this.currentLang.lang;
@@ -767,7 +775,7 @@ export default {
           );
           this.showLoginPwd = false;
           setTimeout(() => {
-            window.localStorage.clear();
+            window.sessionStorage.clear();
             window.location.href = "/login";
           }, 1000);
         } else {

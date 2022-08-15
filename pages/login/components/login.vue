@@ -62,14 +62,14 @@
         $vuetify.lang.t("$vuetify.loginPage.login")
       }}</v-btn>
     </section>
-    <Loading v-if="isAuto"/>
+    <Loading v-if="isAuto" />
   </div>
 </template>
 
 <script>
 import { Message } from "element-ui";
 import { checkEmail } from "../../../utils";
-import Loading from './loading.vue';
+import Loading from "./loading.vue";
 export default {
   data() {
     return {
@@ -79,20 +79,34 @@ export default {
         password: null,
         ga_code: null,
       },
-      isAuto:false,
+      isAuto: false,
+      key: null,
     };
   },
-  components:{
-    Loading
+  components: {
+    Loading,
   },
-  created(){
-    if(this.GetUrlKey('auto',window.location.href)){
-      const key = this.GetUrlKey('auto',window.location.href);
-      console.log(key);
-      this.isAuto = true;
+  created() {
+    if (this.GetUrlKey("auto", window.location.href)) {
+      const key = this.GetUrlKey("auto", window.location.href);
+      (this.key = key), (this.isAuto = true);
+      this.autoLogin();
     }
   },
   methods: {
+    async autoLogin() {
+      let res = await this.$store.dispatch("bossMember/autoLogin", {
+        merchant_id: this.key,
+      });
+      if (res.code === 200) {
+        this.isAuto = false;
+        this.$router.push("/account/merchant");
+      } else {
+        this.$error(
+          res.message || this.$vuetify.lang.t("$vuetify.message.login_failed")
+        );
+      }
+    },
     //获取地址栏参数
     GetUrlKey(name, url) {
       return (

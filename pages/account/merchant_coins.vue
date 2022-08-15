@@ -132,7 +132,7 @@
           background
           layout="prev, pager, next"
           @current-change="pageChange"
-          :total="pagination.total * 10">
+          :total="pagination.total">
         </el-pagination>
       </v-card-text>
     </v-card>

@@ -303,7 +303,7 @@ export default {
     // if (res.code == '200') {
     //   this.$router.push(url)
     // }
-    if (!!localStorage.getItem("TOKEN")) {
+    if (!!sessionStorage.getItem("TOKEN") && !this.GetUrlKey("auto", window.location.href)) {
       this.is_to_home = true;
       // setTimeout(function(){
       //   that.$router.push('/')
@@ -316,6 +316,16 @@ export default {
     };
   },
   methods: {
+     //获取地址栏参数
+    GetUrlKey(name, url) {
+      return (
+        decodeURIComponent(
+          (new RegExp("[?|&]" + name + "=" + "([^&;]+?)(&|#|;|$)").exec(
+            url
+          ) || [, ""])[1].replace(/\+/g, "%20")
+        ) || null
+      );
+    },
     toHome() {
       this.$router.push("/");
     },
