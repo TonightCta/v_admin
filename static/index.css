@@ -92,3 +92,6 @@
 .el-table__row--striped td{
     background-color: #F9FAFC!important;
 }
+.v-main__wrap{
+    overflow: auto;
+}

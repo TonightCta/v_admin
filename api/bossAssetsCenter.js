@@ -219,4 +219,12 @@ export default class BossAssetsCenter {
             data:params
         })
     }
+    //编辑商户名称
+    async editMerchantName(params){
+        return await request({
+            url:BASE_URL + '/manager/updateMerchantName',
+            method:"POST",
+            data:params
+        })
+    }
 }

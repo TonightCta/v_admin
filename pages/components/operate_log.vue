@@ -110,8 +110,14 @@ export default {
   },
   mounted() {
     this.initEchartsMine();
+    setTimeout(() => {
+      window.addEventListener("resize", this.turnResize, true);
+    }, 3000);
   },
   methods: {
+    turnResize(){
+        opreateBox.resize()
+    },  
     // 初始化Echarts
     async initEchartsMine() {
       const option = {

@@ -39,15 +39,15 @@ v-app#ib-wallet(
     v-list-item.mt-4.mb-8.ib-logo
       v-img.mr-3(src="/logo.png", style="width: 116px")
       v-list-item-title {{ $vuetify.lang.t('$vuetify.defaultLayout.title') }}
-    v-list-item(
-      link,
-      v-ripple="false",
-      to="/",
-      :class="[{ 'current-page': currentPage == '/' }]"
-    )
-      v-list-item-avatar
-        i.iconfont.icon-6.ali-icon
-      v-list-item-title 概览
+    //- v-list-item(
+    //-   link,
+    //-   v-ripple="false",
+    //-   to="/",
+    //-   :class="[{ 'current-page': currentPage == '/' }]"
+    //- )
+    //-   v-list-item-avatar
+    //-     i.iconfont.icon-6.ali-icon
+    //-   v-list-item-title 概览
     //- 订单管理
     v-list-group(
       no-action,

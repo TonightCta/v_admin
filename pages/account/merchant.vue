@@ -89,75 +89,75 @@
                 @click="(is_return_key = false), (code = '')"
               ) {{ $vuetify.lang.t('$vuetify.lable.cancel') }}
 
-      .subtitle-1.px-6.py-3.cer-item
-        .mr-4.info-label {{ $vuetify.lang.t('$vuetify.lable.call_back_address') }}：
-        span(v-if="call_back_ip_status", style="margin-right: 20px") {{ lock_call_back_ip }}
-        v-dialog(v-model="call_back_dialog", persistent, max-width="600")
-          template(v-slot:activator="{ on, attrs }")
-            v-btn(
-              v-if="!call_back_ip_status",
-              color="primary",
-              small,
-                depressed,
-              dark,
-              v-bind="attrs",
-              v-on="on"
-            ) {{ $vuetify.lang.t('$vuetify.lable.set') }}
-            v-btn(
-              v-else,
-              color="primary",
-              small,
-                depressed,
-              dark,
-              v-bind="attrs",
-              v-on="on"
-            ) {{ $vuetify.lang.t('$vuetify.lable.edit') }}
-          v-card
-            v-card-title {{ !call_back_ip_status ? $vuetify.lang.t('$vuetify.lable.set_call_back_ip') : $vuetify.lang.t('$vuetify.lable.edit_call_back_ip') }}
-            v-text-field(
-              v-if="call_back_dialog == true",
-              disabled,
-              readonly,
-              hide-details,
-              :label="$formatEmail(merchant.email)",
-              style="width: 550px; margin: 0 0 20px 20px"
-            )
-            v-text-field(
-              v-if="call_back_dialog == true",
-              key="set_call_back_ip-verifycode",
-              v-model="password",
-              type="password",
-              :label="$vuetify.lang.t('$vuetify.loginPage.pwd')",
-              :placeholder="$vuetify.lang.t('$vuetify.loginPage.enterPwd')",
-              :rules="[rules.verifyCode]",
-              style="width: 550px; margin-left: 20px"
-            )
-              template(slot="append")
+      //- .subtitle-1.px-6.py-3.cer-item
+      //-   .mr-4.info-label {{ $vuetify.lang.t('$vuetify.lable.call_back_address') }}：
+      //-   span(v-if="call_back_ip_status", style="margin-right: 20px") {{ lock_call_back_ip }}
+      //-   v-dialog(v-model="call_back_dialog", persistent, max-width="600")
+      //-     template(v-slot:activator="{ on, attrs }")
+      //-       v-btn(
+      //-         v-if="!call_back_ip_status",
+      //-         color="primary",
+      //-         small,
+      //-           depressed,
+      //-         dark,
+      //-         v-bind="attrs",
+      //-         v-on="on"
+      //-       ) {{ $vuetify.lang.t('$vuetify.lable.set') }}
+      //-       v-btn(
+      //-         v-else,
+      //-         color="primary",
+      //-         small,
+      //-           depressed,
+      //-         dark,
+      //-         v-bind="attrs",
+      //-         v-on="on"
+      //-       ) {{ $vuetify.lang.t('$vuetify.lable.edit') }}
+      //-     v-card
+      //-       v-card-title {{ !call_back_ip_status ? $vuetify.lang.t('$vuetify.lable.set_call_back_ip') : $vuetify.lang.t('$vuetify.lable.edit_call_back_ip') }}
+      //-       v-text-field(
+      //-         v-if="call_back_dialog == true",
+      //-         disabled,
+      //-         readonly,
+      //-         hide-details,
+      //-         :label="$formatEmail(merchant.email)",
+      //-         style="width: 550px; margin: 0 0 20px 20px"
+      //-       )
+      //-       v-text-field(
+      //-         v-if="call_back_dialog == true",
+      //-         key="set_call_back_ip-verifycode",
+      //-         v-model="password",
+      //-         type="password",
+      //-         :label="$vuetify.lang.t('$vuetify.loginPage.pwd')",
+      //-         :placeholder="$vuetify.lang.t('$vuetify.loginPage.enterPwd')",
+      //-         :rules="[rules.verifyCode]",
+      //-         style="width: 550px; margin-left: 20px"
+      //-       )
+      //-         template(slot="append")
 
-            v-text-field(
-              v-if="call_back_dialog == true",
-              v-model="call_back_ip",
-              :label="$vuetify.lang.t('$vuetify.lable.call_back_address')",
-              :placeholder="$vuetify.lang.t('$vuetify.placeholder.call_back_address')",
-              :rules="[rules.verifyCallBackIp]",
-              style="width: 550px; margin: 0 0 20px 20px"
-            )
-            v-card-actions.d-flex.flex-row-reverse
-              v-btn(
-                color="primary",
-                dark,
-                :loading="submit_loading",
-                depressed,
-                @click="submit",
-                style="margin-left: 10px"
-              ) {{ $vuetify.lang.t('$vuetify.lable.submit') }}
-              v-btn(
-                outlined,
-                depressed,
-                color="indigo",
-                text,
-                @click="call_back_dialog = false; code = ''; call_back_ip = ''"
-              ) {{ $vuetify.lang.t('$vuetify.lable.cancel') }}
+      //-       v-text-field(
+      //-         v-if="call_back_dialog == true",
+      //-         v-model="call_back_ip",
+      //-         :label="$vuetify.lang.t('$vuetify.lable.call_back_address')",
+      //-         :placeholder="$vuetify.lang.t('$vuetify.placeholder.call_back_address')",
+      //-         :rules="[rules.verifyCallBackIp]",
+      //-         style="width: 550px; margin: 0 0 20px 20px"
+      //-       )
+      //-       v-card-actions.d-flex.flex-row-reverse
+      //-         v-btn(
+      //-           color="primary",
+      //-           dark,
+      //-           :loading="submit_loading",
+      //-           depressed,
+      //-           @click="submit",
+      //-           style="margin-left: 10px"
+      //-         ) {{ $vuetify.lang.t('$vuetify.lable.submit') }}
+      //-         v-btn(
+      //-           outlined,
+      //-           depressed,
+      //-           color="indigo",
+      //-           text,
+      //-           @click="call_back_dialog = false; code = ''; call_back_ip = ''"
+      //-         ) {{ $vuetify.lang.t('$vuetify.lable.cancel') }}
       .subtitle-1.px-6.py-3.cer-item
         .mr-4.info-label {{ $vuetify.lang.t('$vuetify.mine.白名单') }}：
         span(v-if="white_ip", style="margin-right: 20px") {{ white_ip.join(',') }}

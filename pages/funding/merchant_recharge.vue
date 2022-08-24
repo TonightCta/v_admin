@@ -138,7 +138,7 @@ export default {
     },
     selectCoin(_val) {
       this.currentCoinChange(this.allCoins[_val]);
-      this.currentCoinChangeFee(this.allCoins[_val]);
+      this.currentCoinChangeFee(this.currentCoinFee);
     },
     async testEv() {
       const result = await this.$store.dispatch(
@@ -166,7 +166,6 @@ export default {
     async currentCoinChangeFee(coin) {
       if (!coin) coin = {};
       this.currentCoinFee = _.cloneDeep(coin);
-      this.curr_asset = this.currentCoinFee.asset;
       if (
         this.currentCoinFee.asset == "EOS" ||
         this.currentCoinFee.asset == "XRP"

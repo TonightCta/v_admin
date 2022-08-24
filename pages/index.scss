@@ -3,6 +3,8 @@
   flex-grow: 1;
   min-height: 100%;
   background-color: #f5f5fc;
+  min-width: 1560px;
+  width: 100%;
   p {
     margin-bottom: 0;
   }
@@ -76,6 +78,7 @@
   }
   //账户概览
   .index-account-balance {
+    overflow: auto;
     height: 232px;
     margin-bottom: 24px;
     display: flex;

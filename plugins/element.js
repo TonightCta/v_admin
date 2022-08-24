@@ -13,7 +13,9 @@ import {
     DropdownItem,
     DatePicker,
     Table,
-    TableColumn
+    TableColumn,
+    Dialog,
+    Input
 } from 'element-ui';
 import 'element-ui/lib/theme-chalk/index.css';
 Vue.use(Pagination);
@@ -22,6 +24,7 @@ Vue.use(Select);
 Vue.use(Option);
 Vue.use(Popover);
 Vue.use(Button);
-Vue.use(Loading).use(Dropdown).use(DropdownMenu).use(DropdownItem).use(DatePicker).use(Table).use(TableColumn);
+Vue.use(Loading).use(Dropdown).use(DropdownMenu).use(DropdownItem).use(DatePicker).use(Table).use(TableColumn)
+.use(Dialog).use(Input);
 Vue.prototype.$msgbox = MessageBox;
 Vue.prototype.$alert = MessageBox.alert;

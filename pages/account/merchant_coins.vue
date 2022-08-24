@@ -469,7 +469,7 @@ export default {
       this.fileStatus = $event.target.files[0].name;
       this.walletFile = $event.target.files[0];
     },
-    //确认提币
+    //归集
     async turnTransfer() {
       this.transfetPending = true;
 

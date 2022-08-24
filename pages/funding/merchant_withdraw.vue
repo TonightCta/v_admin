@@ -44,9 +44,9 @@
       //-   @blur="checkAddress"
       //- )
       //-   template(v-slot:append)
-          //v-icon(
-          //  @click="$router.push('/funding/merchant_withdraw_address')"
-          // ) mdi-account-box-outline
+        //v-icon(
+        //  @click="$router.push('/funding/merchant_withdraw_address')"
+        // ) mdi-account-box-outline
       v-text-field(
         v-model="currentAddr.address",
         style="width: 560px",
@@ -291,6 +291,34 @@
           :loading="isSubmitting",
           @click="withdrawSubmit"
         ) {{ $vuetify.lang.t('$vuetify.lable.ok') }}
+  //- 检索矿工费
+  v-dialog(v-model="checkFee", max-width="580", persistent, no-click-animation)
+    v-card.mine-card-withdraw
+      v-card-title
+        span 提示
+        v-spacer
+        v-btn(small, icon, @click="checkFee = false")
+          v-icon mdi-close
+      .check-content 
+        .un-check.check-public(v-if="checkStatus === 1") 提币前请先检查提币矿工费是否充裕
+        .check-processing.check-public(v-if="checkStatus === 2") 正在检查中，请耐心等待…
+        .check-pass.check-public(v-if="checkStatus === 3") 提币矿工费充裕，可提币！
+        .check-faild.check-public(v-if="checkStatus === 4") 提币矿工费不足，请充值！
+      .check-btn-box
+        button.wait-btn(@click="checkFee = false") 再想想
+        button.go-recharge.oper-btn(
+          v-if="checkStatus === 1",
+          @click="checkService"
+        ) 检查
+        button.check-btn.oper-btn(disabled)(v-if="checkStatus === 2") 检查中...
+        button.go-withdraw.oper-btn(
+          v-if="checkStatus === 3",
+          @click="checkFee = false;"
+        ) 去提币
+        button.go-recharge.oper-btn(
+          v-if="checkStatus === 4",
+          @click="checkFee = false; $router.push('/funding/merchant_recharge')"
+        ) 去充值
 </template>
     
 <script>
@@ -366,7 +394,8 @@ export default {
           //const pattern = /^[0-9]*$/;
           return (
             /*(pattern.test(value) && value.length == 6) ||*/
-            value.length >= 6 || this.$vuetify.lang.t("$vuetify.loginPage.inValidTransPwd")
+            value.length >= 6 ||
+            this.$vuetify.lang.t("$vuetify.loginPage.inValidTransPwd")
           );
         },
         googleInp: (value) => {
@@ -406,6 +435,8 @@ export default {
           );
         },
       },
+      checkFee: false, //检索矿工费
+      checkStatus: 1, //检索状态
     };
   },
   created() {
@@ -459,9 +490,9 @@ export default {
         "$vuetify.lable.tip4"
       )}`;
     },
-    'currentAddr.address'(val){
+    "currentAddr.address"(val) {
       val && this.checkAddress();
-    }
+    },
   },
   async mounted() {
     if (this.asset !== "") {
@@ -471,6 +502,19 @@ export default {
     this.initWithdraw();
   },
   methods: {
+    //检查矿工费
+    async checkService() {
+      this.checkStatus = 2;
+      console.log(this.currentCoin)
+      const result = await this.$store.dispatch(
+        "bossAssetsCenter/queryCoinCollectFee",
+        {
+          coin: this.currentCoin.mainAsset,
+          merchant_id: this.$store.state.bossAssetsCenter.merchantInfo.mch_id,
+        }
+      );
+      this.checkStatus = Number(this.currentCoin.userFeeAvailable) > Number(result.data.totalToolFee) ? 3 : 4
+    },
     calcReceivedAmount() {
       let n = parseFloat(this.withdrawNum);
       if (n + this.calcServerFee > this.currentCoin.userAvailable) {
@@ -749,8 +793,7 @@ export default {
             : "error";
         } else {
           this.completeComponent.error = true;
-          this.completeComponent.errorMessages = '地址格式错误';
-
+          this.completeComponent.errorMessages = "地址格式错误";
         }
       } catch (error) {
         this.completeComponent.checkResult = "error";
@@ -764,7 +807,8 @@ export default {
 </script>
 
 <style lang="stylus">
-@import ('./index.scss')
+@import ('./index.scss');
+
 .merchant-withdraw {
   display: flex;
   flex-direction: column;
@@ -820,32 +864,38 @@ export default {
   flex-direction: column;
   align-items: flex-start;
   justify-content: flex-start;
-  padding-bottom:0;
-  fieldset{
-    border:1px solid #eee!important;
+  padding-bottom: 0;
+
+  fieldset {
+    border: 1px solid #eee !important;
   }
-  .card-label{
-    text-align:left;
-    margin-bottom:0;
-    font-size:18px!important;
-    color:#333;
-    font-weight:500;
+
+  .card-label {
+    text-align: left;
+    margin-bottom: 0;
+    font-size: 18px !important;
+    color: #333;
+    font-weight: 500;
   }
-  .v-text-field__slot{
-    height:50px;
+
+  .v-text-field__slot {
+    height: 50px;
   }
 }
 
 .balance-box {
   width: 560px;
-  padding-left:16px;
-  margin-top:12px;
+  padding-left: 16px;
+  margin-top: 12px;
+
   .balance-fee {
     display: flex;
     justify-content: space-between;
-    .color-6{
-      color:#666;
+
+    .color-6 {
+      color: #666;
     }
+
     p {
       width: 50%;
     }
@@ -857,15 +907,87 @@ export default {
     justify-content: space-between;
     padding: 20px;
     background: #f8f8f8;
-    border-radius:4px;
+    border-radius: 4px;
+
     p {
       width: 50%;
       margin-bottom: 0;
-      color:#999;
+      color: #999;
     }
 
     .m-16 {
       margin-bottom: 16px;
+    }
+  }
+}
+
+.mine-card-withdraw {
+  box-sizing: border-box;
+
+  .v-card__title::before {
+    display: none;
+  }
+
+  .check-content {
+    margin: 0 auto;
+    box-sizing: border-box;
+    width: 90%;
+    border-top: 1px solid #eee;
+    border-bottom: 1px solid #eee;
+
+    .check-public {
+      width: 100%;
+      box-sizing: border-box;
+      margin: 20px 0;
+      padding: 20px 0;
+      text-align: center;
+      border-radius: 4px;
+      background: rgba(253, 86, 86, 0.1);
+      border: 1px solid #FD5656;
+      color: #FD5656;
+    }
+
+    .check-pass {
+      background: rgba(37, 196, 157, 0.06);
+      color: #25C49D;
+      border-color: #25C49D;
+    }
+  }
+
+  .check-btn-box {
+    width: 90%;
+    margin: 0 auto;
+    padding: 18px 0;
+    display: flex;
+
+    button {
+      height: 44px;
+      font-size: 20;
+      border-radius: 4px;
+    }
+
+    .wait-btn {
+      width: 200px;
+      margin-right: 16px;
+      background: #F8F8F8;
+      color: #999;
+    }
+
+    .oper-btn {
+      flex: 1;
+      color: white;
+    }
+
+    .go-withdraw {
+      background: #25C19E;
+    }
+
+    .go-recharge {
+      background: #FD5656;
+    }
+
+    .check-btn {
+      background: #ccc;
     }
   }
 }

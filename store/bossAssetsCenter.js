@@ -171,4 +171,8 @@ export const actions = {
         const res = await bossAssetsCenter.updateMerchantCoinConfig(params);
         return res;
     },
+    editMerchantName:async({commit},params) => {
+        const res = await bossAssetsCenter.editMerchantName(params);
+        return res;
+    }
 }

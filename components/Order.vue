@@ -281,8 +281,10 @@
         v-if="showTable"
       )
         template(v-slot:item.toAddress="{ item }")
-          span {{ getItemAddress(item.to) }}
-
+          span  {{ getItemAddress(item.to) }}
+        template(v-slot:item.name = "{ item }")
+          span(v-if="item.merchant") {{item.merchant.name}}
+          span(v-else) -
         template(v-slot:item.note="{ item }")
           span(v-if="item.asset == 'XRP' || item.asset == 'EOS'") {{ getItemTag(item.toAddress) }}
           span(v-else) {{ item.note || '-' }}
@@ -913,6 +915,11 @@ export default {
             sortable: false,
             value: "trxNo",
           },
+          {
+            text:'商户名称',
+            sortable: false,
+            value:'name'
+          },
           // {
           //   class: "custom-min-width-column",
           //   text:
@@ -975,6 +982,11 @@ export default {
             text: this.$vuetify.lang.t("$vuetify.table.orderId"),
             sortable: false,
             value: "trxNo",
+          },
+          {
+            text:'商户名称',
+            sortable: false,
+            value:'name'
           },
           {
             class: "custom-min-width-column",
@@ -1062,7 +1074,11 @@ export default {
             sortable: false,
             value: "trxNo",
           },
-
+          {
+            text:'商户名称',
+            sortable: false,
+            value:'name'
+          },
           {
             text: this.$vuetify.lang.t("$vuetify.table.arrivalTime"),
             sortable: false,
@@ -1107,6 +1123,11 @@ export default {
             text: this.$vuetify.lang.t("$vuetify.table.orderId"),
             sortable: false,
             value: "trxNo",
+          },
+          {
+            text:'商户名称',
+            sortable: false,
+            value:'name'
           },
           {
             text: this.$vuetify.lang.t("$vuetify.table.orderTime"),
