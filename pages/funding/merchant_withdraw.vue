@@ -1,26 +1,33 @@
 <template lang="pug">
 .merchant-withdraw.pa-6
   v-card.acrd-mine(style="flex-grow: 1")
-    v-card-title
-      .title {{ $vuetify.lang.t('$vuetify.defaultLayout.merchantWithdraw') }}
+    v-card-title(style="margin-left: -48px")
+      a.title {{ $vuetify.lang.t('$vuetify.defaultLayout.merchantWithdraw') }}
       .wring-read 到账时间说明：1-5分钟，快慢取决于链上区块拥堵情况
-    v-divider
-    v-card-text.d-flex.clo-flex
-      .subtitle-1.card-label {{ $vuetify.lang.t('$vuetify.lable.select_account') }}：
-      v-btn-toggle.d-flex.align-center.flex-wrap(
-        v-model="currentCoin",
-        tile,
-        color="primary",
-        @change="currentCoinChange",
-        group,
-        mandatory
-      )
-        v-btn.coin-btn.mr-4.my-0(
-          v-for="coin, i in allCoins",
-          :key="'withdraw' + i",
-          :value="coin"
-        ) {{ coin.asset }}
-
+    v-divider(style="margin-left: -48px")
+    //- v-card-text.d-flex.clo-flex
+    //-   .subtitle-1.card-label {{ $vuetify.lang.t('$vuetify.lable.select_account') }}：
+    //-   v-btn-toggle.d-flex.align-center.flex-wrap(
+    //-     v-model="currentCoin",
+    //-     tile,
+    //-     color="primary",
+    //-     @change="currentCoinChange",
+    //-     group,
+    //-     mandatory
+    //-   )
+    //-     v-btn.coin-btn.mr-4.my-0(
+    //-       v-for="coin, i in allCoins",
+    //-       :key="'withdraw' + i",
+    //-       :value="coin"
+    //-     ) {{ coin.asset }}
+    .select-coin 
+      p.select-coin-title 选择提币账户
+      .el-select-mine 
+        el-radio-group.mine-radio(
+          v-model="defaultCoin",
+          @change="currentCoinChange"
+        )
+          el-radio(v-for="coin, i in allCoins", :label="coin.asset", border)
     v-card-text.d-flex.pb-4.clo-flex(v-if="showInpAddress")
       .subtitle-1.card-label {{ $vuetify.lang.t('$vuetify.table.address') }}：
       //- v-autocomplete(
@@ -152,7 +159,7 @@
       .card-label
       .text--disabled 服务费：{{$fixed8(withdrawNum * currentCoin.withdraw_service_fee_rate) || 0}}
 
-    v-card-text
+    v-card-text.mine-v-btn
       v-btn.ma-4(
         depressed,
         color="primary",
@@ -319,6 +326,7 @@
           v-if="checkStatus === 4",
           @click="checkFee = false; $router.push('/funding/merchant_recharge')"
         ) 去充值
+  <WithDraw/>
 </template>
     
 <script>
@@ -366,6 +374,7 @@ export default {
       showIsVerify: false,
       allAddress: [],
       currentCoin: "",
+      defaultCoin:'TRX',
       curr_coin: {},
       currentAddr: {
         address: "",
@@ -442,6 +451,9 @@ export default {
   created() {
     that = this;
   },
+  components:{
+    WithDraw:(resolve) => require(['./components/withdraw'],resolve)
+  },  
   computed: {
     disabledVerifyCode() {
       return this.sendingTime > 0;
@@ -505,7 +517,6 @@ export default {
     //检查矿工费
     async checkService() {
       this.checkStatus = 2;
-      console.log(this.currentCoin)
       const result = await this.$store.dispatch(
         "bossAssetsCenter/queryCoinCollectFee",
         {
@@ -585,7 +596,8 @@ export default {
       this.$router.push("/account/certification");
     },
     currentCoinChange(coin) {
-      this.curr_coin = coin;
+      this.curr_coin = this.allCoins[coin];
+      this.currentCoin = this.allCoins[coin];
       this.allAddress = [];
       this.withdrawNum = 0;
       this.currentAddr = {
@@ -676,7 +688,7 @@ export default {
         }
       } else {
         this.currentCoin = this.allCoins[Object.keys(this.allCoins)[0]];
-        this.currentCoinChange(this.allCoins[Object.keys(this.allCoins)[0]]);
+        this.currentCoinChange(this.defaultCoin);
       }
     },
     async getAddressBook() {
@@ -813,14 +825,19 @@ export default {
   display: flex;
   flex-direction: column;
   min-height: 100%;
-
+  .select-coin{
+    margin-bottom:38px;
+  }
+  
   .card-label {
     min-width: 115px;
     text-align: right;
     margin: 0 20px 0 0;
     line-height: 48px;
   }
-
+  .v-card__text{
+    padding-left:0;
+  }
   .coin-btn {
     // height: 36px !important;
     border-radius: 4px !important;
@@ -885,7 +902,6 @@ export default {
 
 .balance-box {
   width: 560px;
-  padding-left: 16px;
   margin-top: 12px;
 
   .balance-fee {

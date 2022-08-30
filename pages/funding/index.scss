@@ -10,6 +10,12 @@
     color: #e17474;
     height: 30px;
   }
+  .v-card__title::before {
+    background-color: #4266ff !important;
+  }
+}
+.mine-radio{
+  margin-top: 0;
 }
 .select-coin {
   margin: 24px 0 70px 0;
@@ -18,15 +24,17 @@
     color: #333;
     font-weight: 500;
   }
-  .el-select-mine {
-    padding-left: 24px;
-  }
 }
 .el-radio {
   min-width: 210px;
   text-align: center;
+  height: 56px!important;
+  padding-top: 20px!important;
   .el-radio__input {
     display: none;
+  }
+  .el-radio__label{
+    font-size: 16px;
   }
 }
 .el-radio.is-bordered.is-checked {
@@ -90,8 +98,8 @@
       .address-text {
         font-weight: 400;
       }
-      .red-text{
-        color: #EC5555!important;
+      .red-text {
+        color: #ec5555 !important;
       }
     }
     .copy-mine-btn {
@@ -165,5 +173,15 @@
       width: 108px;
       height: 28px;
     }
+  }
+}
+.mine-v-btn {
+  padding-left: 0;
+  margin-left: -16px;
+  button {
+    margin-left: 0 !important;
+    width: 246px;
+    height: 56px !important;
+    font-size: 20px!important;
   }
 }

@@ -83,146 +83,178 @@ export default class BossAssetsCenter {
         })
     }
     //获取所有商家
-    async queryAllMerchant(){
+    async queryAllMerchant() {
         return await request({
-            url:BASE_URL + "/user/merchants",
-            method:'GET'
+            url: BASE_URL + "/user/merchants",
+            method: 'GET'
         })
     }
     //获取所有商家币种配置
-    async queryAllMerchantCoins(params){
+    async queryAllMerchantCoins(params) {
         return await request({
-            url:BASE_URL + "/manager/merchantCoins",
-            method:'POST',
-            data:params
+            url: BASE_URL + "/manager/merchantCoins",
+            method: 'POST',
+            data: params
         })
     }
 
     //获取归集数据
-    async queryCoinCollectFee(params){
+    async queryCoinCollectFee(params) {
         return await request({
-            url:BASE_URL + "/manager/poolFee",
-            method:'POST',
-            data:params
+            url: BASE_URL + "/manager/poolFee",
+            method: 'POST',
+            data: params
         })
     }
 
     // 发起归集操作
-    async sendCoinCollectFee(params){
+    async sendCoinCollectFee(params) {
         return await request({
-            url:BASE_URL + "/manager/calculateMerchantPoolFee",
-            method:'POST',
-            data:params
+            url: BASE_URL + "/manager/calculateMerchantPoolFee",
+            method: 'POST',
+            data: params
         })
     }
 
     //获取所有地址
-    async queryAllAddress(params){
+    async queryAllAddress(params) {
         return await request({
-            url:BASE_URL + "/assets/wallets",
-            method:"POST",
-            data:params
+            url: BASE_URL + "/assets/wallets",
+            method: "POST",
+            data: params
         })
     }
     //发起提币
-    async transferCoin(params){
+    async transferCoin(params) {
         return await request({
-            url:BASE_URL + "/assets/wallets/checkout ",
-            method:"POST",
-            data:params
+            url: BASE_URL + "/assets/wallets/checkout ",
+            method: "POST",
+            data: params
         })
     }
     //谷歌验证码
-    async getGoogleAuth(){
+    async getGoogleAuth() {
         return await request({
-            url:BASE_URL + '/user/getGoogleAuth',
-            method:"GET"
+            url: BASE_URL + '/user/getGoogleAuth',
+            method: "GET"
         })
     }
     //绑定谷歌验证码
-    async bindGoogleAuth(params){
+    async bindGoogleAuth(params) {
         return await request({
-            url:BASE_URL + '/user/bindGoogleAuth',
-            method:"POST",
-            data:params
+            url: BASE_URL + '/user/bindGoogleAuth',
+            method: "POST",
+            data: params
         })
     }
     //商家列表
-    async getAllMerchants(params){
+    async getAllMerchants(params) {
         return await request({
-            url:BASE_URL + '/assets/merchants',
-            method:"POST",
-            data:params
+            url: BASE_URL + '/assets/merchants',
+            method: "POST",
+            data: params
         })
     }
     //导入钱包
-    async importWallet(params){
+    async importWallet(params) {
         return await request({
-            url:BASE_URL + `/assets/bindMerchants`,
-            method:"POST",
-            data:params
+            url: BASE_URL + `/assets/bindMerchants`,
+            method: "POST",
+            data: params
         })
     }
     //设置交易HASH
-    async setHash(params){
+    async setHash(params) {
         return await request({
-            url:BASE_URL + '/userWithdraw/pass',
-            method:"POST",
-            data:params
+            url: BASE_URL + '/userWithdraw/pass',
+            method: "POST",
+            data: params
         })
     }
     //设置白名单IP
-    async setWhiteIP(params){
+    async setWhiteIP(params) {
         return await request({
-            url:BASE_URL + '/user/info/setServerIp',
-            method:"POST",
-            data:params
+            url: BASE_URL + '/user/info/setServerIp',
+            method: "POST",
+            data: params
         })
     }
     //新增商户
-    async addMerchant(params){
+    async addMerchant(params) {
         return await request({
-            url:BASE_URL + "/manager/createMerchant",
-            method:"POST",
-            data:params
+            url: BASE_URL + "/manager/createMerchant",
+            method: "POST",
+            data: params
         })
     }
     //更新商户币种配置
-    async updateMerchantCoinConfig(params){
+    async updateMerchantCoinConfig(params) {
         return await request({
-            url:BASE_URL + "/manager/saveMerchantCoins",
-            method:"POST",
-            data:params
+            url: BASE_URL + "/manager/saveMerchantCoins",
+            method: "POST",
+            data: params
         })
     }
     //拒绝提币
-    async rejectWithdraw(params){
+    async rejectWithdraw(params) {
         return await request({
-            url:BASE_URL + "/userWithdraw/reject",
-            method:"POST",
-            data:params
+            url: BASE_URL + "/userWithdraw/reject",
+            method: "POST",
+            data: params
         })
     }
     //重新回调
-    async rebackOrder(params){
+    async rebackOrder(params) {
         return await request({
-            url:BASE_URL + "/assetsFlow/notify",
-            method:"POST",
-            data:params
+            url: BASE_URL + "/assetsFlow/notify",
+            method: "POST",
+            data: params
         })
     }
     //用户提币
-    async userWithdraw(params){
+    async userWithdraw(params) {
         return await request({
-            url:BASE_URL + "/assetsFlow/userWithdraw",
-            method:"POST",
-            data:params
+            url: BASE_URL + "/assetsFlow/userWithdraw",
+            method: "POST",
+            data: params
         })
     }
     //编辑商户名称
-    async editMerchantName(params){
+    async editMerchantName(params) {
         return await request({
-            url:BASE_URL + '/manager/updateMerchantName',
+            url: BASE_URL + '/manager/updateMerchantName',
+            method: "POST",
+            data: params
+        })
+    }
+    //钱包概况
+    async walletOverview(params) {
+        return await request({
+            url: BASE_URL + '/analysis/wallet',
+            method: "POST",
+            data: params
+        })
+    }
+    //经营概况
+    async billOverView(params) {
+        return await request({
+            url: BASE_URL + '/analysis/deposit2Withdraw',
+            method: "POST",
+            data: params
+        })
+    }
+    //登录日志
+    async loginLog(params) {
+        return await request({
+            url: BASE_URL + '/analysis/loginLog',
+            method: "POST",
+            data: params
+        })
+    };
+    //币种统计
+    async coinLog(params){
+        return await request({
+            url:BASE_URL + '/analysis/coinCounts',
             method:"POST",
             data:params
         })

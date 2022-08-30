@@ -2,7 +2,7 @@
   <div class="index-coins-count p-18-20">
     <div class="public-title">
       <p class="title-msg">币种统计</p>
-      <div class="date-select">
+      <!-- <div class="date-select">
         <div class="select-picker">
           <el-date-picker
             v-model="filterDateCount"
@@ -18,7 +18,7 @@
             <img :src="require('../../assets/images/date_icon.png')" alt="" />
           </p>
         </div>
-      </div>
+      </div> -->
     </div>
     <div class="count-list">
       <div class="data-list">
@@ -29,67 +29,83 @@
           :header-cell-style="{ background: '#F9FAFC' }"
         >
           <el-table-column prop="coin" label="币种"> </el-table-column>
-          <el-table-column prop="today" label="今日收款"> </el-table-column>
-          <el-table-column prop="yes_day" label="昨日收款"> </el-table-column>
-          <el-table-column prop="balance" label="账户余额">
+          <el-table-column prop="todayDeposit" label="今日充值">
+          </el-table-column>
+          <el-table-column prop="yesterdayDeposit" label="昨日充值">
+          </el-table-column>
+          <el-table-column prop="todayWithdraw" label="今日提币">
+          </el-table-column>
+          <el-table-column
+            label="昨日提币"
+            prop="yesterdayWithdraw"
+          ></el-table-column>
+          <!-- <el-table-column prop="balance" label="账户余额">
+            <template slot="header">
+              <div class="balance-box">
+                <p>账户余额</p>
+                <el-popover
+                  placement="top"
+                  trigger="hover"
+                  content="可代付余额 + 可提现余额"
+                >
+                  <img
+                    :src="require('../../assets/images/q_icon.png')"
+                    slot="reference"
+                  />
+                </el-popover>
+              </div>
+            </template>
             <template slot-scope="{ row }">
               <div class="bold-text">{{ row.balance }}</div>
             </template>
-          </el-table-column>
-          <el-table-column prop="balance_usdt" label="当前估值 ($)">
-          </el-table-column>
-          <el-table-column label="当前汇率">
-            <template slot-scope="{ row }">
-              <div>{{ row.rate }}</div>
-            </template>
-          </el-table-column>
+          </el-table-column> -->
         </el-table>
       </div>
-      <div class="data-page">
-        <el-pagination layout="prev, pager, next" :total="1000">
+      <!-- <div class="data-page">
+        <el-pagination layout="prev, pager, next" :total="10">
         </el-pagination>
-      </div>
+      </div> -->
     </div>
   </div>
 </template>
 
 <script>
-const space = 6;
-let _minDate = "";
-import dayjs from "dayjs";
 export default {
   options: { styleIsolation: "shared" },
+  props: {
+    merchantID: {
+      type: String,
+      default: "",
+    },
+  },
   data() {
     return {
       filterDateCount: "",
       timeOptionRange: null,
       pickerOptions: {
-        disabledDate: (time) => {
-          if (_minDate) {
-            const min = dayjs(_minDate).subtract(space, "day");
-            const max = dayjs(_minDate).add(space, "day") > Date.now() ? Date.now() - 86400000 : dayjs(_minDate).add(space, "day");
-            return (
-              dayjs(time).isBefore(min) || dayjs(max).isBefore(time)
-            );
-          } else {
-            return time.getTime() > Date.now() - 86400000;
-          }
-        },
-        onPick({ minDate }) {
-          _minDate = minDate;
+        disabledDate(time) {
+          return time.getTime() > Date.now();
         },
       },
-      tableData: [
-        {
-          coin: "TRX",
-          today: "55.265441",
-          yes_day: "55.265441",
-          balance: "55.265441",
-          balance_usdt: "55.265441",
-          rate: "1 USDT ≈ 6.69 INR",
-        },
-      ],
+      tableData: [],
     };
+  },
+  watch: {
+    merchantID: {
+      immediate: true,
+      handler: function (v) {
+        this.coinMsg();
+      },
+    },
+  },
+  methods: {
+    //币种统计
+    async coinMsg() {
+      const result = await this.$store.dispatch("bossAssetsCenter/coinLog", {
+        mch_id: this.merchantID,
+      });
+      this.tableData = result.data;
+    },
   },
 };
 </script>

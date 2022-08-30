@@ -55,6 +55,16 @@
           top: 1px;
         }
       }
+      .select-coin-echarts {
+        margin-left: 12px;
+        .el-input--mini {
+          .el-input__inner {
+            height: 26px;
+            line-height: 26px;
+            border-color: #eee!important;
+          }
+        }
+      }
       .down-unknow {
         width: 24px;
         height: 24px;
@@ -84,7 +94,7 @@
     display: flex;
     justify-content: space-between;
     .acc-public {
-      width: 49%;
+      width: 49.4%;
       height: 100%;
       border-radius: 4px;
     }
@@ -109,8 +119,9 @@
           text-align: center;
         }
         .un-bind {
-          border: 1px solid #6d81ff;
-          color: #4057ff;
+          border: 1px solid #e8158d;
+          background: rgba(234, 31, 96, 0.11);
+          color: #f05184;
           cursor: pointer;
         }
         .has-bind {
@@ -180,7 +191,7 @@
       flex-wrap: wrap;
       justify-content: space-between;
       .msg-box {
-        width: 49%;
+        width: 48.8%;
         background-color: white;
         border-radius: 4px;
         height: 45%;
@@ -207,10 +218,20 @@
               font-size: 14px;
               color: #999;
             }
-            p:last-child {
+            p:nth-child(2) {
               font-size: 28px;
               color: #666;
               font-weight: 500;
+              line-height: 30px;
+            }
+            .bill-tootip {
+              font-size: 14px;
+              color: #999;
+              cursor: pointer;
+              img {
+                width: 14px;
+                height: 14px;
+              }
             }
           }
         }
@@ -257,7 +278,7 @@
       }
     }
     .log-box {
-      width: 40%;
+      width: 40.8%;
       height: 100%;
       background-color: white;
       border-radius: 4px;
@@ -288,6 +309,7 @@
     background-color: white;
     display: flex;
     flex-direction: column;
+    border-radius: 4px;
     .count-list {
       flex: 1;
       margin-top: 18px;
@@ -300,11 +322,41 @@
           color: #4266ff;
           font-weight: 500;
         }
+        .balance-box {
+          display: flex;
+          img {
+            width: 13px;
+            height: 13px;
+            cursor: pointer;
+            transform: translateY(1px);
+            margin-left: 4px;
+          }
+        }
       }
       .data-page {
         display: flex;
         justify-content: flex-end;
       }
     }
+  }
+}
+.popver-coin-bill {
+  li {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 14px;
+    p:first-child {
+      font-size: 16px;
+      color: #333;
+      font-weight: 500;
+    }
+    p:last-child {
+      font-size: 16px;
+      color: #666;
+      margin-left: 16px;
+    }
+  }
+  li:last-child {
+    margin-bottom: 0;
   }
 }

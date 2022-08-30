@@ -39,15 +39,15 @@ v-app#ib-wallet(
     v-list-item.mt-4.mb-8.ib-logo
       v-img.mr-3(src="/logo.png", style="width: 116px")
       v-list-item-title {{ $vuetify.lang.t('$vuetify.defaultLayout.title') }}
-    //- v-list-item(
-    //-   link,
-    //-   v-ripple="false",
-    //-   to="/",
-    //-   :class="[{ 'current-page': currentPage == '/' }]"
-    //- )
-    //-   v-list-item-avatar
-    //-     i.iconfont.icon-6.ali-icon
-    //-   v-list-item-title 概览
+    v-list-item(
+      link,
+      v-ripple="false",
+      to="/",
+      :class="[{ 'current-page': currentPage == '/' }]"
+    )
+      v-list-item-avatar
+        i.iconfont.icon-6.ali-icon
+      v-list-item-title 概览
     //- 订单管理
     v-list-group(
       no-action,
@@ -211,9 +211,9 @@ v-app#ib-wallet(
           span {{ $vuetify.lang.t('$vuetify.defaultLayout.hello') }},{{ infoEmail }}
           v-icon(right, size="24") mdi-menu-down
       v-list.text-center
-        v-list-item(@click="showLoginPwd = true")
+        v-list-item(@click="setPassNew = true;setType = 1;")
           v-list-item-title {{ $vuetify.lang.t('$vuetify.defaultLayout.updateLoginPwd') }}
-        v-list-item(@click="showTransPwd = true")
+        v-list-item(@click="setPassNew = true;setType = 2;")
           v-list-item-title {{ $vuetify.lang.t('$vuetify.defaultLayout.updateTransPwd') }}
         v-list-item(@click="showLogout = true")
           v-list-item-title 
@@ -325,7 +325,6 @@ v-app#ib-wallet(
           :disabled="disabledUpdateLogin",
           @click="updateLoginPwd"
         ) {{ $vuetify.lang.t('$vuetify.lable.ok') }}
-
   //- 修改交易密码弹窗
   v-dialog(
     v-model="showTransPwd",
@@ -412,6 +411,8 @@ v-app#ib-wallet(
           :loading="isLogoutting",
           @click="logout"
         ) {{ $vuetify.lang.t('$vuetify.lable.ok') }}
+  //- 设置密码
+  <ResetPass v-model="setPassNew" :type="setType"/>
 </template>
 
 <script>
@@ -491,12 +492,17 @@ export default {
       },
       sendingTimer: null,
       sendingTime: 0,
+      setPassNew:false,//设置密码
+      setType:1,//设置密码类型
     };
   },
   watch: {
     currentLang() {
       this.currentLangChange();
     },
+  },
+  components:{
+    ResetPass:(resolve) => require(['./components/reset_password'],resolve)
   },
   computed: {
     isAdmin() {

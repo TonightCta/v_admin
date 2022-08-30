@@ -4,7 +4,9 @@
   v-divider
   .info-content
     //- 绑定谷歌验证器
-    .google-setting.info-public(v-if="$store.state.bossAssetsCenter.merchantInfo.ga == 0") <GoogleAuth/>
+    .google-setting.info-public(
+      v-if="$store.state.bossAssetsCenter.merchantInfo.ga == 0"
+    ) <GoogleAuth/>
     //- 对接资料
     .ma-info.info-public 
       .title.mb-4 {{ $vuetify.lang.t('$vuetify.lable.docking_information') }}
@@ -18,200 +20,112 @@
       .subtitle-1.px-6.py-3.cer-item
         .mr-4.info-label {{ $vuetify.lang.t('$vuetify.lable.gateway_server') }}：
         span {{ gateway }}
+
       .subtitle-1.px-6.py-3.cer-item
         .mr-4.info-label API KEY：
-        v-dialog(v-model="dialog", persistent, max-width="600")
-          template(v-slot:activator="{ on, attrs }")
-            v-btn(color="primary", small, dark, v-bind="attrs",depressed, v-on="on") {{ $vuetify.lang.t('$vuetify.lable.click_to_get') }}
-          v-card
-            v-card-title {{ $vuetify.lang.t('$vuetify.lable.get') }}API KEY
-            v-text-field(
-              v-if="dialog == true",
-              disabled,
-              readonly,
-              hide-details,
-              :label="$formatEmail(merchant.email)",
-              style="width: 550px; margin: 0 0 20px 20px"
-            )
-            v-text-field(
-              v-if="dialog == true",
-              key="register-verifycode",
-              v-model="password",
-              type="password",
-              :label="$vuetify.lang.t('$vuetify.loginPage.pwd')",
-              :placeholder="$vuetify.lang.t('$vuetify.loginPage.enterPwd')",
-              :rules="[rules.verifyCode]",
-              style="width: 550px; margin-left: 20px"
-            )
-              template(slot="append")
+        v-btn(
+          color="primary",
+          small,
+          dark,
+          v-bind="attrs",
+          depressed,
+          @click="keyBox = true"
+        ) {{ $vuetify.lang.t('$vuetify.lable.click_to_get') }}
+        //- v-dialog(v-model="dialog", persistent, max-width="600")
+        //-   template(v-slot:activator="{ on, attrs }")
+        //-     v-btn(
+        //-       color="primary",
+        //-       small,
+        //-       dark,
+        //-       v-bind="attrs",
+        //-       depressed,
+        //-       v-on="on"
+        //-     ) {{ $vuetify.lang.t('$vuetify.lable.click_to_get') }}
+        //-   v-card
+        //-     v-card-title {{ $vuetify.lang.t('$vuetify.lable.get') }}API KEY
+        //-     v-text-field(
+        //-       v-if="dialog == true",
+        //-       disabled,
+        //-       readonly,
+        //-       hide-details,
+        //-       :label="$formatEmail(merchant.email)",
+        //-       style="width: 550px; margin: 0 0 20px 20px"
+        //-     )
+        //-     v-text-field(
+        //-       v-if="dialog == true",
+        //-       key="register-verifycode",
+        //-       v-model="password",
+        //-       type="password",
+        //-       :label="$vuetify.lang.t('$vuetify.loginPage.pwd')",
+        //-       :placeholder="$vuetify.lang.t('$vuetify.loginPage.enterPwd')",
+        //-       :rules="[rules.verifyCode]",
+        //-       style="width: 550px; margin-left: 20px"
+        //-     )
+        //-       template(slot="append")
 
-            v-card-actions.d-flex.flex-row-reverse
-              v-btn(
-                color="primary",
-                depressed,
-                dark,
-                :loading="submit_loading",
-                @click="submit",
-                style="margin-left: 10px"
-              ) {{ $vuetify.lang.t('$vuetify.lable.get') }}
-              v-btn(
-                outlined,
-                color="indigo",
-                text,
-                @click="dialog = false; code = ''"
-              ) {{ $vuetify.lang.t('$vuetify.lable.cancel') }}
-        v-dialog(
-          v-model="is_return_key",
-          max-width="600",
-          v-if="is_return_key",
-          persistent
-        )
-          v-card
-            v-card-title {{ $vuetify.lang.t('$vuetify.lable.verified_successfully') }}
-            v-card-text.subtitle-1 {{ $vuetify.lang.t('$vuetify.lable.close_tip') }}
-            input#api_key(
-              :value="api_key",
-              style="outline: none; color: rgba(0, 0, 0, 0.6); margin: 0 24px; background-color: #eee; padding-left: 20px"
-            )
-            v-btn(
-              small,
-              rounded,
-              depressed,
-              outlined,
-              style="margin-top: -3px",
-              color="primary",
-              @click="copyKey"
-            ) {{ $vuetify.lang.t('$vuetify.lable.copy') }} API KEY
-            v-card-text.text-center.py-4
-              v-btn(
-                depressed,
-                color="primary",
-                @click="(is_return_key = false), (code = '')"
-              ) {{ $vuetify.lang.t('$vuetify.lable.cancel') }}
+        //-     v-card-actions.d-flex.flex-row-reverse
+        //-       v-btn(
+        //-         color="primary",
+        //-         depressed,
+        //-         dark,
+        //-         :loading="submit_loading",
+        //-         @click="submit",
+        //-         style="margin-left: 10px"
+        //-       ) {{ $vuetify.lang.t('$vuetify.lable.get') }}
+        //-       v-btn(
+        //-         outlined,
+        //-         color="indigo",
+        //-         text,
+        //-         @click="dialog = false; code = ''"
+        //-       ) {{ $vuetify.lang.t('$vuetify.lable.cancel') }}
+        //- v-dialog(
+        //-   v-model="is_return_key",
+        //-   max-width="600",
+        //-   v-if="is_return_key",
+        //-   persistent
+        //- )
+        //-   v-card
+        //-     v-card-title {{ $vuetify.lang.t('$vuetify.lable.verified_successfully') }}
+        //-     v-card-text.subtitle-1 {{ $vuetify.lang.t('$vuetify.lable.close_tip') }}
+        //-     input#api_key(
+        //-       :value="api_key",
+        //-       style="outline: none; color: rgba(0, 0, 0, 0.6); margin: 0 24px; background-color: #eee; padding-left: 20px"
+        //-     )
+        //-     v-btn(
+        //-       small,
+        //-       rounded,
+        //-       depressed,
+        //-       outlined,
+        //-       style="margin-top: -3px",
+        //-       color="primary",
+        //-       @click="copyKey"
+        //-     ) {{ $vuetify.lang.t('$vuetify.lable.copy') }} API KEY
+        //-     v-card-text.text-center.py-4
+        //-       v-btn(
+        //-         depressed,
+        //-         color="primary",
+        //-         @click="(is_return_key = false), (code = '')"
+        //-       ) {{ $vuetify.lang.t('$vuetify.lable.cancel') }}
 
-      //- .subtitle-1.px-6.py-3.cer-item
-      //-   .mr-4.info-label {{ $vuetify.lang.t('$vuetify.lable.call_back_address') }}：
-      //-   span(v-if="call_back_ip_status", style="margin-right: 20px") {{ lock_call_back_ip }}
-      //-   v-dialog(v-model="call_back_dialog", persistent, max-width="600")
-      //-     template(v-slot:activator="{ on, attrs }")
-      //-       v-btn(
-      //-         v-if="!call_back_ip_status",
-      //-         color="primary",
-      //-         small,
-      //-           depressed,
-      //-         dark,
-      //-         v-bind="attrs",
-      //-         v-on="on"
-      //-       ) {{ $vuetify.lang.t('$vuetify.lable.set') }}
-      //-       v-btn(
-      //-         v-else,
-      //-         color="primary",
-      //-         small,
-      //-           depressed,
-      //-         dark,
-      //-         v-bind="attrs",
-      //-         v-on="on"
-      //-       ) {{ $vuetify.lang.t('$vuetify.lable.edit') }}
-      //-     v-card
-      //-       v-card-title {{ !call_back_ip_status ? $vuetify.lang.t('$vuetify.lable.set_call_back_ip') : $vuetify.lang.t('$vuetify.lable.edit_call_back_ip') }}
-      //-       v-text-field(
-      //-         v-if="call_back_dialog == true",
-      //-         disabled,
-      //-         readonly,
-      //-         hide-details,
-      //-         :label="$formatEmail(merchant.email)",
-      //-         style="width: 550px; margin: 0 0 20px 20px"
-      //-       )
-      //-       v-text-field(
-      //-         v-if="call_back_dialog == true",
-      //-         key="set_call_back_ip-verifycode",
-      //-         v-model="password",
-      //-         type="password",
-      //-         :label="$vuetify.lang.t('$vuetify.loginPage.pwd')",
-      //-         :placeholder="$vuetify.lang.t('$vuetify.loginPage.enterPwd')",
-      //-         :rules="[rules.verifyCode]",
-      //-         style="width: 550px; margin-left: 20px"
-      //-       )
-      //-         template(slot="append")
-
-      //-       v-text-field(
-      //-         v-if="call_back_dialog == true",
-      //-         v-model="call_back_ip",
-      //-         :label="$vuetify.lang.t('$vuetify.lable.call_back_address')",
-      //-         :placeholder="$vuetify.lang.t('$vuetify.placeholder.call_back_address')",
-      //-         :rules="[rules.verifyCallBackIp]",
-      //-         style="width: 550px; margin: 0 0 20px 20px"
-      //-       )
-      //-       v-card-actions.d-flex.flex-row-reverse
-      //-         v-btn(
-      //-           color="primary",
-      //-           dark,
-      //-           :loading="submit_loading",
-      //-           depressed,
-      //-           @click="submit",
-      //-           style="margin-left: 10px"
-      //-         ) {{ $vuetify.lang.t('$vuetify.lable.submit') }}
-      //-         v-btn(
-      //-           outlined,
-      //-           depressed,
-      //-           color="indigo",
-      //-           text,
-      //-           @click="call_back_dialog = false; code = ''; call_back_ip = ''"
-      //-         ) {{ $vuetify.lang.t('$vuetify.lable.cancel') }}
       .subtitle-1.px-6.py-3.cer-item
         .mr-4.info-label {{ $vuetify.lang.t('$vuetify.mine.白名单') }}：
         span(v-if="white_ip", style="margin-right: 20px") {{ white_ip.join(',') }}
-        v-dialog(v-model="setWhiteIP", persistent, max-width="600")
-          template(v-slot:activator="{ on, attrs }")
-            v-btn(
-              v-if="!white_ip",
-              color="primary",
-              small,
-              dark,
-                depressed,
-              v-bind="attrs",
-              v-on="on"
-            ) {{ $vuetify.lang.t('$vuetify.lable.set') }}
-            v-btn(
-              v-else,
-              color="primary",
-              small,
-              dark,
-                depressed,
-              v-bind="attrs",
-              v-on="on"
-            ) {{ $vuetify.lang.t('$vuetify.lable.edit') }}
-          v-card 
-            v-card-title(style="margin-bottom: 16px") {{ $vuetify.lang.t('$vuetify.mine.设置白名单地址') }}
-            v-text-field(
-              :label="$vuetify.lang.t('$vuetify.mine.登录密码')",
-              type="password",
-              v-model="enterPass",
-              :placeholder="$vuetify.lang.t('$vuetify.mine.请输入登录密码')",
-              style="width: 550px; margin: 0 0 20px 20px"
-            )
-            v-text-field(
-              :label="$vuetify.lang.t('$vuetify.mine.白名单IP')",
-              v-model="whiteIP",
-              :placeholder="$vuetify.lang.t('$vuetify.mine.请输入白名单地址(多个IP地址请使用,隔开)')",
-              style="width: 550px; margin: 0 0 20px 20px"
-            )
-            v-card-actions.d-flex.flex-row-reverse
-              v-btn(
-                color="primary",
-                dark,
-                @click="submitIP",
-                :loading="loadWhiteIP",
-                depressed,
-                style="margin-left: 10px"
-              ) {{ $vuetify.lang.t('$vuetify.lable.submit') }}
-              v-btn(
-                outlined,
-                color="indigo",
-                depressed,
-                text,
-                @click="setWhiteIP = false"
-              ) {{ $vuetify.lang.t('$vuetify.lable.cancel') }}
+        v-btn(
+          v-if="!white_ip",
+          color="primary",
+          small,
+          dark,
+          depressed,
+          @click="whiteBox = true; whiteType = 1"
+        ) {{ $vuetify.lang.t('$vuetify.lable.set') }}
+        v-btn(
+          v-else,
+          color="primary",
+          small,
+          dark,
+          depressed,
+          @click="whiteBox = true; whiteType = 2; $refs.editWhite.getEditAddress(white_ip)"
+        ) {{ $vuetify.lang.t('$vuetify.lable.edit') }}
     //- 基本资料
     .info-public 
       .title.mb-4(v-if="merchant.level > 0") {{ $vuetify.lang.t('$vuetify.merchantInfo.basicInfo') }}
@@ -258,6 +172,10 @@
       .subtitle-1.px-6.py-3.cer-item
         .mr-4.info-label {{ $vuetify.lang.t('$vuetify.merchantInfo.companyLicensePic') }}：
         v-img(:src="merchant.companyBusinessLicensePic", max-width="150")
+    //- 获取API Key
+    <SetKey v-model="keyBox"/>
+    //- 设置白名单
+    <SetwhiteList v-model="whiteBox" ref="editWhite" :type="whiteType" @upload="queryMerchantVerifyInfo"/>
 </template>
     
 <script>
@@ -285,6 +203,9 @@ export default {
       api_key: "",
       code: "",
       password: "",
+      whiteBox: false, //设置白名单
+      whiteType: 1, //白名单操作类型
+      keyBox: false,
       rules: {
         verifyCode: (value) => {
           const pattern = /^[a-zA-Z0-9]*$/;
@@ -316,6 +237,8 @@ export default {
   },
   components: {
     GoogleAuth: (resolve) => require(["./components/google_auth"], resolve),
+    SetwhiteList: (resolve) => require(["./components/set_whitelist"], resolve),
+    SetKey: (resolve) => require(["./components/set_key"], resolve),
   },
   watch: {
     setWhiteIP(val) {
@@ -525,35 +448,41 @@ export default {
 .merchant-info {
   display: flex;
   flex-direction: column;
-  flex-wrap:wrap;
+  flex-wrap: wrap;
   min-height: 100%;
   background-color: #F5F5FC;
-  .v-card__title::before{
-    content:'';
-    width:3px;
-    height:14px;
-    background:#304888;
-    margin-right:8px;
+
+  .v-card__title::before {
+    content: '';
+    width: 3px;
+    height: 14px;
+    background: #304888;
+    margin-right: 8px;
   }
+
   .info-content {
     display: flex;
     margin-top: 18px;
     flex-wrap: wrap;
     justify-content: space-between;
+
     .info-public {
       width: 49%;
       padding: 20px;
       background: white;
       border-radius: 4px;
       margin-bottom: 24px;
-      min-width:914px;
+      min-width: 914px;
+
       .subtitle-1 {
         justify-content: space-between;
-        button{
-          span{
-            color:white;
+
+        button {
+          span {
+            color: white;
           }
         }
+
         span {
           color: #666;
         }

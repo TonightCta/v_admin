@@ -116,10 +116,13 @@
             -
           </template>
           <template v-slot:item.is_self="{ item }">
-
-           {{item.is_self == 1 ? $vuetify.lang.t('$vuetify.mine.商户主钱包') : ''}}
-           {{item.is_self == 2 ? $vuetify.lang.t('$vuetify.mine.商户手续费钱包') : ''}}
-           {{item.is_self == 0 ? $vuetify.lang.t('$vuetify.mine.客户钱包') : ''}}
+            <p>
+              {{ item.is_self == 1 ? $vuetify.lang.t("$vuetify.mine.商户主钱包") : "" }}
+              {{
+                item.is_self == 2 ? $vuetify.lang.t("$vuetify.mine.商户手续费钱包") : ""
+              }}
+              {{ item.is_self == 0 ? $vuetify.lang.t("$vuetify.mine.客户钱包") : "" }}
+            </p>
           </template>
         </v-data-table>
       </div>
@@ -222,19 +225,17 @@ export default {
       transferResult: "",
       errorMessage: "", //提币回执信息
 
-      isSelfList:[
-
-      ],
+      isSelfList: [],
     };
   },
   created() {
     this.query.coin = this.$vuetify.lang.t("$vuetify.mine.全部");
     this.query.is_self = null;
     this.isSelfList = [
-      {name: this.$vuetify.lang.t("$vuetify.mine.商户主钱包"),val:1},
-      {name:this.$vuetify.lang.t("$vuetify.mine.商户手续费钱包"),val:2},
-      {name:this.$vuetify.lang.t("$vuetify.mine.客户钱包"),val:0},
-    ]
+      { name: this.$vuetify.lang.t("$vuetify.mine.商户主钱包"), val: 1 },
+      { name: this.$vuetify.lang.t("$vuetify.mine.商户手续费钱包"), val: 2 },
+      { name: this.$vuetify.lang.t("$vuetify.mine.客户钱包"), val: 0 },
+    ];
     this.getMerchantList();
     this.getAllAddress();
   },
@@ -325,14 +326,14 @@ export default {
           this.query.coin == this.$vuetify.lang.t("$vuetify.mine.全部")
             ? null
             : this.query.coin,
-        is_self:this.query.is_self,
+        is_self: this.query.is_self,
       };
       const result = await this.$store.dispatch(
         "bossAssetsCenter/queryAllAddress",
         params
       );
       this.desserts = result.data.list;
-      this.pagination.total = result.data.last_page;
+      this.pagination.total = result.data.total;
       this.tableLoading = false;
     },
     //提币

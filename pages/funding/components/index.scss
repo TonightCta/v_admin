@@ -1,0 +1,75 @@
+.withdraw-box {
+  .set-header {
+    display: flex;
+    justify-content: center;
+    position: relative;
+    box-shadow: inset 0px -1px 0px 0px rgba(238, 238, 238, 0.3);
+    padding-bottom: 12px;
+    p {
+      font-size: 22px;
+      font-weight: 500;
+      color: #333;
+      margin-bottom: 0;
+    }
+    img {
+      width: 18px;
+      height: 18px;
+      position: absolute;
+      top: 8px;
+      right: 0;
+      cursor: pointer;
+    }
+  }
+  .draw-msg {
+    padding: 0 10px;
+    .draw-address {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      height: 56px;
+      border: 1px solid #f8f8f8;
+      border-radius: 4px;
+      background: rgba(248, 248, 248, 0.2);
+      margin-bottom: 16px;
+      p {
+        font-size: 14px;
+        color: #666;
+        margin-bottom: 0;
+      }
+    }
+    ul {
+      display: flex;
+      list-style: none;
+      justify-content: space-between;
+      border-radius: 4px;
+      li {
+        width: 30%;
+        align-items: center;
+        display: flex;
+        justify-content: center;
+        img {
+          width: 16px;
+          height: 16px;
+          margin-right: 4px;
+          //   transform: translateY(-1px);
+        }
+        p {
+          margin-bottom: 0;
+          font-size: 14px;
+          color: #666;
+        }
+        .pop-img {
+          width: 12px;
+          height: 12px;
+          cursor: pointer;
+          margin-left: 4px;
+          transform: translateY(1px);
+        }
+      }
+    }
+    .remark-list {
+      background: #FBFCFF;
+      padding: 8px 0;
+    }
+  }
+}

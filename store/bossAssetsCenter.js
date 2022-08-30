@@ -1,12 +1,12 @@
-import {bossAssetsCenter} from "~/api"
+import { bossAssetsCenter } from "~/api"
 
 export const state = () => ({
     // 所有币种
     allCoins: {},
-    merchantInfo: {},
+    merchantInfo: JSON.parse(sessionStorage.getItem('merchantInfo') || '{}') || {},
     allRates: {},
     currentRate: 'USD',
-    isAuthBox:window.sessionStorage.getItem('isAuthBox') || 1,
+    isAuthBox: window.sessionStorage.getItem('isAuthBox') || 1,
     allRateSymbols: {
         TWD: "NT$",
         AUD: "A$",
@@ -28,17 +28,19 @@ export const mutations = {
         state.currentRate = rate
     },
     setAllCoins(state, coins) {
-        state.allCoins = coins
+        state.allCoins = coins;
+        sessionStorage.setItem('allCoins', JSON.stringify(coins))
     },
     setMerchantInfo(state, info) {
-        state.merchantInfo = info
+        state.merchantInfo = info;
+        sessionStorage.setItem('merchantInfo', JSON.stringify(info))
     },
     setAllRates(state, rates) {
         state.allRates = rates
     },
-    setIsAuthBox(state,opt){
+    setIsAuthBox(state, opt) {
         state.isAuthBox = opt;
-        window.sessionStorage.setItem('isAuthBox',opt)
+        window.sessionStorage.setItem('isAuthBox', opt)
     }
 }
 
@@ -119,60 +121,76 @@ export const actions = {
         const res = await bossAssetsCenter.bindGoogleAuth(params);
         return res;
     },
-    getAllMerchants:async({commit},params) => {
+    getAllMerchants: async ({ commit }, params) => {
         const res = await bossAssetsCenter.getAllMerchants(params);
         return res;
     },
-    importWallet:async({commit},params) => {
+    importWallet: async ({ commit }, params) => {
         const res = await bossAssetsCenter.importWallet(params);
         return res;
     },
-    setHash:async({commit},params) => {
+    setHash: async ({ commit }, params) => {
         const res = await bossAssetsCenter.setHash(params);
         return res;
     },
-    setWhiteIP:async({commit},params) => {
+    setWhiteIP: async ({ commit }, params) => {
         const res = await bossAssetsCenter.setWhiteIP(params);
         return res;
     },
-    addMerchant:async({commit},params) => {
+    addMerchant: async ({ commit }, params) => {
         const res = await bossAssetsCenter.addMerchant(params);
         return res;
     },
-    rejectWithdraw:async({commit},params) => {
+    rejectWithdraw: async ({ commit }, params) => {
         const res = await bossAssetsCenter.rejectWithdraw(params);
         return res;
     },
-    rebackOrder:async({commit},params) => {
+    rebackOrder: async ({ commit }, params) => {
         const res = await bossAssetsCenter.rebackOrder(params);
         return res;
     },
-    userWithdraw:async({commit},params) => {
+    userWithdraw: async ({ commit }, params) => {
         const res = await bossAssetsCenter.userWithdraw(params);
         return res;
     },
 
-    queryMerchantCoins: async ({ commit },params) => {
+    queryMerchantCoins: async ({ commit }, params) => {
         const res = await bossAssetsCenter.queryAllMerchantCoins(params);
         return res
     },
 
-    queryCoinCollectFee: async ({ commit },params) => {
+    queryCoinCollectFee: async ({ commit }, params) => {
         const res = await bossAssetsCenter.queryCoinCollectFee(params);
         return res
     },
 
-    sendCoinCollectFee: async ({ commit },params) => {
+    sendCoinCollectFee: async ({ commit }, params) => {
         const res = await bossAssetsCenter.sendCoinCollectFee(params);
         return res
     },
 
-    updateMerchantCoinConfig:async({commit},params) => {
+    updateMerchantCoinConfig: async ({ commit }, params) => {
         const res = await bossAssetsCenter.updateMerchantCoinConfig(params);
         return res;
     },
-    editMerchantName:async({commit},params) => {
+    editMerchantName: async ({ commit }, params) => {
         const res = await bossAssetsCenter.editMerchantName(params);
+        return res;
+    },
+    walletOverview: async ({ commit }, params) => {
+        const res = await bossAssetsCenter.walletOverview(params);
+        return res
+    },
+    billOverView: async ({ commit }, params) => {
+        const res = await bossAssetsCenter.billOverView(params);
+        return res
+    },
+    loginLog: async ({ commit }, params) => {
+        const res = await bossAssetsCenter.loginLog(params);
+        return res;
+    },
+    coinLog: async ({ commit }, params) => {
+        const res = await bossAssetsCenter.coinLog(params);
         return res;
     }
 }

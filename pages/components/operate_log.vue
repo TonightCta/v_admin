@@ -9,15 +9,34 @@
               v-model="filterDate"
               type="daterange"
               size="mini"
+              value-format="yyyy-MM-dd"
               range-separator="-"
               start-placeholder="开始日期"
               end-placeholder="结束日期"
               :picker-options="pickerOptions"
+              @change="selecePickerE"
             >
             </el-date-picker>
             <p class="">
               <img :src="require('../../assets/images/date_icon.png')" alt="" />
             </p>
+          </div>
+          <div class="select-coin-echarts">
+            <el-select
+              v-model="selectCoin"
+              @change="selectCoinEv"
+              placeholder="请选择"
+              size="mini"
+              style="width: 120px"
+            >
+              <el-option
+                v-for="item in options"
+                :key="item.asset"
+                :label="item.asset"
+                :value="item.asset"
+              >
+              </el-option>
+            </el-select>
           </div>
           <div class="down-unknow" @click="downEcharts">
             <img :src="require('../../assets/images/down_icon.png')" alt="" />
@@ -38,7 +57,8 @@
               range-separator="-"
               start-placeholder="开始日期"
               end-placeholder="结束日期"
-              :picker-options="pickerOptions"
+              :picker-options="pickerOptionsLog"
+              @change="selectLogDate"
             >
             </el-date-picker>
             <p class="">
@@ -50,19 +70,27 @@
       <div class="log-list">
         <div class="data-list">
           <el-table :data="tableData" style="width: 100%">
-            <el-table-column prop="name" label="商户名称" width="280">
+            <el-table-column label="商户名称" width="280">
+              <template slot-scope="{ row }">
+                <p>{{ row.merchant.name }}</p>
+              </template>
             </el-table-column>
             <el-table-column prop="ip" label="登录IP" width="280">
             </el-table-column>
             <el-table-column label="登录时间" header-align="right">
-                <template slot-scope="{ row }">
-                   <div class="text-right">{{row.date}} </div>
-                </template>
+              <template slot-scope="{ row }">
+                <p class="text-right">{{ row.created_at }}</p>
+              </template>
             </el-table-column>
           </el-table>
         </div>
         <div class="data-page">
-          <el-pagination layout="prev, pager, next" :total="1000">
+          <el-pagination
+            layout="prev, pager, next"
+            background
+            @current-change="pageChange"
+            :total="pagination.total"
+          >
           </el-pagination>
         </div>
       </div>
@@ -71,65 +99,174 @@
 </template>
 
 <script>
+const space = 6;
+let _minDate = "";
+import dayjs from "dayjs";
 import * as echarts from "echarts";
 import html2canvas from "html2canvas";
 let opreateBox;
 export default {
+  props: {
+    merchantID: {
+      type: String,
+      default: "",
+    },
+  },
   data() {
     return {
-      filterDate: "",
-      filterDateLog: "",
+      filterDate: null,
+      filterDateLog: null,
       pickerOptions: {
+        disabledDate: (time) => {
+          if (_minDate) {
+            const min = dayjs(_minDate).subtract(space, "day");
+            const max =
+              dayjs(_minDate).add(space, "day") > Date.now()
+                ? Date.now() - 86400000
+                : dayjs(_minDate).add(space, "day");
+            return dayjs(time).isBefore(min) || dayjs(max).isBefore(time);
+          } else {
+            return time.getTime() > Date.now() - 86400000;
+          }
+        },
+        onPick({ minDate }) {
+          _minDate = minDate;
+        },
+      },
+      pickerOptionsLog: {
         disabledDate(time) {
           return time.getTime() > Date.now();
         },
       },
-      tableData: [
-        {
-          date: "2022-02-05 14:25:56",
-          name: "王小虎",
-          ip: "145.25.29.36",
-        },
-        {
-          date: "2022-02-05 14:25:56",
-          name: "王小虎",
-          ip: "145.25.29.36",
-        },
-        {
-          date: "2022-02-05 14:25:56",
-          name: "王小虎",
-          ip: "145.25.29.36",
-        },
-        {
-          date: "2022-02-05 14:25:56",
-          name: "王小虎",
-          ip: "145.25.29.36",
-        },
-      ],
+      tableData: [],
+      pagination: {
+        size: 8,
+        total: 1,
+        current: 1,
+      },
+      options: [],
+      selectCoin: "TRX",
+      mch_id: null,
     };
   },
+  watch: {
+    merchantID: {
+      immediate: true,
+      handler: function (v) {
+        this.billMsg();
+        this.logMsg();
+      },
+    },
+  },
   mounted() {
-    this.initEchartsMine();
     setTimeout(() => {
       window.addEventListener("resize", this.turnResize, true);
     }, 3000);
   },
+  created() {
+    this.getCoins();
+  },
   methods: {
-    turnResize(){
-        opreateBox.resize()
-    },  
+    async getCoins() {
+      const result = await this.$store.dispatch(
+        "bossAssetsCenter/merchantAssetsInfo"
+      );
+      this.options = result.data.coinStatementList;
+    },
+    //分页器事件
+    pageChange(_val) {
+      this.pagination.current = _val;
+      this.queryWalletAssetsFlow();
+    },
+    //选择币种
+    selectCoinEv(_coin) {
+      this.billMsg();
+    },
+    //选择图表日期
+    selecePickerE() {
+      if (this.filterDate == null) {
+        _minDate = "";
+      }
+      this.billMsg();
+    },
+    //选择日志日期
+    selectLogDate() {
+      this.logMsg();
+    },
+    turnResize() {
+      opreateBox.resize();
+    },
+    //登录日志
+    async logMsg() {
+      const result = await this.$store.dispatch("bossAssetsCenter/loginLog", {
+        mch_id: this.merchantID,
+        page: this.pagination.current,
+        limit: this.pagination.size,
+        start: this.filterDateLog ? this.filterDateLog[0] : "",
+        end: this.filterDateLog ? this.filterDateLog[1] : "",
+      });
+      this.tableData = result.data.list;
+      this.pagination.total = result.data.last_page * 10;
+    },
+    //获取数据
+    async billMsg() {
+      opreateBox = null;
+      // 经营概况
+      const result = await this.$store.dispatch(
+        "bossAssetsCenter/billOverView",
+        {
+          mch_id: this.merchantID,
+          coin: this.selectCoin,
+          start: this.filterDate ? this.filterDate[0] : "",
+          end: this.filterDate ? this.filterDate[1] : "",
+        }
+      );
+      const date = result.data.deposits.map((item) => {
+        return item.date;
+      });
+      const deposits = result.data.deposits.map((item) => {
+        return item.total;
+      });
+      const withdraw = result.data.withdraw.map((item) => {
+        return item.total;
+      });
+      const userDeposits = result.data.userDeposits.map((item) => {
+        return item.total;
+      });
+      const userWithdraw = result.data.userWithdraw.map((item) => {
+        return item.total;
+      });
+      this.initEchartsMine(
+        date,
+        deposits,
+        withdraw,
+        userDeposits,
+        userWithdraw
+      );
+    },
     // 初始化Echarts
-    async initEchartsMine() {
+    async initEchartsMine(
+      _date,
+      _deposits,
+      _withdraw,
+      _userDeposits,
+      _userWithdraw
+    ) {
+      opreateBox = null;
       const option = {
         tooltip: {
           trigger: "axis",
-          formatter: function (params) {
+          formatter: (params) => {
             let result = "";
             params.forEach((e) => {
               result +=
-                `<div style="margin-top:12px;display:flex;width:150px;justify-content: space-between;"><div style="display:flex;"><p style="transform:scale(0.7);">${e.marker}</p>` +
+                `<div style="margin-top:12px;display:flex;justify-content: space-between;"><div style="display:flex;"><p style="transform:scale(0.7);">${e.marker}</p>` +
                 `<p>${e.seriesName}</p></div>` +
-                `<p>${e.value}&nbsp;U</p></div>`;
+                `<p style="margin-left:16px;">${Number(e.value).toFixed(
+                  4
+                )}&nbsp;${
+                  this.selectCoin === "TRX" ? this.selectCoin : "U"
+                }</p></div>`;
             });
             return params[0].name + result;
           },
@@ -161,15 +298,7 @@ export default {
           {
             type: "category",
             boundaryGap: false,
-            data: [
-              "08-08",
-              "08-09",
-              "08-10",
-              "08-11",
-              "08-12",
-              "08-13",
-              "08-14",
-            ],
+            data: _date,
             axisTick: false,
             offset: 10,
             axisLabel: {
@@ -218,7 +347,7 @@ export default {
             emphasis: {
               focus: "series",
             },
-            data: [120, 132, 101, 134, 90, 230, 210],
+            data: _deposits,
           },
           {
             name: "商户提币",
@@ -242,7 +371,7 @@ export default {
             emphasis: {
               focus: "series",
             },
-            data: [220, 182, 191, 234, 290, 330, 310],
+            data: _withdraw,
           },
           {
             name: "用户提币",
@@ -266,7 +395,7 @@ export default {
             emphasis: {
               focus: "series",
             },
-            data: [150, 232, 201, 154, 190, 330, 410],
+            data: _userWithdraw,
           },
           {
             name: "用户充值",
@@ -290,11 +419,16 @@ export default {
             emphasis: {
               focus: "series",
             },
-            data: [320, 332, 301, 334, 390, 330, 320],
+            data: _userDeposits,
           },
         ],
       };
-      opreateBox = echarts.init(document.getElementById("echarts-box-mine"));
+      opreateBox = echarts.getInstanceByDom(
+        document.getElementById("echarts-box-mine")
+      );
+      if (!opreateBox) {
+        opreateBox = echarts.init(document.getElementById("echarts-box-mine"));
+      }
       opreateBox.setOption(option);
     },
     //下载echarts

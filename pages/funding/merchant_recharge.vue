@@ -103,8 +103,8 @@
 import _ from "lodash";
 import Vue from "vue";
 import * as QRcode from "qrcodejs2";
-import { RadioGroup, RadioButton, Message } from "element-ui";
 import Clipboard from "clipboard";
+import { RadioGroup, RadioButton, Message } from "element-ui";
 Vue.use(RadioGroup);
 Vue.use(RadioButton);
 export default {
@@ -191,7 +191,7 @@ export default {
       this.$success("success");
     },
     copyAddress() {
-      var clipboard = new Clipboard("#copy-btn-one");
+      const clipboard = new Clipboard("#copy-btn-one");
       clipboard.on("success", (e) => {
         Message.success("复制成功");
         //  释放内存
@@ -284,11 +284,6 @@ export default {
   flex-direction: column;
   min-height: 100%;
   background-color: #F5F5FC;
-
-  .mine-radio {
-    margin-top: 8px;
-  }
-
   .per-card-item {
     display: flex;
     align-items: center;

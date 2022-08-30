@@ -70,28 +70,46 @@
 .index-page .el-pagination .active {
     background-color: #D4E3FD !important;
     color: #6B80FB !important;
-    min-width: 26px!important;
-    height: 26px!important;
+    min-width: 26px !important;
+    height: 26px !important;
     border-radius: 4px;
 }
-.index-page .el-pagination .number{
+
+.index-page .el-pagination .number {
     color: #999999;
 }
-.index-page .el-pagination .el-icon{
+
+.index-page .el-pagination .el-icon {
     color: #999999;
 }
-.text-right{
+
+.text-right {
     text-align: right;
 }
-.index-page .count-list .el-table__header{
-    border: 0!important;
+
+.index-page .count-list .el-table__header {
+    border: 0 !important;
 }
-.index-page .count-list .el-table__header th{
-    border: 0!important;
+
+.index-page .count-list .el-table__header th {
+    border: 0 !important;
 }
-.el-table__row--striped td{
-    background-color: #F9FAFC!important;
+
+.el-table__row--striped td {
+    background-color: #F9FAFC !important;
 }
-.v-main__wrap{
+
+.v-main__wrap {
     overflow: auto;
+}
+
+.el-dialog {
+    border-radius: 4px !important;
+}
+
+.reset-password .el-dialog__body {
+    padding: 30px !important;
+}
+.set-key .el-dialog__body {
+    padding: 30px !important;
 }

@@ -445,6 +445,7 @@ export default {
         }
         button {
           margin-top: 24px;
+          box-shadow:none;
         }
       }
     }

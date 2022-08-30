@@ -1,0 +1,107 @@
+.reset-password {
+  .set-header {
+    display: flex;
+    justify-content: center;
+    position: relative;
+    p {
+      font-size: 22px;
+      font-weight: 500;
+      color: #333;
+      margin-bottom: 0;
+    }
+    img {
+      width: 18px;
+      height: 18px;
+      position: absolute;
+      top: 8px;
+      right: 0;
+      cursor: pointer;
+    }
+  }
+  .set-content {
+    p {
+      margin-bottom: 0;
+    }
+    .inp-slide {
+      display: flex;
+      align-items: center;
+      margin-bottom: 24px;
+      position: relative;
+      .slide-lable {
+        width: 76px;
+        margin-right: 20px;
+        font-size: 15px;
+        color: #666;
+        font-weight: 500;
+        text-align: justify;
+        text-align-last: justify;
+      }
+      input {
+        flex: 1;
+        height: 44px;
+        border: 1px solid #f6f6f6;
+        border-radius: 4px;
+        outline: none;
+        box-sizing: border-box;
+        padding-left: 16px;
+        font-size: 14px;
+      }
+      input::placeholder {
+        color: #999;
+      }
+      .change-inp-type {
+        width: 20px;
+        height: 20px;
+        position: absolute;
+        right: 16px;
+        bottom: 11px;
+        cursor: pointer;
+      }
+      .send-code {
+        position: absolute;
+        color: #4266ff;
+        font-size: 14px;
+        font-weight: 500;
+        right: 12px;
+        bottom: 10px;
+        cursor: pointer;
+      }
+      .send-code::before {
+        content: "";
+        display: inline-block;
+        height: 24px;
+        width: 1px;
+        background-color: #eee;
+        transform: translateY(7px) translateX(-11px);
+      }
+      .gray-btn{
+        color: #999;
+        cursor: not-allowed;
+      }
+    }
+    .inp-slide:last-child {
+      margin-bottom: 0;
+    }
+    .oper-box {
+      display: flex;
+      margin-top: 60px;
+      .lable-mask {
+        width: 18px;
+      }
+      button {
+        flex: 1;
+        border-radius: 4px;
+        height: 40px;
+        font-size: 14px;
+      }
+      .default-btn {
+        border: 1px solid #eee;
+        color: #999;
+      }
+      .primary-btn {
+        background-color: #4266ff;
+        color: white;
+      }
+    }
+  }
+}

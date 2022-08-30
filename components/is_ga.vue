@@ -6,7 +6,7 @@
         <v-card-title class="headline">
           <!-- 提示 -->
           {{ $vuetify.lang.t("$vuetify.lable.prompt") }}
-          <v-btn icon>
+          <v-btn icon @click="remindBox = false">
             <v-icon>mdi-close</v-icon>
           </v-btn>
         </v-card-title>
@@ -33,7 +33,7 @@
 export default {
   data: () => {
     return {
-      remindBox: false,
+      remindBox: true,
     };
   },
   computed: {
@@ -76,6 +76,7 @@ export default {
   display: flex;
   justify-content: space-between;
   align-items: center;
+  padding-right: 14px!important;
 }
 .headline::before {
   display: none;
@@ -88,9 +89,12 @@ export default {
 }
 .card-oper {
   display: flex;
-  width: 96%;
+  width: 97%;
   margin: 0 auto;
   padding-bottom: 24px !important;
+  button{
+    box-shadow: none;
+  }
   button:first-child {
     width: 30%;
     background: #f8f8f8;

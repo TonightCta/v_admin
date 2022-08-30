@@ -15,7 +15,9 @@ import {
     Table,
     TableColumn,
     Dialog,
-    Input
+    Input,
+    RadioGroup,
+    RadioButton,
 } from 'element-ui';
 import 'element-ui/lib/theme-chalk/index.css';
 Vue.use(Pagination);
@@ -25,6 +27,6 @@ Vue.use(Option);
 Vue.use(Popover);
 Vue.use(Button);
 Vue.use(Loading).use(Dropdown).use(DropdownMenu).use(DropdownItem).use(DatePicker).use(Table).use(TableColumn)
-.use(Dialog).use(Input);
+.use(Dialog).use(Input).use(RadioGroup).use(RadioButton)
 Vue.prototype.$msgbox = MessageBox;
 Vue.prototype.$alert = MessageBox.alert;
