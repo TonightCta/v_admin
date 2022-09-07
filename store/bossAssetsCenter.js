@@ -3,6 +3,7 @@ import { bossAssetsCenter } from "~/api"
 export const state = () => ({
     // 所有币种
     allCoins: {},
+    allFeeCoins: {},
     merchantInfo: JSON.parse(sessionStorage.getItem('merchantInfo') || '{}') || {},
     allRates: {},
     currentRate: 'USD',
@@ -31,6 +32,10 @@ export const mutations = {
         state.allCoins = coins;
         sessionStorage.setItem('allCoins', JSON.stringify(coins))
     },
+    setAllFeeCoins(state, coins) {
+        state.allFeeCoins = coins;
+        sessionStorage.setItem('allFeeCoins', JSON.stringify(coins))
+    },
     setMerchantInfo(state, info) {
         state.merchantInfo = info;
         sessionStorage.setItem('merchantInfo', JSON.stringify(info))
@@ -51,10 +56,15 @@ export const actions = {
     merchantAssetsInfo: async ({ commit }, params) => {
         let res = await bossAssetsCenter.merchantAssetsInfo(params)
         if (res.code === 200) {
-            let coins = {}
+            let coins = {};
+            let feeCoins = {};
             for (let coin of res.data.coinStatementList) {
                 coins[coin.asset] = coin
             }
+            for (let feeCoin of res.data.feeCoinStatementList) {
+                feeCoins[feeCoin.asset] = feeCoin
+            };
+            commit('setAllFeeCoins', feeCoins)
             commit('setAllCoins', coins)
             commit('setAllRates', res.data.fxrateUSD)
             commit('setMerchantInfo', res.data.merchantInfo)
@@ -192,5 +202,13 @@ export const actions = {
     coinLog: async ({ commit }, params) => {
         const res = await bossAssetsCenter.coinLog(params);
         return res;
+    },
+    billAssets: async ({ commit }, params) => {
+        const res = await bossAssetsCenter.billAssets(params);
+        return res
+    },
+    checkWorkfee: async ({ commit }, params) => {
+        const res = await bossAssetsCenter.checkWorkfee(params);
+        return res
     }
 }

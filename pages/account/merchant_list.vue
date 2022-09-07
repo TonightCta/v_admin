@@ -134,6 +134,14 @@
               }}
             </div>
           </template>
+          <template v-slot:item.ip_list="{ item }">
+            <p>{{ item.ip_list ? item.ip_list : '-' }}</p>
+          </template>
+          <template v-slot:item.create="{ item }">
+            <div>
+              {{ item.created_at }}
+            </div>
+          </template>
         </v-data-table>
       </div>
       <v-divider />
@@ -382,7 +390,8 @@ export default {
   // $vuetify.lang.t('$vuetify.mine.确认')
   computed: {
     headers() {
-      return [
+      return this.isAdmin 
+        ? [
         {
           text: "商户名称",
           sortable: false,
@@ -398,23 +407,61 @@ export default {
           sortable: false,
           value: "email",
         },
-        /*{
-          text: this.$vuetify.lang.t("$vuetify.mine.入金手续费"),
-          sortable: false,
-          align: "center",
-          value: "deposit_fee",
-        },
-        {
-          text: this.$vuetify.lang.t("$vuetify.mine.出金手续费"),
-          sortable: false,
-          align: "center",
-          value: "withdraw_fee",
-        },*/
         {
           text: this.$vuetify.lang.t("$vuetify.mine.状态"),
           sortable: false,
           value: "status",
           align: "center",
+        },
+        {
+          text: '白名单IP',
+          sortable: false,
+          align:'center',
+          value: "ip_list",
+        },
+        {
+          text: '开户时间',
+          sortable: false,
+          value: "create",
+        },
+        {
+          text: this.$vuetify.lang.t("$vuetify.mine.操作"),
+          sortable: false,
+          value: "action",
+          align: "right",
+        },
+      ]
+        :  [
+        {
+          text: "商户名称",
+          sortable: false,
+          value: "name",
+        },
+        {
+          text: this.$vuetify.lang.t("$vuetify.mine.商户号"),
+          sortable: false,
+          value: "mch_id",
+        },
+        {
+          text: this.$vuetify.lang.t("$vuetify.mine.邮箱"),
+          sortable: false,
+          value: "email",
+        },
+        {
+          text: this.$vuetify.lang.t("$vuetify.mine.状态"),
+          sortable: false,
+          value: "status",
+          align: "center",
+        },
+        {
+          text: '白名单IP',
+          sortable: false,
+          value: "ip_list",
+        },
+        {
+          text: '状态',
+          sortable: false,
+          value: "status",
         },
         {
           text: this.$vuetify.lang.t("$vuetify.mine.操作"),

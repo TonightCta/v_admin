@@ -110,6 +110,15 @@
 .reset-password .el-dialog__body {
     padding: 30px !important;
 }
+
 .set-key .el-dialog__body {
     padding: 30px !important;
+}
+
+.without-padding-popover {
+    padding: 0 !important;
+}
+
+.submit-btn .el-loading-mask .el-loading-spinner{
+    margin-top: -10px;
 }

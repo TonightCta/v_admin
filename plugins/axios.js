@@ -4,7 +4,7 @@ import config from "~/config"
 const api = config.apiCenter;
 console.log(api)
 const PREFIX = ""
-const SERVER_URL = `${api.host}${api.port?':'+api.port:''}${PREFIX}`
+const SERVER_URL = `${api.host}${api.port ? ':' + api.port : ''}${PREFIX}`
 
 let request = axios.create({
   baseURL: SERVER_URL
@@ -29,7 +29,7 @@ request.interceptors.request.use(
 )
 
 request.interceptors.response.use(
-  response =>{
+  response => {
     return response.data
   },
   error => {

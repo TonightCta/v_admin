@@ -53,7 +53,7 @@
             </li>
             <li>
               <p>上次登录时间<span></span></p>
-              <p>-</p>
+              <p>{{account.last_login_time}}</p>
             </li>
           </ul>
         </div>
@@ -174,6 +174,7 @@ export default {
   },
   mounted() {
     this.account = this.$store.state.bossAssetsCenter.merchantInfo;
+    console.log(this.account)
   },
   watch: {
     merchantID: {

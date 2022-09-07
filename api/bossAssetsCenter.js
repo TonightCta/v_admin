@@ -252,9 +252,25 @@ export default class BossAssetsCenter {
         })
     };
     //币种统计
-    async coinLog(params){
+    async coinLog(params) {
         return await request({
-            url:BASE_URL + '/analysis/coinCounts',
+            url: BASE_URL + '/analysis/coinCounts',
+            method: "POST",
+            data: params
+        })
+    }
+    //流水总览
+    async billAssets(params) {
+        return await request({
+            url: BASE_URL + '/analysis/countProfits',
+            method: "GET",
+            data: params
+        })
+    }
+    //检查矿工费
+    async checkWorkfee(params){
+        return await request({
+            url:BASE_URL + '/userWithdraw/beforeMerchantWithdraw',
             method:"POST",
             data:params
         })

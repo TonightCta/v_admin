@@ -125,6 +125,10 @@ export default {
       this.asset_list = Object.keys(re_allCoins);
       return re_allCoins;
     },
+    allFeeCoins(){
+      let re_allCoins = this.$store.state.bossAssetsCenter.allFeeCoins || [];
+      return re_allCoins;
+    }
   },
   created() {
     this.testEv();
@@ -138,7 +142,7 @@ export default {
     },
     selectCoin(_val) {
       this.currentCoinChange(this.allCoins[_val]);
-      this.currentCoinChangeFee(this.currentCoinFee);
+      this.currentCoinChangeFee(this.allFeeCoins[_val]);
     },
     async testEv() {
       const result = await this.$store.dispatch(

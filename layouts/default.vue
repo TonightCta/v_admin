@@ -713,6 +713,7 @@ export default {
       this.$store.dispatch("openCertificationPage");
       this.$store.dispatch("bossMember/logout");
       this.$router.push("/login");
+      
       return;
       this.isLogoutting = true;
       try {

@@ -25,7 +25,7 @@
         <img :src="require('../../../assets/images/lock_icon.png')" alt="" />
         <input
           :type="pass"
-          autocomplet="off"
+          autocomplete="new-password"
           v-model="loginParams.password"
           :placeholder="$vuetify.lang.t('$vuetify.loginPage.enterPwd')"
           @keydown.enter="boradEv"

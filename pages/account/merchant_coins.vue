@@ -95,10 +95,10 @@
             </el-button>
             <el-button
                 class="can-click"
-                v-if=" item.mainCoin === ''"
+                v-if="false"
                 size="mini"
                 @click="
-                $store.state.bossAssetsCenter.merchantInfo.is_admin && item.mainCoin === ''
+                $store.state.bossAssetsCenter.merchantInfo.is_admin && item.mainCoin == ''
                   ? drawCoin(item)
                   : null
               "
@@ -116,14 +116,17 @@
             </div>
           </template>
           <template v-slot:item.status="{ item }">
-  <div>
-    {{
-      item.status == 1
-        ? $vuetify.lang.t("$vuetify.mine.正常")
-        : $vuetify.lang.t("$vuetify.mine.冻结")
-    }}
-  </div>
-</template>
+            <div>
+              {{
+                item.status == 1
+                  ? $vuetify.lang.t("$vuetify.mine.正常")
+                  : $vuetify.lang.t("$vuetify.mine.冻结")
+              }}
+            </div>
+          </template>
+          <template v-slot:item.is_undun="{ item }">
+            <div>{{item.udun === 1 ? 'UDUN' : '自有'}}</div>
+          </template>
         </v-data-table>
       </div>
       <v-divider />
@@ -350,7 +353,7 @@ export default {
           value: "max_withdraw",
         },
         {
-          text: this.$vuetify.lang.t("$vuetify.mine.Udun归集地址"),
+          text: 'UDUN归集地址',
           sortable: false,
           align: "center",
           value: "udun_pool_address",
@@ -360,6 +363,12 @@ export default {
           sortable: false,
           align: "center",
           value: "udun_pool_last_time",
+        },
+        {
+          text:'是否UDUN服务',
+          sortable:false,
+          align:'center',
+          value:'is_undun'
         },
         {
           text: this.$vuetify.lang.t("$vuetify.mine.操作"),
@@ -447,12 +456,14 @@ export default {
             "merchant_id": _item.mch_id
           }
       );
-      console.log(result)
-      if (result.code === 200){
-        this.transferMsg = _item;
-        this.showTransModel = true;
-        this.poolCollectResponse = result.data;
+      const { code } = result;
+      if( code !== 200){
+        Message.error(result.message);
+        return
       }
+      this.transferMsg = _item;
+      this.showTransModel = true;
+      this.poolCollectResponse = result.data;
     },
     //修改配置
     collectCoin(_item) {

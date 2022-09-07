@@ -16,6 +16,9 @@
 }
 .mine-radio{
   margin-top: 0;
+  display: flex;
+  flex-wrap: wrap;
+  padding-right: 48px;
 }
 .select-coin {
   margin: 24px 0 70px 0;
@@ -30,6 +33,8 @@
   text-align: center;
   height: 56px!important;
   padding-top: 20px!important;
+  margin-left: 0!important;
+  margin-bottom: 12px;
   .el-radio__input {
     display: none;
   }

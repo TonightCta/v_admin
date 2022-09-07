@@ -164,6 +164,7 @@
         depressed,
         color="primary",
         :disabled="disabledWithdraw",
+        v-loading="waitCheck",
         @click="startWithdraw"
       ) {{ $vuetify.lang.t('$vuetify.loginPage.nextStep') }}
 
@@ -320,13 +321,16 @@
         button.check-btn.oper-btn(disabled)(v-if="checkStatus === 2") 检查中...
         button.go-withdraw.oper-btn(
           v-if="checkStatus === 3",
-          @click="checkFee = false;"
+          @click="checkFee = false"
         ) 去提币
         button.go-recharge.oper-btn(
           v-if="checkStatus === 4",
           @click="checkFee = false; $router.push('/funding/merchant_recharge')"
         ) 去充值
-  <WithDraw/>
+  //- 提币
+  <WithDraw ref="withdraw" @resetInput="resetInput"/>
+  //- 检查矿工费
+  <CheckFee ref="checkfee"/>
 </template>
     
 <script>
@@ -374,8 +378,9 @@ export default {
       showIsVerify: false,
       allAddress: [],
       currentCoin: "",
-      defaultCoin:'TRX',
+      defaultCoin: "TRX",
       curr_coin: {},
+      waitCheck:false,
       currentAddr: {
         address: "",
         note: "",
@@ -451,9 +456,10 @@ export default {
   created() {
     that = this;
   },
-  components:{
-    WithDraw:(resolve) => require(['./components/withdraw'],resolve)
-  },  
+  components: {
+    WithDraw: (resolve) => require(["./components/withdraw"], resolve),
+    CheckFee: (resolve) => require(["./components/check_fee"], resolve),
+  },
   computed: {
     disabledVerifyCode() {
       return this.sendingTime > 0;
@@ -514,6 +520,11 @@ export default {
     this.initWithdraw();
   },
   methods: {
+    //重置输入
+    resetInput() {
+      this.withdrawNum = 0;
+      this.currentAddr.address = "";
+    },
     //检查矿工费
     async checkService() {
       this.checkStatus = 2;
@@ -524,7 +535,11 @@ export default {
           merchant_id: this.$store.state.bossAssetsCenter.merchantInfo.mch_id,
         }
       );
-      this.checkStatus = Number(this.currentCoin.userFeeAvailable) > Number(result.data.totalToolFee) ? 3 : 4
+      this.checkStatus =
+        Number(this.currentCoin.userFeeAvailable) >
+        Number(result.data.totalToolFee)
+          ? 3
+          : 4;
     },
     calcReceivedAmount() {
       let n = parseFloat(this.withdrawNum);
@@ -537,7 +552,7 @@ export default {
       }
     },
     allWithdraw() {
-      this.withdrawNum = this.currentCoin.userAvailable;
+      this.withdrawNum = this.currentCoin.userAvailable - this.currentCoin.userAvailable * this.currentCoin.withdraw_service_fee_rate;
     },
     forgetTransPwd() {
       eVue.$emit("forgetTransPwd");
@@ -745,9 +760,43 @@ export default {
       // } catch (error) {
       //    console.log(error)
       // }
-      this.showWithdrawSure = true;
+      // this.showWithdrawSure = true;
+      this.waitCheck = true;
+      const check = {
+        coin: this.currentCoin.asset,
+        amount: this.withdrawNum,
+      };
+      const result = await this.$store.dispatch(
+        "bossAssetsCenter/checkWorkfee",
+        check
+      );
+      this.waitCheck = false;
+      const { code } = result;
+      if(code != 200){
+        this.$refs.checkfee.getErrorMsg(result.data);
+        return;
+      };
+      let toAddress = this.currentAddr.address;
+      if (this.currentAddr.note) {
+        toAddress = toAddress + "|" + this.currentAddr.note;
+      }
+      const params = {
+        asset: this.currentCoin.asset,
+        toAddress: toAddress,
+        txAmount: this.withdrawNum,
+        walletId: window.sessionStorage.getItem("userId"),
+        userWithdrawId: this.userWithdrawId,
+        fee: this.$fixed8(this.calcServerFee),
+        toolFee:result.data.totalToolFee
+      };
+      this.$refs.withdraw.getWithdrawMsg(params);
     },
     async withdrawSubmit() {
+      //检查手续费
+      // 数量 & 币种
+      // withdraw
+
+      // return;
       this.isSubmitting = true;
       try {
         let toAddress = this.currentAddr.address;
@@ -825,19 +874,23 @@ export default {
   display: flex;
   flex-direction: column;
   min-height: 100%;
-  .select-coin{
-    margin-bottom:38px;
+  background: #f5f5fc;
+
+  .select-coin {
+    margin-bottom: 38px;
   }
-  
+
   .card-label {
     min-width: 115px;
     text-align: right;
     margin: 0 20px 0 0;
     line-height: 48px;
   }
-  .v-card__text{
-    padding-left:0;
+
+  .v-card__text {
+    padding-left: 0;
   }
+
   .coin-btn {
     // height: 36px !important;
     border-radius: 4px !important;
