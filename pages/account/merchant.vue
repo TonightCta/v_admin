@@ -17,9 +17,23 @@
       .subtitle-1.px-6.py-3.cer-item
         .mr-4.info-label {{ $vuetify.lang.t('$vuetify.merchantInfo.merchantSdkId') }}：
         span {{ merchant.enterpriseManagerId }}
+          v-btn#copy-btn-one(
+            color="primary",
+            small,
+            dark,
+            :data-clipboard-text="merchant.enterpriseManagerId",
+            @click="copyAddress"
+          ) 复制
       .subtitle-1.px-6.py-3.cer-item
         .mr-4.info-label {{ $vuetify.lang.t('$vuetify.lable.gateway_server') }}：
         span {{ gateway }}
+          v-btn#copy-btn-two(
+            color="primary",
+            small,
+            dark,
+            :data-clipboard-text="gateway",
+            @click="copyWay"
+          ) 复制
 
       .subtitle-1.px-6.py-3.cer-item
         .mr-4.info-label API KEY：
@@ -145,12 +159,12 @@
       .subtitle-1.px-6.py-3.cer-item(v-if="merchant.level > 0")
         .mr-4.info-label {{ $vuetify.lang.t('$vuetify.lable.merchant_email') }}：
         span {{ $formatEmail(merchant.email) }}
-      .subtitle-1.px-6.py-3.cer-item(v-if="merchant.level > 0")
-        .mr-4.info-label {{ $vuetify.lang.t('$vuetify.lable.url_name') }}：
-        span {{ merchant.merchantWebsiteUrl }}
-      .subtitle-1.px-6.py-3.cer-item(v-if="merchant.level > 0")
-        .mr-4.info-label {{ $vuetify.lang.t('$vuetify.lable.business_introduction') }}：
-        span {{ merchant.merchantDesc }}
+      //- .subtitle-1.px-6.py-3.cer-item(v-if="merchant.level > 0")
+      //-   .mr-4.info-label {{ $vuetify.lang.t('$vuetify.lable.url_name') }}：
+      //-   span {{ merchant.merchantWebsiteUrl }}
+      //- .subtitle-1.px-6.py-3.cer-item(v-if="merchant.level > 0")
+      //-   .mr-4.info-label {{ $vuetify.lang.t('$vuetify.lable.business_introduction') }}：
+      //-   span {{ merchant.merchantDesc }}
     //- 企业认证
     .info-public(v-if="merchant.level > 0")
       .title.mb-4 {{ $vuetify.lang.t('$vuetify.merchantInfo.companyCertification') }}
@@ -181,6 +195,7 @@
 <script>
 import { Message } from "element-ui";
 var that = null;
+import Clipboard from "clipboard";
 export default {
   data: () => {
     return {
@@ -440,6 +455,35 @@ export default {
         clearTimeout(this.sendingTimer);
       }
     },
+    //复制ID
+    copyAddress() {
+      const clipboard = new Clipboard("#copy-btn-one");
+      clipboard.on("success", (e) => {
+        Message.success("复制成功");
+        //  释放内存
+        clipboard.destroy();
+      });
+      clipboard.on("error", (e) => {
+        // 不支持复制
+        Message.error("该浏览器不支持复制");
+        // 释放内存
+        clipboard.destroy();
+      });
+    },
+    copyWay() {
+      const clipboard = new Clipboard("#copy-btn-two");
+      clipboard.on("success", (e) => {
+        Message.success("复制成功");
+        //  释放内存
+        clipboard.destroy();
+      });
+      clipboard.on("error", (e) => {
+        // 不支持复制
+        Message.error("该浏览器不支持复制");
+        // 释放内存
+        clipboard.destroy();
+      });
+    },
   },
 };
 </script>
@@ -493,6 +537,10 @@ export default {
   .cer-item {
     display: flex;
     align-items: flex-start;
+
+    button {
+      margin-left: 12px;
+    }
 
     .info-label {
       min-width: 130px;

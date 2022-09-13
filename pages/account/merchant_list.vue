@@ -85,7 +85,7 @@
           <template v-slot:item.action="{ item }">
             <div class="list-oper" style="display: flex">
               <div
-                class="can-click"
+                class="can-click bg-click"
                 @click="
                   $store.state.bossAssetsCenter.merchantInfo.is_admin
                     ? autoLogin(item)
@@ -103,8 +103,8 @@
                 <!-- {{ $vuetify.lang.t("$vuetify.mine.导入地址") }} -->
                 <el-button
                   size="mini"
-                  type="primary"
-                  style="background: #4266ff"
+                  type="default"
+                  style="background:#0068FF;"
                   >登录</el-button
                 >
               </div>
@@ -113,35 +113,62 @@
                 @click="
                   editName = item.name;
                   editID = item.mch_id;
+                  editEmail = item.email;
                   editNicknameBox = true;
                 "
               >
                 <el-button
                   size="mini"
-                  type="primary"
-                  style="background: #4266ff"
-                  >设置名称</el-button
+                  type="default"
+                  >编辑</el-button
                 >
+              </div>
+              <div class="can-click-icon" @click="deleteAccount(item)">
+                <img :src="require('../../assets/images/delete_btn.png')" alt="">
               </div>
             </div>
           </template>
           <template v-slot:item.status="{ item }">
-            <div>
-              {{
-                item.status == 1
-                  ? $vuetify.lang.t("$vuetify.mine.正常")
-                  : $vuetify.lang.t("$vuetify.mine.冻结")
-              }}
-            </div>
-          </template>
-          <template v-slot:item.ip_list="{ item }">
-            <p>{{ item.ip_list ? item.ip_list : '-' }}</p>
-          </template>
-          <template v-slot:item.create="{ item }">
-            <div>
-              {{ item.created_at }}
-            </div>
-          </template>
+  <div :class="['status-box', item.status == 1 ? 'on-status' : 'off-status']">
+    {{
+      item.status == 1
+        ? $vuetify.lang.t("$vuetify.mine.正常")
+        : $vuetify.lang.t("$vuetify.mine.冻结")
+    }}
+  </div>
+</template>
+                                <template v-slot:item.ip_list="{ item }">
+  <div>{{ item.ip_list ? item.ip_list : "-" }}</div>
+</template>
+                                <template v-slot:item.create="{ item }">
+  <div>
+    {{ item.created_at }}
+  </div>
+</template>
+                                <template v-slot:item.switch="{ item }">
+  <div class="">
+    <el-switch
+      v-model="item.status"
+      active-color="#18C711"
+      inactive-color="#FF4D4E"
+      :active-value="1"
+      :inactive-value="0"
+      @change="changeStatus('status', item)"
+    >
+    </el-switch>
+  </div>
+</template>
+          <template v-slot:item.switch_admin="{ item }">
+  <el-switch
+    v-model="item.is_admin"
+    active-color="#18C711"
+    inactive-color="#FF4D4E"
+    :active-value="1"
+    :inactive-value="0"
+    @change="changeStatus('is_admin', item)"
+  >
+  </el-switch>
+</template>
         </v-data-table>
       </div>
       <v-divider />
@@ -333,8 +360,12 @@
     </v-dialog>
     <el-dialog title="编辑名称" :visible.sync="editNicknameBox" width="30%">
       <div class="edit-nickname">
+        <p>邮箱</p>
+        <input type="text" v-model="editEmail" placeholder="请输入邮箱地址" />
+      </div>
+      <div class="edit-nickname">
         <p>商户名称</p>
-        <el-input type="text" v-model="editName" placeholder="请输入商户名称" />
+        <input type="text" v-model="editName" placeholder="请输入商户名称" />
       </div>
       <span slot="footer" class="dialog-footer">
         <el-button @click="editNicknameBox = false" size="small">取 消</el-button>
@@ -353,7 +384,7 @@ export default {
       merchantListService: [], //商家列表
       tableLoading: false,
       query: {
-        merchant: null,
+        merchant: '全部',
       }, //筛选条件
       showTransModel: false, //转账窗口
       transferMsg: {}, //转账信息
@@ -385,6 +416,8 @@ export default {
       editNicknameBox: false, //编辑商户名
       editName: null, //新的商户名
       editID: null, //当前编辑ID
+      value:1,
+      editEmail:null,//编辑邮箱地址
     };
   },
   // $vuetify.lang.t('$vuetify.mine.确认')
@@ -407,12 +440,7 @@ export default {
           sortable: false,
           value: "email",
         },
-        {
-          text: this.$vuetify.lang.t("$vuetify.mine.状态"),
-          sortable: false,
-          value: "status",
-          align: "center",
-        },
+        
         {
           text: '白名单IP',
           sortable: false,
@@ -423,6 +451,24 @@ export default {
           text: '开户时间',
           sortable: false,
           value: "create",
+        },
+        {
+          text: this.$vuetify.lang.t("$vuetify.mine.状态"),
+          sortable: false,
+          value: "status",
+          align: "center",
+        },
+        {
+          text: '启用/禁用',
+          sortable: false,
+          value: "switch",
+          align: "center",
+        },
+        {
+          text: '管理员',
+          sortable: false,
+          value: "switch_admin",
+          align: "center",
         },
         {
           text: this.$vuetify.lang.t("$vuetify.mine.操作"),
@@ -448,20 +494,15 @@ export default {
           value: "email",
         },
         {
-          text: this.$vuetify.lang.t("$vuetify.mine.状态"),
-          sortable: false,
-          value: "status",
-          align: "center",
-        },
-        {
           text: '白名单IP',
           sortable: false,
           value: "ip_list",
         },
         {
-          text: '状态',
+          text: this.$vuetify.lang.t("$vuetify.mine.状态"),
           sortable: false,
           value: "status",
+          align: "center",
         },
         {
           text: this.$vuetify.lang.t("$vuetify.mine.操作"),
@@ -496,15 +537,73 @@ export default {
     this.getAllAddress();
   },
   methods: {
+    //冻结 & 启用
+    async changeStatus(_type,_item){
+      const next = async () => {
+        const result = await this.$store.dispatch('bossAssetsCenter/changeAccountStatus',{
+            id:_item.id,
+            key:_type,
+            status:_type === 'status' ? _item.status : _item.is_admin
+          });
+          const { code } = result;
+          if(code !== 200){
+            Message.error(result.message);
+            _type === 'status' && (_item.status = _item.status == 0 ? 1 : 0)
+            _type === 'is_admin' && (_item.is_admin = _item.is_admin == 0 ? 1 : 0)
+            return;
+          };
+          Message.success('操作成功');
+      }
+      if(_item.status === 0){
+        this.$confirm(`此操作将冻结当前账号，当前账号下的所有操作将无法进行，是否继续？`, '提示', {
+          confirmButtonText: '确定',
+          cancelButtonText: '取消',
+          type: 'warning'
+        }).then(async () => {
+          next();
+        }).catch(() => {
+          _type === 'status' && (_item.status = _item.status == 0 ? 1 : 0)
+          _type === 'is_admin' && (_item.is_admin = _item.is_admin == 0 ? 1 : 0)
+        })
+      }else{
+        next()
+      }
+      
+      
+    },
+    //删除账户
+    async deleteAccount(_item){
+      this.$confirm(`此操作将删除当前账号，当前账号下的所有操作将无法进行，是否继续？`, '提示', {
+          confirmButtonText: '确定',
+          cancelButtonText: '取消',
+          type: 'error'
+        }).then(async () => {
+          const result = await this.$store.dispatch('bossAssetsCenter/deleAccount',{
+            id:_item.id
+          });
+          const { code } = result;
+          if(code != 200){
+            Message.error(result.message);
+            return
+          };
+          Message.success('删除成功');
+          this.getAllAddress();
+        })
+      
+    },
     //提交编辑名称
     async submitEdit() {
       if (!this.editName) {
         Message.error("请输入商户名称");
         return;
       }
+      if(!this.editEmail){
+        Message.error('请输入邮箱地址');
+        return
+      };
       const result = await this.$store.dispatch(
         "bossAssetsCenter/editMerchantName",
-        { mch_id: this.editID, name: this.editName }
+        { mch_id: this.editID, name: this.editName,email:this.editEmail }
       );
       const { code } = result;
       if(code !== 200){
@@ -515,6 +614,7 @@ export default {
       this.editNicknameBox = false;
       this.getAllAddress();
     },
+    //自动登录
     autoLogin(_item) {
       const features =
         "height=800, width=1366, top=100, left=100, toolbar=no, menubar=no,scrollbars=no,resizable=no, location=no, status=no";
@@ -709,12 +809,46 @@ export default {
     padding-bottom: 30px;
     .can-click {
       cursor: pointer;
-      color: #4266ff;
       margin-left: 16px;
+      button{
+        color: rgb(95, 116, 210);
+      }
+    }
+    .bg-click{
+      button{
+        color: white;
+      }
+    }
+    .can-click:nth-child(2)::before{
+      content: '';
+      display: inline-block;
+      height: 12px;
+      width: 1px;
+      background-color: #DBE7FF;
+      margin-right: 10px;
+      transform: translateY(2px);
+    }
+    .can-click-icon{
+      img{
+        width: 16px;
+        height: 17px;
+        vertical-align: middle;
+        cursor: pointer;
+      }
+    }
+    .can-click-icon::before{
+      content: '';
+      display: inline-block;
+      height: 12px;
+      width: 1px;
+      background-color: #DBE7FF;
+      margin:0 10px;
+      transform: translateY(2px);
     }
     .list-oper {
       display: flex;
       justify-content: flex-end;
+      align-items: center;
     }
   }
 }
@@ -821,10 +955,44 @@ export default {
 .edit-nickname {
   display: flex;
   align-items: center;
+  margin-bottom: 24px;
   p {
     white-space: nowrap;
     margin-right: 12px;
     margin-bottom: 0;
+    width: 72px;
+    margin-right: 16px;
+    color: #666;
+    font-size: 15px;
+    font-weight: 500;
+    text-align-last: justify;
   }
+  input{
+    flex: 1;
+    height: 44px;
+    border-radius: 4px;
+    border: 1px solid #f6f6f6;
+    outline: none;
+    box-sizing: border-box;
+    padding-left: 16px;
+  }
+}
+.edit-nickname:last-child{
+  margin-bottom: 0;
+}
+.status-box{
+  width: 54px;
+  border-radius: 4px;
+  margin: 0 auto;
+  font-size: 12px;
+  padding: 2px 0;
+}
+.on-status{
+  background-color: rgba(30,217,23,.1);
+  color: #108F0B;
+}
+.off-status{
+  background-color: #FFEBF0;
+  color: #DE2829;
 }
 </style>

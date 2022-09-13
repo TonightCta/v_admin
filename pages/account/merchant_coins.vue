@@ -236,8 +236,8 @@
         <v-card-actions>
           <v-spacer></v-spacer>
           <div class="inp-oper">
-              <v-btn color="primary" class="default-btn" @click="addMerchantBox = false"> {{ $vuetify.lang.t('$vuetify.lable.cancel') }} </v-btn>
-              <v-btn color="primary" class="primary-btn" :loading="loadAdd" @click="submitAddMerchant"> {{ $vuetify.lang.t('$vuetify.mine.确认') }} </v-btn>
+              <button color="default" class="default-btn" @click="addMerchantBox = false"> {{ $vuetify.lang.t('$vuetify.lable.cancel') }} </button>
+              <button color="primary" class="primary-btn" :loading="loadAdd" @click="submitAddMerchant"> {{ $vuetify.lang.t('$vuetify.mine.确认') }} </button>
           </div>
         </v-card-actions>
       </v-card>

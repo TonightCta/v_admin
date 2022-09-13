@@ -116,13 +116,18 @@
             -
           </template>
           <template v-slot:item.is_self="{ item }">
-            <p>
+            <div>
               {{ item.is_self == 1 ? $vuetify.lang.t("$vuetify.mine.商户主钱包") : "" }}
               {{
                 item.is_self == 2 ? $vuetify.lang.t("$vuetify.mine.商户手续费钱包") : ""
               }}
               {{ item.is_self == 0 ? $vuetify.lang.t("$vuetify.mine.客户钱包") : "" }}
-            </p>
+            </div>
+          </template>
+          <template v-slot:item.is_udun_address="{ item }">
+            <div>
+              {{ item.is_udun_address == 0 ? '自有' : 'UDUN' }}
+            </div>
           </template>
         </v-data-table>
       </div>
@@ -208,7 +213,7 @@ export default {
       coinListVal: [], //币种选择
       tableLoading: false,
       query: {
-        merchant: "",
+        merchant: "全部",
         coin: "全部",
         address: null,
         is_self: null,
@@ -260,7 +265,14 @@ export default {
         {
           text: this.$vuetify.lang.t("$vuetify.mine.类型"),
           sortable: false,
+          align:'center',
           value: "is_self",
+        },
+        {
+          text: '是否UDUN地址',
+          align:'center',
+          sortable: false,
+          value: "is_udun_address",
         },
         {
           text: this.$vuetify.lang.t("$vuetify.mine.业务ID"),

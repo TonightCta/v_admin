@@ -210,5 +210,13 @@ export const actions = {
     checkWorkfee: async ({ commit }, params) => {
         const res = await bossAssetsCenter.checkWorkfee(params);
         return res
+    },
+    changeAccountStatus:async ({commit},params) => {
+        const res = await bossAssetsCenter.changeAccountStatus(params);
+        return res;
+    },
+    deleAccount:async ({commit},params) => {
+        const res = await bossAssetsCenter.deleAccount(params);
+        return res;
     }
 }

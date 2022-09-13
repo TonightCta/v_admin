@@ -67,7 +67,7 @@ v-app#ib-wallet(
         :class="[{ 'current-page': currentPage == '/order/user_recharge' }]"
       )
         v-list-item-avatar
-          i.iconfont.icon-6.ali-icon
+          i.iconfont-mine.icon-bianzu1.ali-icon
         v-list-item-title {{ $vuetify.lang.t('$vuetify.defaultLayout.userDepositOrder') }}
       v-list-item(
         link,
@@ -76,7 +76,7 @@ v-app#ib-wallet(
         :class="[{ 'current-page': currentPage == '/order/user_withdraw' }]"
       )
         v-list-item-avatar
-          i.iconfont.icon-8.ali-icon
+          i.iconfont-mine.icon-a-xinzengshanghubeifen4.ali-icon
         v-list-item-title {{ $vuetify.lang.t('$vuetify.defaultLayout.userWithdrawOrder') }}
 
       v-list-item(
@@ -86,7 +86,7 @@ v-app#ib-wallet(
         :class="[{ 'current-page': currentPage == '/order/merchant_recharge' }]"
       )
         v-list-item-avatar
-          i.iconfont.icon-5.ali-icon
+          i.iconfont-mine.icon-a-xinzengshanghubeifen41.ali-icon
         v-list-item-title {{ $vuetify.lang.t('$vuetify.defaultLayout.merchantDepositOrder') }}
       v-list-item(
         link,
@@ -95,7 +95,7 @@ v-app#ib-wallet(
         :class="[{ 'current-page': currentPage == '/order/merchant_withdraw' }]"
       )
         v-list-item-avatar
-          i.iconfont.icon-4.ali-icon
+          i.iconfont-mine.icon-a-xinzengshanghubeifen42.ali-icon
         v-list-item-title {{ $vuetify.lang.t('$vuetify.defaultLayout.merchantWithdrawOrder') }}
 
     //- 资金管理
@@ -117,7 +117,7 @@ v-app#ib-wallet(
         :class="[{ 'current-page': currentPage == '/funding/merchant_recharge' }]"
       )
         v-list-item-avatar
-          i.iconfont.icon-5.ali-icon
+          i.iconfont-mine.icon-a-xinzengshanghubeifen43.ali-icon
         v-list-item-title {{ $vuetify.lang.t('$vuetify.defaultLayout.merchantDeposit') }}
 
       v-list-item(
@@ -127,7 +127,7 @@ v-app#ib-wallet(
         :class="[{ 'current-page': currentPage == '/funding/merchant_withdraw' }]"
       )
         v-list-item-avatar
-          i.iconfont.icon-4.ali-icon
+          i.iconfont-mine.icon-a-xinzengshanghubeifen44.ali-icon
         v-list-item-title {{ $vuetify.lang.t('$vuetify.defaultLayout.merchantWithdraw') }}
 
       // /funding/merchant_addresses
@@ -138,7 +138,7 @@ v-app#ib-wallet(
         :class="[{ 'current-page': currentPage == '/funding/merchant_addresses' }]"
       )
         v-list-item-avatar
-          i.iconfont.icon-4.ali-icon
+          i.iconfont-mine.icon-a-xinzengshanghubeifen45.ali-icon
         v-list-item-title {{ $vuetify.lang.t('$vuetify.defaultLayout.addresses') }}
 
     //- 账户信息
@@ -160,7 +160,7 @@ v-app#ib-wallet(
         :class="[{ 'current-page': currentPage == '/account/merchant_list' }]"
       )
         v-list-item-avatar
-          i.iconfont.icon-7.ali-icon
+          i.iconfont-mine.icon-a-xinzengshanghubeifen46.ali-icon
         v-list-item-title {{ $vuetify.lang.t('$vuetify.mine.商家列表') }}
 
       v-list-item(
@@ -171,7 +171,7 @@ v-app#ib-wallet(
         :class="[{ 'current-page': currentPage == '/account/merchant_coins' }]"
       )
         v-list-item-avatar
-          i.iconfont.icon-7.ali-icon
+          i.iconfont-mine.icon-shangjia.ali-icon
         v-list-item-title {{ $vuetify.lang.t('$vuetify.mine.商家配置') }}
 
       v-list-item(
@@ -181,7 +181,7 @@ v-app#ib-wallet(
         :class="[{ 'current-page': currentPage == '/account/merchant' }]"
       )
         v-list-item-avatar
-          i.iconfont.icon-7.ali-icon
+          i.iconfont-mine.icon-a-xinzengshanghubeifen47.ali-icon
         v-list-item-title {{ $vuetify.lang.t('$vuetify.defaultLayout.merchantInfo') }}
 
       v-list-item(

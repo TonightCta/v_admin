@@ -33,11 +33,11 @@
         )
 
       .tool-box(v-if="identify == 'user' && manageWay == 'withdraw'")
-        span {{ $vuetify.lang.t('$vuetify.table.username') }}/{{ $vuetify.lang.t('$vuetify.table.merchantOrderId') }}：
+        span {{ $vuetify.lang.t('$vuetify.table.merchantOrderId') }}：
         v-text-field.per-tool(
           v-model="order.userName",
           style="width: 230px; transform: scale(0.85)",
-          :label="$vuetify.lang.t('$vuetify.table.username') + '/' + $vuetify.lang.t('$vuetify.table.merchantOrderId')",
+          :label="$vuetify.lang.t('$vuetify.table.merchantOrderId')",
           outlined,
           single-line,
           dense,
@@ -193,19 +193,19 @@
           :placeholder="$vuetify.lang.t('$vuetify.orderComponent.pleaseEnter') + $vuetify.lang.t('$vuetify.table.address')",
           hide-details
         )
-      .tool-box(v-if="manageWay != 'all'")
-        span {{ $vuetify.lang.t('$vuetify.table.tag') }}：
-        v-text-field.per-tool(
-          x-small,
-          v-model="order.tag",
-          style="width: 120px; transform: scale(0.85)",
-          :label="$vuetify.lang.t('$vuetify.table.tag')",
-          outlined,
-          single-line,
-          dense,
-          :placeholder="$vuetify.lang.t('$vuetify.orderComponent.pleaseEnter') + $vuetify.lang.t('$vuetify.table.tag')",
-          hide-details
-        )
+      //- .tool-box(v-if="manageWay != 'all'")
+      //-   span {{ $vuetify.lang.t('$vuetify.table.tag') }}：
+      //-   v-text-field.per-tool(
+      //-     x-small,
+      //-     v-model="order.tag",
+      //-     style="width: 120px; transform: scale(0.85)",
+      //-     :label="$vuetify.lang.t('$vuetify.table.tag')",
+      //-     outlined,
+      //-     single-line,
+      //-     dense,
+      //-     :placeholder="$vuetify.lang.t('$vuetify.orderComponent.pleaseEnter') + $vuetify.lang.t('$vuetify.table.tag')",
+      //-     hide-details
+      //-   )
       .tool-box(v-if="manageWay != 'all'")
         span {{ $vuetify.lang.t('$vuetify.table.txHash') }}：
         v-text-field.per-tool(
@@ -310,9 +310,9 @@
         template(v-slot:item.status="{ item }")
           //- span(v-if="item.status == -1") {{ $vuetify.lang.t('$vuetify.mine.已拒绝') }}
           span(v-if="item.status == 0") {{ $vuetify.lang.t('$vuetify.mine.未处理') }}
-          span(v-else-if="item.status == 1") {{ $vuetify.lang.t('$vuetify.mine.审核成功') }}
-          span(v-else-if="item.status == 2") {{ $vuetify.lang.t('$vuetify.mine.审核驳回') }}
-          span(v-else-if="item.status == 3") {{ $vuetify.lang.t('$vuetify.mine.交易成功') }}
+          span(v-else-if="item.status == 1") 提币中
+          span(v-else-if="item.status == 2") 已拒绝
+          span(v-else-if="item.status == 3") 提币完成
           span(v-else-if="item.status == 4") {{ $vuetify.lang.t('$vuetify.mine.交易失败') }}
 
         template(v-slot:item.asset="{ item }")
@@ -991,8 +991,6 @@ export default {
           {
             class: "custom-min-width-column",
             text:
-              this.$vuetify.lang.t("$vuetify.table.username") +
-              "/" +
               this.$vuetify.lang.t("$vuetify.table.merchantOrderId"),
             sortable: false,
             value: "addColumn",

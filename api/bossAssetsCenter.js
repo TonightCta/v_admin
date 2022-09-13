@@ -268,11 +268,27 @@ export default class BossAssetsCenter {
         })
     }
     //检查矿工费
-    async checkWorkfee(params){
+    async checkWorkfee(params) {
         return await request({
-            url:BASE_URL + '/userWithdraw/beforeMerchantWithdraw',
-            method:"POST",
-            data:params
+            url: BASE_URL + '/userWithdraw/beforeMerchantWithdraw',
+            method: "POST",
+            data: params
+        })
+    }
+    //设置商家账号状态
+    async changeAccountStatus(params) {
+        return await request({
+            url: BASE_URL + '/manager/merchantStatus',
+            method: "POST",
+            data: params
+        })
+    }
+    //删除商户
+    async deleAccount(params) {
+        return await request({
+            url: BASE_URL + '/manager/merchantDelete',
+            method: "POST",
+            data: params
         })
     }
 }
