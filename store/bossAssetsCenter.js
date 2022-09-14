@@ -218,5 +218,9 @@ export const actions = {
     deleAccount:async ({commit},params) => {
         const res = await bossAssetsCenter.deleAccount(params);
         return res;
+    },
+    historyAddress:async ({commit},params) => {
+        const res = await bossAssetsCenter.historyAddress(params);
+        return res;
     }
 }

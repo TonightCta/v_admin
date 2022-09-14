@@ -19,6 +19,8 @@ import {
     RadioGroup,
     RadioButton,
     Switch,
+    Image,
+    Autocomplete
     
 } from 'element-ui';
 import 'element-ui/lib/theme-chalk/index.css';
@@ -29,7 +31,7 @@ Vue.use(Option);
 Vue.use(Popover);
 Vue.use(Button);
 Vue.use(Loading).use(Dropdown).use(DropdownMenu).use(DropdownItem).use(DatePicker).use(Table).use(TableColumn)
-.use(Dialog).use(Input).use(RadioGroup).use(RadioButton).use(Switch);
+.use(Dialog).use(Input).use(RadioGroup).use(RadioButton).use(Switch).use(Image).use(Autocomplete);
 Vue.prototype.$msgbox = MessageBox;
 Vue.prototype.$alert = MessageBox.alert;
 Vue.prototype.$confirm = MessageBox.confirm;

@@ -1,5 +1,12 @@
 .acrd-mine {
   padding-left: 48px;
+  .edit-title {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    box-sizing: border-box;
+    padding-right: 48px;
+  }
   .wring-read {
     font-size: 12px;
     padding: 0 10px;
@@ -10,11 +17,42 @@
     color: #e17474;
     height: 30px;
   }
+  .oper-tu {
+    box-sizing: border-box;
+    display: flex;
+    align-items: center;
+    .right-arrow {
+      width: 48px;
+      height: 20px;
+      margin-right: 20px;
+    }
+    button {
+      width: 94px;
+      height: 34px;
+      background: linear-gradient(135deg, #708bff 0%, #496bff 100%);
+      border-radius: 4px;
+      font-size: 14px;
+      color: white;
+      font-weight: 500;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      img {
+        width: 13px;
+        height: 13px;
+        margin-right: 6px;
+      }
+    }
+  }
+  .v-card__title {
+    display: flex;
+    justify-content: space-between;
+  }
   .v-card__title::before {
     background-color: #4266ff !important;
   }
 }
-.mine-radio{
+.mine-radio {
   margin-top: 0;
   display: flex;
   flex-wrap: wrap;
@@ -31,14 +69,14 @@
 .el-radio {
   min-width: 210px;
   text-align: center;
-  height: 56px!important;
-  padding-top: 20px!important;
-  margin-left: 0!important;
+  height: 56px !important;
+  padding-top: 20px !important;
+  margin-left: 0 !important;
   margin-bottom: 12px;
   .el-radio__input {
     display: none;
   }
-  .el-radio__label{
+  .el-radio__label {
     font-size: 16px;
   }
 }
@@ -187,6 +225,14 @@
     margin-left: 0 !important;
     width: 246px;
     height: 56px !important;
-    font-size: 20px!important;
+    font-size: 20px !important;
+  }
+}
+.inline-input {
+  .el-input {
+    .el-input__inner {
+      height: 50px;
+      border-color: #eee!important;
+    }
   }
 }

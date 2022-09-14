@@ -1,9 +1,15 @@
 <template lang="pug">
 .merchant-recharge.pa-6
   v-card.acrd-mine(style="flex-grow: 1", v-if="!showRecharge")
-    v-card-title(style="margin-left: -48px")
-      a.title(@click="closeShowRecharge") {{ $vuetify.lang.t('$vuetify.defaultLayout.merchantDeposit') }}
-      .wring-read 到账时间说明：1-5分钟，快慢取决于链上区块拥堵情况
+    .edit-title 
+      v-card-title(style="margin-left: -48px")
+        a.title(@click="closeShowRecharge") {{ $vuetify.lang.t('$vuetify.defaultLayout.merchantDeposit') }}
+        .wring-read 到账时间说明：1-5分钟，快慢取决于链上区块拥堵情况
+      .oper-tu 
+        img.right-arrow(:src="require('../../assets/images/right_arrow.png')")
+        button(@click="rechargeTuBox = true")
+          img(:src="require('../../assets/images/tu_icon.png')")
+          span 充币教程
     v-divider(style="margin-left: -48px")
     .select-coin 
       p.select-coin-title 选择充币账户
@@ -97,6 +103,7 @@
         v-spacer
         v-btn(depressed, color="error", @click="showForbidden = false") {{ $vuetify.lang.t('$vuetify.lable.ok') }}
         v-spacer
+  <RechargeTu v-model="rechargeTuBox"/>
 </template>
     
 <script>
@@ -117,6 +124,7 @@ export default {
       asset_list: [],
       showForbidden: false,
       normalCurrent: "TRX",
+      rechargeTuBox:false,//提币教程
     };
   },
   computed: {
@@ -125,16 +133,19 @@ export default {
       this.asset_list = Object.keys(re_allCoins);
       return re_allCoins;
     },
-    allFeeCoins(){
+    allFeeCoins() {
       let re_allCoins = this.$store.state.bossAssetsCenter.allFeeCoins || [];
       return re_allCoins;
-    }
+    },
   },
   created() {
     this.testEv();
     // setTimeout(() => {
     // this.currentCoinChange(this.$store.state.bossAssetsCenter.allCoins[0]);
     // },500)
+  },
+  components: {
+    RechargeTu: (resolve) => require(["./components/recharge_tu"], resolve),
   },
   methods: {
     jumpSide(_url) {
@@ -288,6 +299,7 @@ export default {
   flex-direction: column;
   min-height: 100%;
   background-color: #F5F5FC;
+
   .per-card-item {
     display: flex;
     align-items: center;

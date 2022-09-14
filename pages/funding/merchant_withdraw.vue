@@ -1,9 +1,15 @@
 <template lang="pug">
 .merchant-withdraw.pa-6
   v-card.acrd-mine(style="flex-grow: 1")
-    v-card-title(style="margin-left: -48px")
-      a.title {{ $vuetify.lang.t('$vuetify.defaultLayout.merchantWithdraw') }}
-      .wring-read 到账时间说明：1-5分钟，快慢取决于链上区块拥堵情况
+    .edit-title 
+      v-card-title(style="margin-left: -48px")
+        a.title {{ $vuetify.lang.t('$vuetify.defaultLayout.merchantWithdraw') }}
+        .wring-read 到账时间说明：1-5分钟，快慢取决于链上区块拥堵情况
+      .oper-tu 
+        img.right-arrow(:src="require('../../assets/images/right_arrow.png')")
+        button(@click="withdrawTuBox = true")
+          img(:src="require('../../assets/images/tu_icon.png')")
+          span 提币教程
     v-divider(style="margin-left: -48px")
     //- v-card-text.d-flex.clo-flex
     //-   .subtitle-1.card-label {{ $vuetify.lang.t('$vuetify.lable.select_account') }}：
@@ -54,15 +60,30 @@
         //v-icon(
         //  @click="$router.push('/funding/merchant_withdraw_address')"
         // ) mdi-account-box-outline
-      v-text-field(
+      //- v-text-field(
+      //-   v-model="currentAddr.address",
+      //-   style="width: 560px",
+      //-   :placeholder="$vuetify.lang.t('$vuetify.placeholder.address')",
+      //-   outlined,
+      //-   dense,
+      //-   hide-details,
+      //-   :disabled="!currentCoin.asset"
+      //- )
+      el-autocomplete.inline-input(
         v-model="currentAddr.address",
         style="width: 560px",
         :placeholder="$vuetify.lang.t('$vuetify.placeholder.address')",
-        outlined,
-        dense,
-        hide-details,
-        :disabled="!currentCoin.asset"
+        :disabled="!currentCoin.asset",
+        :fetch-suggestions="querySearch"
+        @select="selectHistory"
       )
+    //-   <el-autocomplete
+    //-   class="inline-input"
+    //-   v-model="state1"
+    //-   :fetch-suggestions="querySearch"
+    //-   placeholder="请输入内容"
+    //-   @select="handleSelect"
+    //- ></el-autocomplete>
 
     v-card-text.d-flex.pt-0.clo-flex(v-if="showInpAddress")
       .card-label
@@ -331,6 +352,8 @@
   <WithDraw ref="withdraw" @resetInput="resetInput"/>
   //- 检查矿工费
   <CheckFee ref="checkfee"/>
+  //- 提币教程
+  <WithdrawTu v-model="withdrawTuBox"/>
 </template>
     
 <script>
@@ -365,6 +388,7 @@ export default {
   },
   data() {
     return {
+      withdrawTuBox: false, //提币教程
       isSubmitting: false,
       sendingTimer: null,
       sendingTime: 0,
@@ -380,7 +404,7 @@ export default {
       currentCoin: "",
       defaultCoin: "TRX",
       curr_coin: {},
-      waitCheck:false,
+      waitCheck: false,
       currentAddr: {
         address: "",
         note: "",
@@ -396,6 +420,7 @@ export default {
         errorMessages: "",
         hint: "",
       },
+      restaurants: [],
       rules: {
         verifyCode: (value) => {
           const pattern = /^[a-zA-Z0-9]*$/;
@@ -459,6 +484,7 @@ export default {
   components: {
     WithDraw: (resolve) => require(["./components/withdraw"], resolve),
     CheckFee: (resolve) => require(["./components/check_fee"], resolve),
+    WithdrawTu: (resolve) => require(["./components/withdraw_tu.vue"], resolve),
   },
   computed: {
     disabledVerifyCode() {
@@ -520,6 +546,43 @@ export default {
     this.initWithdraw();
   },
   methods: {
+    //获取历史地址
+    async setHistory() {
+      const result = await this.$store.dispatch('bossAssetsCenter/historyAddress',{
+        asset: this.currentCoin.asset,
+        mainAsset: this.currentCoin.mainAsset,
+      });
+      const { data } = result;
+      const arr = [];
+      data.forEach((e) => {
+        arr.push({
+          value:e.remark,
+          address:e.address
+        })
+      });
+      this.restaurants = arr;
+    },
+    // 地址建议
+    querySearch(queryString, cb) {
+      const restaurants = this.restaurants;
+      const results = queryString
+        ? restaurants.filter(this.createFilter(queryString))
+        : restaurants;
+      // 调用 callback 返回建议列表的数据
+      cb(results);
+    },
+    createFilter(queryString) {
+      return (restaurant) => {
+        return (
+          restaurant.value.toLowerCase().indexOf(queryString.toLowerCase()) ===
+          0
+        );
+      };
+    },
+    //选中历史记录
+    selectHistory(_item){
+      this.currentAddr.address = _item.address;
+    },
     //重置输入
     resetInput() {
       this.withdrawNum = 0;
@@ -552,7 +615,10 @@ export default {
       }
     },
     allWithdraw() {
-      this.withdrawNum = this.currentCoin.userAvailable - this.currentCoin.userAvailable * this.currentCoin.withdraw_service_fee_rate;
+      this.withdrawNum =
+        this.currentCoin.userAvailable -
+        this.currentCoin.userAvailable *
+          this.currentCoin.withdraw_service_fee_rate;
     },
     forgetTransPwd() {
       eVue.$emit("forgetTransPwd");
@@ -632,6 +698,9 @@ export default {
       if (!this.currentCoin) {
         this.currentCoin = {};
         return;
+      };
+      if(this.restaurants.length > 1){
+        this.setHistory();
       }
       // this.getAddressBook()
     },
@@ -705,6 +774,7 @@ export default {
         this.currentCoin = this.allCoins[Object.keys(this.allCoins)[0]];
         this.currentCoinChange(this.defaultCoin);
       }
+      this.setHistory();
     },
     async getAddressBook() {
       try {
@@ -772,10 +842,10 @@ export default {
       );
       this.waitCheck = false;
       const { code } = result;
-      if(code != 200){
+      if (code != 200) {
         this.$refs.checkfee.getErrorMsg(result.data);
         return;
-      };
+      }
       let toAddress = this.currentAddr.address;
       if (this.currentAddr.note) {
         toAddress = toAddress + "|" + this.currentAddr.note;
@@ -787,7 +857,7 @@ export default {
         walletId: window.sessionStorage.getItem("userId"),
         userWithdrawId: this.userWithdrawId,
         fee: this.$fixed8(this.calcServerFee),
-        toolFee:result.data.totalToolFee
+        toolFee: result.data.totalToolFee,
       };
       this.$refs.withdraw.getWithdrawMsg(params);
     },

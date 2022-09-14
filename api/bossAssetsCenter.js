@@ -291,4 +291,12 @@ export default class BossAssetsCenter {
             data: params
         })
     }
+    //历史地址
+    async historyAddress(params){
+        return await request({
+            url:BASE_URL + '/manager/historyWithdrawAddress',
+            method:"POST",
+            data:params
+        })
+    }
 }
