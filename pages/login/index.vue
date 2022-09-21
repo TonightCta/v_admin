@@ -315,6 +315,11 @@ export default {
       }
     };
   },
+  mounted(){
+    if(/Mobile|Android|iPhone/i.test(navigator.userAgent)){
+      window.location.href = 'https://www.mobile.ib.cc/#/login';
+    }
+  },
   methods: {
      //获取地址栏参数
     GetUrlKey(name, url) {

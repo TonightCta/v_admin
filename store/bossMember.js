@@ -164,7 +164,8 @@ export const actions = {
     return res;
   },
   autoLogin: async ({ commit }, params) => {
-    let res = await bossMember.autoLogin(params)
+    let res = await bossMember.autoLogin(params);
+    console.log(res);
     if (res.code == '200') {
       window.sessionStorage.setItem('TOKEN', res.data.token_type + ' ' + res.data.access_token)
       window.sessionStorage.setItem('refreshToken', res.data.token_type)

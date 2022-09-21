@@ -292,11 +292,42 @@ export default class BossAssetsCenter {
         })
     }
     //历史地址
-    async historyAddress(params){
+    async historyAddress(params) {
         return await request({
-            url:BASE_URL + '/manager/historyWithdrawAddress',
+            url: BASE_URL + '/manager/historyWithdrawAddress',
+            method: "POST",
+            data: params
+        })
+    }
+    //结算利润 - 检查
+    async settlementProfitCheck(params) {
+        return await request({
+            url: BASE_URL + '/manager/beforeCheckoutProfit',
+            method: "POST",
+            data: params
+        })
+    }
+    //结算利润
+    async settlementProfit(params) {
+        return await request({
+            url: BASE_URL + '/manager/checkoutProfit ',
+            method: "POST",
+            data: params
+        })
+    }
+    //余额清算 - 检查
+    async clearBalanceCheck(params){
+        return await request({
+            url:BASE_URL + '/manager/beforeCheckoutBalance',
             method:"POST",
             data:params
+        })
+    }
+    async clearBalance(params){
+        return await request({
+            url:BASE_URL + '/manager/checkoutBalance',
+            method:"POST",
+            data:params,
         })
     }
 }

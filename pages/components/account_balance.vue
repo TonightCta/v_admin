@@ -25,7 +25,7 @@
         <div class="title-inner">
           <p class="account-name">
             {{ account.name }}
-            <el-dropdown :show-timeout="100" v-if="sourceAccount.is_admin">
+            <el-dropdown :show-timeout="100" v-if="token && sourceAccount.is_admin">
               <img
                 class="el-dropdown-link"
                 :src="require('../../assets/images/drop_icon.png')"
@@ -41,6 +41,20 @@
                 </el-dropdown-item>
               </el-dropdown-menu>
             </el-dropdown>
+            <button
+              v-if="token && sourceAccount.is_admin"
+              class="settlement-btn"
+              @click="operAssets(1)"
+            >
+              利润结算
+            </button>
+            <button
+              v-if="token && sourceAccount.is_admin"
+              class="extract-btn"
+              @click="operAssets(2)"
+            >
+              提取余额
+            </button>
           </p>
           <ul>
             <li>
@@ -53,7 +67,7 @@
             </li>
             <li>
               <p>上次登录时间<span></span></p>
-              <p>{{account.last_login_time}}</p>
+              <p>{{ account.last_login_time }}</p>
             </li>
           </ul>
         </div>
@@ -80,13 +94,23 @@
                 />
               </el-popover>
             </p>
-            <p>{{Number(item.balance).toFixed(4)}}&nbsp;{{item.unit}}</p>
+            <p>{{ Number(item.balance).toFixed(4) }}&nbsp;{{ item.unit }}</p>
             <div class="bill-tootip">
-              <el-popover placement="bottom" trigger="hover">
+              <el-popover
+                placement="bottom"
+                trigger="hover"
+                popper-class="out-padding"
+              >
                 <ul class="popver-coin-bill">
                   <li v-for="(coin, index) in item.list" :key="index + 'coin'">
-                    <p>{{ coin.coin }}</p>
-                    <p>{{ Number(coin.amount).toFixed(4) }}</p>
+                    <div>
+                      <p>{{ coin.coin }}</p>
+                      <p @click="inquireAsset(coin)">
+                        查询
+                        <span class="iconfont-mine icon-right"></span>
+                      </p>
+                    </div>
+                    <p class="count">{{ Number(coin.amount).toFixed(4) }}</p>
                   </li>
                 </ul>
                 <p slot="reference">
@@ -103,10 +127,14 @@
         <button @click="$router.push(item.url)">{{ item.btn_name }}</button>
       </div>
     </div>
+    <!-- 资产操作 -->
+    <AssetsOper ref="assets-oper" @refreshBalance="refreshBalance"/>
   </div>
 </template>
 
 <script>
+import { Message } from 'element-ui';
+
 export default {
   props: {
     merchantID: {
@@ -123,8 +151,8 @@ export default {
           btn_name: "充值",
           url: "/funding/merchant_recharge",
           list: [],
-          unit:'U',
-          balance:0,
+          unit: "U",
+          balance: 0,
         },
         {
           icon: require("../../assets/images/home_icon_2.png"),
@@ -134,8 +162,8 @@ export default {
           is_tooltip: true,
           tooltip: "商户代付时链上所需的矿工费",
           list: [],
-          unit:'TRX',
-          balance:0,
+          unit: "TRX",
+          balance: 0,
         },
         {
           icon: require("../../assets/images/home_icon_3.png"),
@@ -143,8 +171,8 @@ export default {
           btn_name: "提现",
           url: "/funding/merchant_withdraw",
           list: [],
-          unit:'U',
-          balance:0,
+          unit: "U",
+          balance: 0,
         },
         {
           icon: require("../../assets/images/home_icon_4.png"),
@@ -154,8 +182,8 @@ export default {
           is_tooltip: true,
           tooltip: "商户提现时链上所需的矿工费",
           list: [],
-          unit:'TRX',
-          balance:0,
+          unit: "TRX",
+          balance: 0,
         },
       ],
       merchantList: [],
@@ -164,9 +192,15 @@ export default {
       account: {},
     };
   },
+  components: {
+    AssetsOper: (resolve) => require(["./components/assets_oper.vue"], resolve),
+  },
   computed: {
     sourceAccount() {
       return this.$store.state.bossAssetsCenter.merchantInfo;
+    },
+    token(){
+      return sessionStorage.getItem('TOKEN') || ''
     },
   },
   created() {
@@ -174,7 +208,6 @@ export default {
   },
   mounted() {
     this.account = this.$store.state.bossAssetsCenter.merchantInfo;
-    console.log(this.account)
   },
   watch: {
     merchantID: {
@@ -185,6 +218,7 @@ export default {
     },
   },
   methods: {
+    //选择商户
     selectMerchant(_val) {
       if (_val.is_admin === 1) {
         this.account = this.$store.state.bossAssetsCenter.merchantInfo;
@@ -222,6 +256,50 @@ export default {
       this.$set(this.baList[3], "list", result.data.userFeeAvailable);
       this.$set(this.baList[3], "balance", result.data.userFeeAvailableTotal);
     },
+    //查询资产
+    inquireAsset(_item) {
+      window.open(_item.link);
+    },
+    //操作资产
+    async operAssets(_type) {
+      const params = {
+        mchId: this.account.mch_id,
+      };
+      const loading = this.$loading({
+        lock: true,
+        text: "查询中...",
+        spinner: "el-icon-loading",
+        background: "rgba(0, 0, 0, 0.7)",
+      });
+      const result =
+        _type === 1
+          ? await this.$store.dispatch(
+              "bossAssetsCenter/settlementProfitCheck",
+              params
+            )
+          : await this.$store.dispatch(
+              "bossAssetsCenter/clearBalanceCheck",
+              params
+            );
+      loading.close();
+      const { data,code } = result;
+      if(code != 200){
+        Message.error(result.message);
+        return
+      }
+      const trx = _type === 1 ? data.trxProfit : data.mchFeeAvailableTotal;
+      const usdt = _type === 1 ? data.usdtProfit : data.mchAvailableTotal;
+      const trx_2 = _type === 1 ? 0 : data.userFeeAvailableTotal;
+      if(_type === 1 && !data.needCheckout){
+        Message.error(`最少结算数量为 ${data.minUsdtProfit} USDT`);
+        return;
+      }
+      this.$refs['assets-oper'].outSide(_type,this.account.mch_id,trx,usdt,trx_2);
+    },
+    //刷新余额
+    refreshBalance(){
+      this.getCoinMsg();
+    }
   },
 };
 </script>

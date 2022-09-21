@@ -146,6 +146,22 @@
               transform: translateY(5px) rotate(-180deg);
               transition: 0.3s all;
             }
+            button {
+              font-size: 13px;
+              padding: 3px 8px;
+              border-radius: 4px;
+              color: #475eff;
+              display: inline-block;
+              transform: translateY(-3px);
+            }
+            .settlement-btn {
+              background-color: #e2e4ff;
+              margin-left: 20px;
+            }
+            .extract-btn{
+              border: 1px solid #586BFE;
+              margin-left: 10px;
+            }
           }
           ul {
             padding: 0;
@@ -369,7 +385,7 @@
               font-size: 20px;
               color: rgba(255, 255, 255, 0.65);
               margin-bottom: 0;
-              img{
+              img {
                 cursor: pointer;
                 width: 20px;
                 height: 20px;
@@ -426,32 +442,41 @@
 .popver-coin-bill {
   li {
     list-style: none;
-    .list-title {
+    div {
       font-size: 16px;
       color: #333;
-      font-weight: 500;
-      padding: 8px 18px;
+      padding: 7px 16px;
       background-color: #f8f8f8;
-    }
-    ul {
-      li {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      p:first-child {
+        font-weight: 500;
+      }
+      p:last-child {
+        font-size: 12px;
+        color: #3951fe;
+        cursor: pointer;
+        margin-left: 24px;
         display: flex;
-        justify-content: space-between;
-        margin-bottom: 0;
-        padding: 7px 18px;
         align-items: center;
-        p {
-          font-size: 14px;
-          color: #666;
-        }
-        p:last-child {
-          color: #999;
-          margin-left: 24px;
+        transform: translateY(1px);
+        .iconfont {
+          display: inline-block;
+          transform: scale(0.8) translateY(-1px);
         }
       }
+    }
+    .count {
+      padding: 8px 16px;
+      font-size: 16px;
+      color: #666;
     }
   }
   li:last-child {
     margin-bottom: 0;
   }
+}
+.out-padding {
+  padding: 0;
 }

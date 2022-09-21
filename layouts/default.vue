@@ -712,8 +712,8 @@ export default {
     async logout() {
       this.$store.dispatch("openCertificationPage");
       this.$store.dispatch("bossMember/logout");
+      window.sessionStorage.clear();
       this.$router.push("/login");
-      
       return;
       this.isLogoutting = true;
       try {

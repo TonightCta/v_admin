@@ -211,16 +211,32 @@ export const actions = {
         const res = await bossAssetsCenter.checkWorkfee(params);
         return res
     },
-    changeAccountStatus:async ({commit},params) => {
+    changeAccountStatus: async ({ commit }, params) => {
         const res = await bossAssetsCenter.changeAccountStatus(params);
         return res;
     },
-    deleAccount:async ({commit},params) => {
+    deleAccount: async ({ commit }, params) => {
         const res = await bossAssetsCenter.deleAccount(params);
         return res;
     },
-    historyAddress:async ({commit},params) => {
+    historyAddress: async ({ commit }, params) => {
         const res = await bossAssetsCenter.historyAddress(params);
         return res;
+    },
+    settlementProfitCheck: async ({ commit }, params) => {
+        const res = await bossAssetsCenter.settlementProfitCheck(params);
+        return res
+    },
+    settlementProfit: async ({ commit }, params) => {
+        const res = await bossAssetsCenter.settlementProfit(params);
+        return res
+    },
+    clearBalanceCheck:async ({commit},params) => {
+        const res = await bossAssetsCenter.clearBalanceCheck(params);
+        return res;
+    },
+    clearBalance:async ({commit},params) => {
+        const res = await bossAssetsCenter.clearBalance(params);
+        return res
     }
 }

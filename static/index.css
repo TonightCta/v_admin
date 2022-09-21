@@ -122,3 +122,6 @@
 .submit-btn .el-loading-mask .el-loading-spinner{
     margin-top: -10px;
 }
+.el-loading-spinner{
+    margin-top: -12px!important;
+}
