@@ -517,7 +517,9 @@ export default {
       border-radius: 4px;
       margin-bottom: 24px;
       min-width: 914px;
-
+      button{
+        box-shadow:none;
+      }
       .subtitle-1 {
         justify-content: space-between;
 

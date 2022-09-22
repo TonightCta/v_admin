@@ -70,12 +70,12 @@
       <div class="log-list">
         <div class="data-list">
           <el-table :data="tableData" style="width: 100%">
-            <el-table-column label="商户名称" width="280">
+            <el-table-column label="商户名称" width="180">
               <template slot-scope="{ row }">
                 <p>{{ row.merchant.name }}</p>
               </template>
             </el-table-column>
-            <el-table-column prop="ip" label="登录IP" width="280">
+            <el-table-column prop="ip" label="登录IP" width="180">
             </el-table-column>
             <el-table-column label="登录时间" header-align="right">
               <template slot-scope="{ row }">

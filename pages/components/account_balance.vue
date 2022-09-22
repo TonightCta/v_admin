@@ -105,7 +105,7 @@
                   <li v-for="(coin, index) in item.list" :key="index + 'coin'">
                     <div>
                       <p>{{ coin.coin }}</p>
-                      <p @click="inquireAsset(coin)">
+                      <p class="inquire-balance" v-if="coin.link && sourceAccount.is_admin" @click="inquireAsset(coin)">
                         查询
                         <span class="iconfont-mine icon-right"></span>
                       </p>
