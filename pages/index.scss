@@ -153,6 +153,11 @@
               color: #475eff;
               display: inline-block;
               transform: translateY(-3px);
+              .iconfont-mine{
+                font-size: 12px;
+                display: inline-block;
+                transform: rotate(90deg);
+              }
             }
             .settlement-btn {
               background-color: #e2e4ff;
@@ -326,6 +331,9 @@
     display: flex;
     flex-direction: column;
     border-radius: 4px;
+    .select-public{
+      margin-right: 20px;
+    }
     .count-list {
       flex: 1;
       margin-top: 18px;
@@ -346,6 +354,16 @@
             cursor: pointer;
             transform: translateY(1px);
             margin-left: 4px;
+          }
+        }
+        .text-right{
+          button{
+            width: 46px;
+            height: 26px;
+            border: 1px solid #DEECFF;
+            font-size: 12px;
+            color: #4266FF;
+            border-radius: 4px;
           }
         }
       }
@@ -491,6 +509,10 @@
   }
   li:last-child {
     margin-bottom: 0;
+  }
+  .no-data-li{
+    padding: 12px;
+    text-align: center;
   }
 }
 .out-padding {

@@ -323,11 +323,20 @@ export default class BossAssetsCenter {
             data:params
         })
     }
+    //余额清算
     async clearBalance(params){
         return await request({
             url:BASE_URL + '/manager/checkoutBalance',
             method:"POST",
             data:params,
+        })
+    }
+    // 清算记录
+    async clearLog(params){
+        return await request({
+            url:BASE_URL + '/analysis/profitHistory',
+            method:"POST",
+            data:params
         })
     }
 }

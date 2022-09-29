@@ -16,33 +16,54 @@
       </div>
       <div class="assets-content">
         <!-- 利润结算 -->
-        <div class="oper-amount" v-if="boxType === 1">
+        <div class="oper-amount-balance" v-if="boxType === 1">
+          <p class="title-balance">请选择结算类型<span> (单选)</span></p>
           <ul>
-            <li>
+            <li @click="selectCoinBalance(2)" :class="[selectBalance.indexOf(2) > -1 && 'selected-balance']">
+              <div class="selected-mask"></div>
               <img
-                :src="require('../../../assets/images/asset_oper.png')"
+                :src="require('../../../assets/images/right_icon.png')"
+                class="selected-icon"
                 alt=""
               />
-              <p>TRX{{ boxType === 1 ? "收益" : "余额" }}</p>
+              <p class="oper-name">
+                <img
+                  :src="require('../../../assets/images/asset_oper.png')"
+                  alt=""
+                />
+                TRX{{ boxType === 1 ? "收益" : "余额" }}
+              </p>
+              <!-- 2 -->
+              <div class="amount-box">
+                <p>{{trxAmount}}</p>
+              </div>
             </li>
-            <li>
+            <li @click="selectCoinBalance(1)" :class="[selectBalance.indexOf(1) > -1 && 'selected-balance']">
+              <div class="selected-mask"></div>
               <img
-                :src="require('../../../assets/images/asset_oper.png')"
+                :src="require('../../../assets/images/right_icon.png')"
+                class="selected-icon"
                 alt=""
               />
-              <p>USDT-TRC20{{ boxType === 1 ? "收益" : "余额" }}</p>
+              <p class="oper-name">
+                <img
+                  :src="require('../../../assets/images/asset_oper.png')"
+                  alt=""
+                />
+                USDT-TRC20{{ boxType === 1 ? "收益" : "余额" }}
+              </p>
+              <!-- 1 -->
+              <div class="amount-box">
+                <p>{{usdtAmount}}</p>
+              </div>
             </li>
-          </ul>
-          <ul>
-            <li>{{ trxAmount }}</li>
-            <li>{{ usdtAmount }}</li>
           </ul>
         </div>
         <!-- 余额提取 -->
         <div class="oper-amount-balance" v-else>
-          <p class="title-balance">请选择余额类型<span> (可多选)</span></p>
+          <p class="title-balance">请选择余额类型<span> (单选)</span></p>
           <ul>
-            <li @click="selectCoin(2)" :class="[selectBalance.indexOf(2) > -1 && 'selected-balance']">
+            <li @click="selectCoinBalance(2)" :class="[selectBalance.indexOf(2) > -1 && 'selected-balance']">
               <div class="selected-mask"></div>
               <img
                 :src="require('../../../assets/images/right_icon.png')"
@@ -61,7 +82,7 @@
                 <p>{{trxAmount}}</p>
               </div>
             </li>
-            <li @click="selectCoin(3)" :class="[selectBalance.indexOf(3) > -1 && 'selected-balance']">
+            <li @click="selectCoinBalance(3)" :class="[selectBalance.indexOf(3) > -1 && 'selected-balance']">
               <div class="selected-mask"></div>
               <img
                 :src="require('../../../assets/images/right_icon.png')"
@@ -80,7 +101,7 @@
                 <p>{{trxAmountFee}}</p>
               </div>
             </li>
-            <li @click="selectCoin(1)" :class="[selectBalance.indexOf(1) > -1 && 'selected-balance']">
+            <li @click="selectCoinBalance(1)" :class="[selectBalance.indexOf(1) > -1 && 'selected-balance']">
               <div class="selected-mask"></div>
               <img
                 :src="require('../../../assets/images/right_icon.png')"
@@ -207,7 +228,7 @@ export default {
           tradePass: null,
           code: null,
           auth: null,
-        }));
+        },this.selectBalance = []));
     },
   },
   computed: {
@@ -244,18 +265,15 @@ export default {
         }
       }, 1000);
     },
-    //选择提现币种
-    selectCoin(_type) {
-      const index = this.selectBalance.indexOf(_type);
-      index > -1
-        ? this.selectBalance.splice(index, 1)
-        : this.selectBalance.push(_type);
-      console.log(this.selectBalance);
+    //选择结算币种
+    selectCoinBalance(_type){
+      this.selectBalance = [];
+      this.selectBalance.push(_type)
     },
     //提交操作
     async submitAssetsOper() {
-      if(this.boxType === 2 && this.selectBalance.length == 0){
-        Message.error('请选择余额类型');
+      if(this.selectBalance.length == 0){
+        Message.error(`请选择${this.boxType === 1 ? '结算' : '余额'}类型`);
         return
       }
       if (!this.inpMsg.address) {

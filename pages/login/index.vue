@@ -317,7 +317,7 @@ export default {
   },
   mounted(){
     if(/Mobile|Android|iPhone/i.test(navigator.userAgent)){
-      window.location.href = 'https://www.mobile.ib.cc/#/login';
+      window.location.href = 'https://mobile.ib.cc/#/login';
     }
   },
   methods: {

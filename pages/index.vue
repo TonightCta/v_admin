@@ -3,7 +3,7 @@
     <AdminView v-if="view" />
     <AccountBalance @upMerchantID="upMerchantID" :merchantID="merchantID" />
     <OperateLog :merchantID="merchantID" />
-    <!-- <CoinsCount :merchantID="merchantID" /> -->
+    <CoinsCount v-if="view" :merchantID="merchantID" />
   </div>
 </template>
 

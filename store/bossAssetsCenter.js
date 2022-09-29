@@ -231,12 +231,16 @@ export const actions = {
         const res = await bossAssetsCenter.settlementProfit(params);
         return res
     },
-    clearBalanceCheck:async ({commit},params) => {
+    clearBalanceCheck: async ({ commit }, params) => {
         const res = await bossAssetsCenter.clearBalanceCheck(params);
         return res;
     },
-    clearBalance:async ({commit},params) => {
+    clearBalance: async ({ commit }, params) => {
         const res = await bossAssetsCenter.clearBalance(params);
+        return res
+    },
+    clearLog: async ({ commit }, params) => {
+        const res = await bossAssetsCenter.clearLog(params);
         return res
     }
 }

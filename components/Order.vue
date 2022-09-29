@@ -414,9 +414,12 @@
     v-card-text.d-flex.align-center.justify-center
       el-pagination(
         background,
-        layout="prev, pager, next",
+        layout="sizes,prev, pager, next",
         @current-change="pageChange",
         :total="pagination.total"
+        :page-sizes="[10, 50, 100, 200]"
+        :page-size="pagination.size"
+        @size-change="handleSizeChange"
       )
 
     // - 发起转账
@@ -771,6 +774,10 @@ export default {
     this.showTable = true;
   },
   methods: {
+    handleSizeChange(val){
+      this.pagination.size = val;
+      this.queryWalletAssetsFlow();
+    },
     //确认提币
     async submitWithdraw() {
       console.log(this.withdraw);

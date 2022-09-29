@@ -25,7 +25,10 @@
         <div class="title-inner">
           <p class="account-name">
             {{ account.name }}
-            <el-dropdown :show-timeout="100" v-if="token && sourceAccount.is_admin">
+            <el-dropdown
+              :show-timeout="100"
+              v-if="token && sourceAccount.is_admin"
+            >
               <img
                 class="el-dropdown-link"
                 :src="require('../../assets/images/drop_icon.png')"
@@ -55,6 +58,38 @@
             >
               提取余额
             </button>
+
+            <el-popover
+              placement="bottom"
+              trigger="hover"
+              popper-class="out-padding"
+              v-if="token && sourceAccount.is_admin"
+            >
+              <ul class="popver-coin-bill">
+                <li v-for="(coin, index) in rechargeFee" :key="index + 'coin'">
+                  <div>
+                    <p>{{ coin.coin }}</p>
+                    <p
+                      class="inquire-balance"
+                      v-if="coin.url && sourceAccount.is_admin"
+                      @click="inquireAsset(coin)"
+                    >
+                      查询
+                      <span class="iconfont-mine icon-right"></span>
+                    </p>
+                  </div>
+                  <p class="count">{{ Number(coin.total).toFixed(4) }}</p>
+                </li>
+                <li v-if="rechargeFee.length === 0" class="no-data-li">暂无</li>
+              </ul>
+              <button
+                class="extract-btn"
+                slot="reference"
+              >
+                充值收益
+                <span class="iconfont-mine icon-right"></span>
+              </button>
+            </el-popover>
           </p>
           <ul>
             <li>
@@ -105,7 +140,11 @@
                   <li v-for="(coin, index) in item.list" :key="index + 'coin'">
                     <div>
                       <p>{{ coin.coin }}</p>
-                      <p class="inquire-balance" v-if="coin.link && sourceAccount.is_admin" @click="inquireAsset(coin)">
+                      <p
+                        class="inquire-balance"
+                        v-if="coin.link && sourceAccount.is_admin"
+                        @click="inquireAsset(coin)"
+                      >
                         查询
                         <span class="iconfont-mine icon-right"></span>
                       </p>
@@ -128,12 +167,12 @@
       </div>
     </div>
     <!-- 资产操作 -->
-    <AssetsOper ref="assets-oper" @refreshBalance="refreshBalance"/>
+    <AssetsOper ref="assets-oper" @refreshBalance="refreshBalance" />
   </div>
 </template>
 
 <script>
-import { Message } from 'element-ui';
+import { Message } from "element-ui";
 
 export default {
   props: {
@@ -190,6 +229,7 @@ export default {
       walletMsg: {},
       selectMsg: {},
       account: {},
+      rechargeFee:[],
     };
   },
   components: {
@@ -199,8 +239,8 @@ export default {
     sourceAccount() {
       return this.$store.state.bossAssetsCenter.merchantInfo;
     },
-    token(){
-      return sessionStorage.getItem('TOKEN') || ''
+    token() {
+      return sessionStorage.getItem("TOKEN") || "";
     },
   },
   created() {
@@ -255,6 +295,8 @@ export default {
       this.$set(this.baList[2], "balance", result.data.userAvailableTotal);
       this.$set(this.baList[3], "list", result.data.userFeeAvailable);
       this.$set(this.baList[3], "balance", result.data.userFeeAvailableTotal);
+      this.rechargeFee = result.data.usersDeposits;
+      console.log(result)
     },
     //查询资产
     inquireAsset(_item) {
@@ -282,24 +324,30 @@ export default {
               params
             );
       loading.close();
-      const { data,code } = result;
-      if(code != 200){
+      const { data, code } = result;
+      if (code != 200) {
         Message.error(result.message);
-        return
+        return;
       }
       const trx = _type === 1 ? data.trxProfit : data.mchFeeAvailableTotal;
       const usdt = _type === 1 ? data.usdtProfit : data.mchAvailableTotal;
       const trx_2 = _type === 1 ? 0 : data.userFeeAvailableTotal;
-      if(_type === 1 && !data.needCheckout){
+      if (_type === 1 && !data.needCheckout) {
         Message.error(`最少结算数量为 ${data.minUsdtProfit} USDT`);
         return;
       }
-      this.$refs['assets-oper'].outSide(_type,this.account.mch_id,trx,usdt,trx_2);
+      this.$refs["assets-oper"].outSide(
+        _type,
+        this.account.mch_id,
+        trx,
+        usdt,
+        trx_2
+      );
     },
     //刷新余额
-    refreshBalance(){
+    refreshBalance() {
       this.getCoinMsg();
-    }
+    },
   },
 };
 </script>

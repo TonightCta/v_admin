@@ -119,9 +119,22 @@
     padding: 0 !important;
 }
 
-.submit-btn .el-loading-mask .el-loading-spinner{
+.submit-btn .el-loading-mask .el-loading-spinner {
     margin-top: -10px;
 }
-.el-loading-spinner{
-    margin-top: -12px!important;
+
+.el-loading-spinner {
+    margin-top: -12px !important;
+}
+
+.select-public .el-select .el-input input {
+    border-color: #eee !important;
+    height: 26px !important;
+    line-height: 26px !important;
+}
+
+.text-overflow {
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
 }
