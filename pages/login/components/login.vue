@@ -100,7 +100,11 @@ export default {
       });
       if (res.code === 200) {
         this.isAuto = false;
-        this.$router.push("/account/merchant");
+        if (this.GetUrlKey("recharge", window.location.href)) {
+          this.$router.push("/funding/merchant_recharge");
+        } else {
+          this.$router.push("/account/merchant");
+        }
       } else {
         this.$error(
           res.message || this.$vuetify.lang.t("$vuetify.message.login_failed")

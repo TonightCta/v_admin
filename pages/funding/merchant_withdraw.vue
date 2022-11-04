@@ -616,9 +616,9 @@ export default {
     },
     allWithdraw() {
       this.withdrawNum =
-        this.currentCoin.userAvailable -
+        Number(this.currentCoin.userAvailable -
         this.currentCoin.userAvailable *
-          this.currentCoin.withdraw_service_fee_rate;
+          this.currentCoin.withdraw_service_fee_rate).toFixed(0);
     },
     forgetTransPwd() {
       eVue.$emit("forgetTransPwd");
@@ -852,12 +852,14 @@ export default {
       }
       const params = {
         asset: this.currentCoin.asset,
+        fee_coin:result.data.feeCoin,
         toAddress: toAddress,
         txAmount: this.withdrawNum,
         walletId: window.sessionStorage.getItem("userId"),
         userWithdrawId: this.userWithdrawId,
         fee: this.$fixed8(this.calcServerFee),
         toolFee: result.data.totalToolFee,
+        poolFee:result.data.totalPoolFee
       };
       this.$refs.withdraw.getWithdrawMsg(params);
     },

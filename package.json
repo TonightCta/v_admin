@@ -3,7 +3,7 @@
   "version": "1.0.0",
   "private": true,
   "scripts": {
-    "dev": "nuxt --hostname 0.0.0.0 --port 3030",
+    "dev": "nuxt --hostname 0.0.0.0 --port 10010",
     "build": "nuxt build --prod",
     "start": "nuxt start",
     "generate": "nuxt generate"

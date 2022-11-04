@@ -31,7 +31,17 @@
           dense,
           hide-details
         )
-
+      .tool-box(v-if="identify == 'user'")
+        span 回调状态：
+        v-select.per-tool(
+          v-model="order.backStatus",
+          style="width: 150px; transform: scale(0.85)",
+          :items="backList",
+          outlined,
+          single-line,
+          dense,
+          hide-details
+        )
       .tool-box(v-if="identify == 'user' && manageWay == 'withdraw'")
         span {{ $vuetify.lang.t('$vuetify.table.merchantOrderId') }}：
         v-text-field.per-tool(
@@ -281,9 +291,9 @@
         v-if="showTable"
       )
         template(v-slot:item.toAddress="{ item }")
-          span  {{ getItemAddress(item.to) }}
-        template(v-slot:item.name = "{ item }")
-          span(v-if="item.merchant") {{item.merchant.name}}
+          span {{ getItemAddress(item.to) }}
+        template(v-slot:item.name="{ item }")
+          span(v-if="item.merchant") {{ item.merchant.name }}
           span(v-else) -
         template(v-slot:item.note="{ item }")
           span(v-if="item.asset == 'XRP' || item.asset == 'EOS'") {{ getItemTag(item.toAddress) }}
@@ -341,7 +351,7 @@
               size="mini",
               @click="rebackOrder(item)"
             ) {{ $vuetify.lang.t('$vuetify.mine.重新回调') }}
-            span(v-else) -
+            span(v-else) 回调成功
         template(v-slot:item.operate="{ item }")
           template(v-if="manageWay == 'withdraw'")
             el-popover(
@@ -416,9 +426,9 @@
         background,
         layout="sizes,prev, pager, next",
         @current-change="pageChange",
-        :total="pagination.total"
-        :page-sizes="[10, 50, 100, 200]"
-        :page-size="pagination.size"
+        :total="pagination.total",
+        :page-sizes="[10, 50, 100, 200]",
+        :page-size="pagination.size",
         @size-change="handleSizeChange"
       )
 
@@ -557,6 +567,9 @@ export default {
       setAddress: null, //交易HASH
       orderID: null,
       waitSet: false,
+      backList:[
+        '全部','回调成功','回调失败'
+      ]
     };
   },
   computed: {
@@ -604,6 +617,7 @@ export default {
         txHash: "",
         merchant: "",
         selectedMerchant: this.$vuetify.lang.t("$vuetify.mine.全部"),
+        backStatus:this.$vuetify.lang.t("$vuetify.table.all")
       };
       this.incomeExpenditure = [
         this.$vuetify.lang.t("$vuetify.table.all"),
@@ -700,6 +714,7 @@ export default {
       txHash: "",
       merchant: "",
       selectedMerchant: this.$vuetify.lang.t("$vuetify.mine.全部"),
+      backStatus:this.$vuetify.lang.t("$vuetify.table.all")
     };
     this.incomeExpenditure = [
       this.$vuetify.lang.t("$vuetify.table.all"),
@@ -774,7 +789,7 @@ export default {
     this.showTable = true;
   },
   methods: {
-    handleSizeChange(val){
+    handleSizeChange(val) {
       this.pagination.size = val;
       this.queryWalletAssetsFlow();
     },
@@ -798,7 +813,7 @@ export default {
     async rebackOrder(_item) {
       const result = await this.$store.dispatch(
         "bossAssetsCenter/rebackOrder",
-        { orderId: _item.id,type:this.manageWay }
+        { orderId: _item.id, type: this.manageWay }
       );
       const { code } = result;
       if (code != 200) {
@@ -923,9 +938,9 @@ export default {
             value: "trxNo",
           },
           {
-            text:'商户名称',
+            text: "商户名称",
             sortable: false,
-            value:'name'
+            value: "name",
           },
           // {
           //   class: "custom-min-width-column",
@@ -991,14 +1006,13 @@ export default {
             value: "trxNo",
           },
           {
-            text:'商户名称',
+            text: "商户名称",
             sortable: false,
-            value:'name'
+            value: "name",
           },
           {
             class: "custom-min-width-column",
-            text:
-              this.$vuetify.lang.t("$vuetify.table.merchantOrderId"),
+            text: this.$vuetify.lang.t("$vuetify.table.merchantOrderId"),
             sortable: false,
             value: "addColumn",
           },
@@ -1080,9 +1094,9 @@ export default {
             value: "trxNo",
           },
           {
-            text:'商户名称',
+            text: "商户名称",
             sortable: false,
-            value:'name'
+            value: "name",
           },
           {
             text: this.$vuetify.lang.t("$vuetify.table.arrivalTime"),
@@ -1130,9 +1144,9 @@ export default {
             value: "trxNo",
           },
           {
-            text:'商户名称',
+            text: "商户名称",
             sortable: false,
-            value:'name'
+            value: "name",
           },
           {
             text: this.$vuetify.lang.t("$vuetify.table.orderTime"),
@@ -1349,7 +1363,8 @@ export default {
         businessId: this.order.userName ? this.order.userName.trim() : null,
         txHash: this.order.txHash,
         merchant_id: this.selectMerchant(this.order.selectedMerchant),
-      };
+        notify_status:this.order.backStatus === '回调成功' && 1 || this.order.backStatus === '回调失败' && 2 || ''
+       };
 
       if (this.manageWay === "deposit" && this.identify === "merchant") {
         params.isMerchant = 1;

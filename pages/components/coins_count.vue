@@ -69,6 +69,11 @@
         >
           <el-table-column prop="mch_name" label="商户名称" width="180">
           </el-table-column>
+          <el-table-column label="类型" width="180">
+            <template slot-scope="{ row }">
+              <p class="text-overflow">{{ row.type === 1 ? '利润结算' : '余额提取' }}</p>
+            </template>
+          </el-table-column>
           <el-table-column
             prop="mch_balance"
             label="处理前后台余额"
@@ -92,7 +97,7 @@
           </el-table-column>
           <el-table-column label="目标地址">
             <template slot-scope="{ row }">
-              <el-tooltip effect="dark" :content="row.from" placement="top">
+              <el-tooltip effect="dark" :content="row.to" placement="top">
                 <p class="text-overflow">{{ row.to }}</p>
               </el-tooltip>
             </template>
@@ -179,9 +184,6 @@ export default {
         Object.keys(this.$store.state.bossAssetsCenter.allCoins)
       );
     }
-  },
-  mounted(){
-    console.log(this.allCoins)
   },
   methods: {
     //币种统计

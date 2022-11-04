@@ -135,6 +135,7 @@
           background
           layout="prev, pager, next"
           @current-change="pageChange"
+          :page-size="10"
           :total="pagination.total">
         </el-pagination>
       </v-card-text>
@@ -442,9 +443,8 @@ export default {
       const result = await this.$store.dispatch("bossAssetsCenter/queryMerchantCoins",
         params
       );
-      console.log(result)
-      this.desserts = result.data;
-      this.pagination.total = result.data.length;
+      this.desserts = result.data.list;
+      this.pagination.total = result.data.total;
       this.tableLoading = false;
     },
     //归集地址
@@ -537,7 +537,7 @@ export default {
         return;
       }*/
       this.loadAdd = true;
-      const params = this.merchantBoxItem
+      const params = this.merchantBoxItem;
       const result = await this.$store.dispatch(
         "bossAssetsCenter/updateMerchantCoinConfig",
         params

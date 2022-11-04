@@ -129,6 +129,11 @@
               {{ item.is_udun_address == 0 ? '自有' : 'UDUN' }}
             </div>
           </template>
+          <template v-slot:item.mch_id="{ item }">
+            <div>
+              {{ item.merchant ?  item.merchant.name : '-' }}
+            </div>
+          </template>
         </v-data-table>
       </div>
       <v-divider />
@@ -253,6 +258,11 @@ export default {
           value: "mch_id",
         },
         {
+          text: '创建时间',
+          sortable: false,
+          value: "created_at",
+        },
+        {
           text: this.$vuetify.lang.t("$vuetify.mine.地址"),
           sortable: false,
           value: "address",
@@ -331,7 +341,7 @@ export default {
       this.tableLoading = true;
       const params = {
         page: this.pagination.current,
-        limit: 10,
+        limit: 50,
         merchant_id: this.selectMerchant(this.query.merchant),
         address: this.query.address,
         coin:

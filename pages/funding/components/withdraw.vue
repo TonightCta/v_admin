@@ -28,9 +28,9 @@
           </li>
         </ul>
         <ul class="msg-list">
-          <li>{{ drawMsg?.asset }}</li>
-          <li>{{ Number(drawMsg?.txAmount).toFixed(8) }}</li>
-          <li>{{ drawMsg?.fee }}</li>
+          <li>{{ drawMsg.asset }}</li>
+          <li>{{ Number(drawMsg.txAmount).toFixed(8) }}</li>
+          <li>{{ (Number(drawMsg.txAmount) / 100).toFixed(8) }}</li>
           <li>{{drawMsg?.toolFee}}</li>
         </ul>
         <div class="verify-msg">
@@ -195,6 +195,9 @@ export default {
     //获取提币参数
     getWithdrawMsg(obj) {
       this.drawMsg = obj;
+      if(this.drawMsg.asset === this.drawMsg.fee_coin){
+        this.drawMsg.txAmount = this.drawMsg.txAmount - this.drawMsg.poolFee
+      }
       this.withDrawBox = true;
     },
     //提交提币

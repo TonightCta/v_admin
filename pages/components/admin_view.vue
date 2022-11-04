@@ -164,7 +164,7 @@ export default {
           name: "总手续费",
           bg: "linear-gradient(46deg, #E7DC5D 0%, #E5CA4D 100%)",
           is_tooltip: true,
-          is_remark: true,
+          is_remark: false,
           unit: "USDT",
           down: require("../../assets/images/index/down_3.png"),
           amount: 0,
@@ -210,6 +210,32 @@ export default {
             },
           ],
         },
+        {
+          icon: require("../../assets/images/index/card_4_icon.png"),
+          right_icon: require("../../assets/images/index/card_4.png"),
+          name: "已结利润",
+          bg: "linear-gradient(46deg, #FFC970 0%, #F39F47 100%)",
+          is_tooltip: true,
+          is_remark: false,
+          unit: "USDT",
+          down: require("../../assets/images/index/down_5.png"),
+          amount: 0,
+          list: [
+            {
+              name: "商户",
+              amount: [
+                {
+                  coin: "USDT",
+                  total: "12",
+                },
+                {
+                  coin: "USDT",
+                  total: "12",
+                },
+              ],
+            },
+          ],
+        },
       ],
     };
   },
@@ -225,6 +251,7 @@ export default {
       this.$set(this.card[1], "amount", data.totalDeposit.toFixed(0));
       this.$set(this.card[2], "amount", data.totalWithdraw.toFixed(0));
       this.$set(this.card[3], "amount", data.totalFee.toFixed(0));
+      this.$set(this.card[4], "amount", data.totalCheckout.toFixed(0));
       this.card[1].list[0].amount = data.merchantsDeposits;
       this.card[1].list[1].amount = data.usersDeposits;
       this.card[2].list[0].amount = data.merchantsWithdraws;
@@ -232,6 +259,7 @@ export default {
       this.card[3].list[0].amount = data.allDepositFee;
       this.card[3].list[1].amount = data.allWithdrawFee;
       this.card[3].list[2].amount = data.allMinerFee;
+      this.card[4].list[0].amount = data.checkoutHistory;
     },
   },
 };

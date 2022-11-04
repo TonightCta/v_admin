@@ -310,7 +310,7 @@ export default class BossAssetsCenter {
     //结算利润
     async settlementProfit(params) {
         return await request({
-            url: BASE_URL + '/manager/checkoutProfit ',
+            url: BASE_URL + '/manager/checkoutProfit',
             method: "POST",
             data: params
         })

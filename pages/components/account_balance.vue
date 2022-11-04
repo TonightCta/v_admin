@@ -82,10 +82,7 @@
                 </li>
                 <li v-if="rechargeFee.length === 0" class="no-data-li">暂无</li>
               </ul>
-              <button
-                class="extract-btn"
-                slot="reference"
-              >
+              <button class="extract-btn" slot="reference">
                 充值收益
                 <span class="iconfont-mine icon-right"></span>
               </button>
@@ -151,6 +148,7 @@
                     </div>
                     <p class="count">{{ Number(coin.amount).toFixed(4) }}</p>
                   </li>
+                  <li></li>
                 </ul>
                 <p slot="reference">
                   币种明细
@@ -163,7 +161,17 @@
             </div>
           </div>
         </div>
-        <button @click="$router.push(item.url)">{{ item.btn_name }}</button>
+        <button @click="autoLogin(item.url)">{{ item.btn_name }}</button>
+      </div>
+      <div class="reload-assets" @click="getCoinMsg(1)">
+        <div class="reload-inner">
+          <img
+            :class="loadAni"
+            :src="require('../../assets/images/reload.png')"
+            alt=""
+          />
+          <p>刷新资产</p>
+        </div>
       </div>
     </div>
     <!-- 资产操作 -->
@@ -229,7 +237,8 @@ export default {
       walletMsg: {},
       selectMsg: {},
       account: {},
-      rechargeFee:[],
+      rechargeFee: [],
+      loadAni: "",
     };
   },
   components: {
@@ -267,6 +276,22 @@ export default {
       }
       this.$emit("upMerchantID", _val.mch_id);
     },
+    autoLogin(_url) {
+      if (
+        this.account.mch_id !==
+        this.$store.state.bossAssetsCenter.merchantInfo.mch_id
+      ) {
+        const features =
+          "height=800, width=1366, top=100, left=100, toolbar=no, menubar=no,scrollbars=no,resizable=no, location=no, status=no";
+        window.open(
+          `https://client.ib.cc/login?auto=${this.account.mch_id}&recharge=1`,
+          "NEW",
+          features
+        );
+      } else {
+        this.$router.push(_url);
+      }
+    },
     //商户列表
     async getMerchantList() {
       const result = await this.$store.dispatch(
@@ -279,7 +304,8 @@ export default {
       this.merchantList = result.data.list;
     },
     //币种概况
-    async getCoinMsg() {
+    async getCoinMsg(_type) {
+      this.loadAni = "start-rotate";
       const result = await this.$store.dispatch(
         "bossAssetsCenter/walletOverview",
         {
@@ -296,7 +322,12 @@ export default {
       this.$set(this.baList[3], "list", result.data.userFeeAvailable);
       this.$set(this.baList[3], "balance", result.data.userFeeAvailableTotal);
       this.rechargeFee = result.data.usersDeposits;
-      console.log(result)
+      if (_type) {
+        Message.success("刷新成功");
+      }
+      this.loadAni = "";
+      // setTimeout(() => {
+      // },1000)
     },
     //查询资产
     inquireAsset(_item) {
